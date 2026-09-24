@@ -1,0 +1,31 @@
+# DineIQ Analytics - Python dependencies
+#
+# Current (Python data pipeline owned by Ali Jaan's workspace):
+#   generation, quality checks, cleaning, processing, advanced
+#   analytics and ML comparison sets, plus the test suite.
+#
+# Install:
+#   python -m venv .venv
+#   .venv/bin/pip install -r Main/requirements.txt
+
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.4
+PyYAML>=6.0
+pytest>=8.0
+
+# Jupyter pipeline notebooks (notebook/)
+jupyter>=1.0
+ipykernel>=6.29
+matplotlib>=3.8
+
+# Big Data pipeline (Main/spark_pipeline/)
+# The Spark engine uses PySpark + a JVM (see Main/setup_spark.sh).
+# When no JVM is available the pipeline falls back to the documented
+# pandas/pyarrow engine producing the same artifacts.
+pyspark>=3.5
+pyarrow>=15.0
+
+# Planned (used by the web application, added as it lands):
+#   flask>=3.0
+#   (frontend dependencies managed separately in the app workspace)
