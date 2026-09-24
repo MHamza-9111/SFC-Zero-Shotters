@@ -1,0 +1,8 @@
+metric,value
+holdout_size,300
+high_value_threshold,18306.68
+accuracy,0.9867
+f1,0.9231
+roc_auc,0.9992
+model,RandomForestClassifier (sklearn)
+task,High-value order classification (top 10% of completed order value)
