@@ -1,0 +1,31 @@
+seed: 42
+
+scale:
+  customers: 50000
+  restaurants: 20
+  locations: 20
+  categories: 10
+  menu_items: 150
+  orders: 100000
+  order_items_min: 1000000
+  ratings: 100000
+  wastage: 50000
+  months: 12
+
+quality:
+  missing_value_rate: 0.01
+  duplicate_rate: 0.005
+  invalid_value_rate: 0.002
+  outlier_rate: 0.003
+
+time:
+  start_date: "2025-01-01"
+  end_date: "2025-12-31"
+
+output:
+  raw_dir: "Main/raw_data"
+  # Canonical cleaned CSV layer, owned by Ali's Python pipeline.
+  # Hamza's Spark pipeline consumes this layer and writes Parquet
+  # to parquet_dir.
+  processed_dir: "Ali Jaan/processed_data"
+  parquet_dir: "Main/parquet_data"
