@@ -1,0 +1,2 @@
+task,cases,matching_cases,disagreeing_cases,agreement_percentage,python_accuracy,pipeline_accuracy,actual_class_distribution,model_version,engine
+menu_business_class,30,30,0,100.0,0.9667,0.9667,"{""Volume Driver"": 11, ""Profit Driver"": 7, ""Low Performer"": 7, ""Hidden Opportunity"": 5}",1,pandas

@@ -1,0 +1,5 @@
+{
+  "engine": "pandas",
+  "engine_detail": "pandas+pyarrow fallback (no JVM available)",
+  "work_root": "/home/user"
+}

@@ -1,0 +1,42 @@
+{
+  "high_value_order": {
+    "task": "high_value_order",
+    "batch_size": 100,
+    "nfr_limit_ms": 5000.0,
+    "python_model_version": 2,
+    "pipeline_model_version": 1,
+    "pipeline_engine": "pandas",
+    "python_engine": "python",
+    "runs_ms": [
+      67.416,
+      68.181,
+      68.341,
+      68.089,
+      67.677
+    ],
+    "total_ms": 67.941,
+    "total_ms_min": 67.416,
+    "total_ms_max": 68.341,
+    "pass": true
+  },
+  "customer_churn": {
+    "task": "customer_churn",
+    "batch_size": 200,
+    "nfr_limit_ms": 5000.0,
+    "python_model_version": 2,
+    "pipeline_model_version": 1,
+    "pipeline_engine": "pandas",
+    "python_engine": "python",
+    "runs_ms": [
+      1.173,
+      1.179,
+      1.243,
+      1.151,
+      1.163
+    ],
+    "total_ms": 1.182,
+    "total_ms_min": 1.151,
+    "total_ms_max": 1.243,
+    "pass": true
+  }
+}

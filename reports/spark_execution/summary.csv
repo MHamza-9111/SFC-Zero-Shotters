@@ -1,0 +1,11 @@
+output,rows,evidence_rows,file,evidence_file
+orders_enriched,79930,2000,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/orders_enriched.csv,/home/user/Techwizz/Main/evidence/spark_sql/orders_enriched.csv
+order_item_revenue,797829,2000,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/order_item_revenue.csv,/home/user/Techwizz/Main/evidence/spark_sql/order_item_revenue.csv
+monthly_revenue,240,240,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/monthly_revenue.csv,/home/user/Techwizz/Main/evidence/spark_sql/monthly_revenue.csv
+category_revenue_share,10,10,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/category_revenue_share.csv,/home/user/Techwizz/Main/evidence/spark_sql/category_revenue_share.csv
+channel_monthly,48,48,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/channel_monthly.csv,/home/user/Techwizz/Main/evidence/spark_sql/channel_monthly.csv
+peak_hours,28,28,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/peak_hours.csv,/home/user/Techwizz/Main/evidence/spark_sql/peak_hours.csv
+top_item_combos,25,25,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/top_item_combos.csv,/home/user/Techwizz/Main/evidence/spark_sql/top_item_combos.csv
+promo_effectiveness,120,120,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/promo_effectiveness.csv,/home/user/Techwizz/Main/evidence/spark_sql/promo_effectiveness.csv
+location_ranking,20,20,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/location_ranking.csv,/home/user/Techwizz/Main/evidence/spark_sql/location_ranking.csv
+churn_candidates,27384,5000,/home/user/Techwizz/Main/reports/spark_pipeline/spark_sql/churn_candidates.csv,/home/user/Techwizz/Main/evidence/spark_sql/churn_candidates.csv
