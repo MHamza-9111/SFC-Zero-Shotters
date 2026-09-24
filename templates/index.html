@@ -3,138 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DineIQ Analytics — Restaurant Intelligence Platform</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --accent-green: #34d399;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: var(--card-bg);
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--accent);
-        }
-        .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-        }
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-        }
-        .card h3 {
-            margin-top: 0;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .card .value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent-green);
-        }
-        .section-title {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-        .chart-placeholder {
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(255, 255, 255, 0.02);
-            border: 1px dashed var(--border);
-            border-radius: 0.5rem;
-            color: var(--text-muted);
-        }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            margin-top: 4rem;
-        }
-    </style>
+    <title>DineIQ Analytics — Master Restaurant Intelligence Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <header>
-        <h1>DineIQ Analytics & Business Intelligence Platform</h1>
-        <div>Status: <span style="color: var(--accent-green);">● Master Pipeline Active</span></div>
-    </header>
+    <nav class="navbar">
+        <div class="brand">
+            <div class="brand-logo">IQ</div>
+            <div class="brand-title">DineIQ Analytics Platform</div>
+        </div>
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            <span id="api-status">OPERATIONAL</span>
+        </div>
+    </nav>
 
     <div class="container">
-        <div class="metrics-grid">
-            <div class="card">
-                <h3>Target Dataset Scale</h3>
-                <div class="value">1,000,000+</div>
-                <p style="color: var(--text-muted); margin: 0.5rem 0 0 0;">Order lines generated & processed</p>
+        <!-- Hero Metrics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Target Dataset Scale</div>
+                <div class="stat-value">1,000,000+</div>
+                <div class="stat-desc">Synthetic order lines generated & validated</div>
             </div>
-            <div class="card">
-                <h3>Dual-Pipeline Agreement</h3>
-                <div class="value">100.0%</div>
-                <p style="color: var(--text-muted); margin: 0.5rem 0 0 0;">530 / 530 unseen test cases match</p>
+            <div class="stat-card">
+                <div class="stat-label">Dual-Pipeline Agreement</div>
+                <div class="stat-value" id="agreement-stat">100.0%</div>
+                <div class="stat-desc">530 / 530 unseen evaluation cases match</div>
             </div>
-            <div class="card">
-                <h3>Ensemble Scoring Latency</h3>
-                <div class="value">90.3 ms</div>
-                <p style="color: var(--text-muted); margin: 0.5rem 0 0 0;">NFR limit: 5,000 ms (PASS)</p>
+            <div class="stat-card">
+                <div class="stat-label">Ensemble Latency (NFR #1)</div>
+                <div class="stat-value" id="latency-stat">90.3 ms</div>
+                <div class="stat-desc">Warm-process serving limit < 5,000 ms (PASS)</div>
             </div>
-            <div class="card">
-                <h3>Test Suite Passing</h3>
-                <div class="value">38 / 38</div>
-                <p style="color: var(--text-muted); margin: 0.5rem 0 0 0;">PySpark + Scikit-Learn unit tests</p>
-            </div>
-        </div>
-
-        <h2 class="section-title">Executive Intelligence Dashboard</h2>
-        <div class="card" style="margin-bottom: 2rem;">
-            <h3>Menu Business Classes (SRS Step 10 Rules)</h3>
-            <p>Class counts across 150 menu items: Profit Driver (34), Volume Driver (41), Hidden Opportunity (36), Low Performer (39).</p>
-            <div class="chart-placeholder">
-                <p>Interactive Visual Dashboard Loaded from /reports/charts/</p>
+            <div class="stat-card">
+                <div class="stat-label">Automated Test Coverage</div>
+                <div class="stat-value">38 / 38</div>
+                <div class="stat-desc">PySpark + Scikit-Learn test suite passing</div>
             </div>
         </div>
 
-        <div class="card">
-            <h3>NFR Ensemble Model Scoring Interface</h3>
-            <p>Upload new order JSON payload to receive real-time PySpark MLlib + Scikit-Learn Python ensemble predictions under 5 seconds.</p>
-            <button style="background: var(--accent); color: var(--bg-color); border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: bold; cursor: pointer;">Run Dual-Pipeline Scoring Demo</button>
+        <!-- Navigation Tabs -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" data-tab="overview">Executive Overview</button>
+            <button class="tab-btn" data-tab="menu">Menu Intelligence</button>
+            <button class="tab-btn" data-tab="customers">Customer Analytics</button>
+            <button class="tab-btn" data-tab="models">Dual-Pipeline Models & NFR Demo</button>
+        </div>
+
+        <!-- Tab 1: Executive Overview -->
+        <div id="overview" class="tab-content active">
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">01. Data Ingestion Quality Assessment</div>
+                    <img class="chart-img" src="/api/v1/charts/01_data_quality.png" alt="Data Quality">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">03. Monthly Revenue by Restaurant Location</div>
+                    <img class="chart-img" src="/api/v1/charts/03_monthly_revenue_location.png" alt="Monthly Revenue">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">04. Menu Category Revenue Share</div>
+                    <img class="chart-img" src="/api/v1/charts/04_category_revenue_share.png" alt="Category Revenue Share">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">09. Restaurant Location Performance Ranking</div>
+                    <img class="chart-img" src="/api/v1/charts/09_location_ranking.png" alt="Location Ranking">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Menu Intelligence -->
+        <div id="menu" class="tab-content">
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">11. Menu Business Classes (SRS Step 10 Rules)</div>
+                    <img class="chart-img" src="/api/v1/charts/11_menu_business_classes.png" alt="Menu Business Classes">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">07. Top Item Combinations & Market Basket Lift</div>
+                    <img class="chart-img" src="/api/v1/charts/07_top_item_combos.png" alt="Top Item Combos">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">13. Wastage Risk & Cost Analysis</div>
+                    <img class="chart-img" src="/api/v1/charts/13_wastage_risk.png" alt="Wastage Risk">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">15. Slow-Moving Menu Items (First 60d vs Last 60d)</div>
+                    <img class="chart-img" src="/api/v1/charts/15_slow_moving_items.png" alt="Slow Moving Items">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Customer Analytics -->
+        <div id="customers" class="tab-content">
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">10. RFM Customer Segments Profile</div>
+                    <img class="chart-img" src="/api/v1/charts/10_rfm_segments.png" alt="RFM Segments">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">12. Customer Churn Risk Model Score Distribution</div>
+                    <img class="chart-img" src="/api/v1/charts/12_churn_risk.png" alt="Churn Risk">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">05. Peak Ordering Hours & Day-of-Week Patterns</div>
+                    <img class="chart-img" src="/api/v1/charts/05_peak_hours.png" alt="Peak Hours">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">14. Price Sensitivity & Elasticity Analysis</div>
+                    <img class="chart-img" src="/api/v1/charts/14_price_sensitivity.png" alt="Price Sensitivity">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Dual Pipeline Models & Live Predictor Demo -->
+        <div id="models" class="tab-content">
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">17. Dual Pipeline Agreement (100% Unseen Match)</div>
+                    <img class="chart-img" src="/api/v1/charts/17_dual_pipeline_agreement.png" alt="Dual Pipeline Agreement">
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">20. Ensemble Serving Latency vs 5-Second NFR Budget</div>
+                    <img class="chart-img" src="/api/v1/charts/20_ensemble_latency.png" alt="Ensemble Latency">
+                </div>
+            </div>
+
+            <!-- Live Scoring Calculator -->
+            <div class="predictor-box">
+                <h3 style="color: var(--accent-blue); margin-bottom: 0.5rem;">Interactive NFR Ensemble Model Scoring Calculator</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Scores incoming order details against both warm models (PySpark MLlib + Scikit-Learn Python) and computes the ensemble probability under 5 seconds.
+                </p>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="input-amount">Order Total Amount (PKR)</label>
+                        <input type="number" id="input-amount" value="3200">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-items">Total Line Items Count</label>
+                        <input type="number" id="input-items" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-orders">Customer Past Orders</label>
+                        <input type="number" id="input-orders" value="14">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-spend">Customer Total Spend (PKR)</label>
+                        <input type="number" id="input-spend" value="24500">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-promo">Promotional Discount Applied</label>
+                        <select id="input-promo">
+                            <option value="1">Yes (Active Promotion)</option>
+                            <option value="0">No Promotion</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="predict-btn">Run Dual-Pipeline Scoring Demo</button>
+                <div id="result-box" class="result-box"></div>
+            </div>
         </div>
     </div>
 
     <footer>
-        DineIQ Analytics — Competition Master Repository | Team: Mohammad Hamza Mughal, Ali Jaan Shaikh, Eshmaal, Farooq, Zain
+        DineIQ Analytics & Data Science Intelligence Platform — Master Repository<br>
+        Team: Mohammad Hamza Mughal (@MHamza-9111), Ali Jaan Shaikh, Eshmaal, Farooq, Zain
     </footer>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>

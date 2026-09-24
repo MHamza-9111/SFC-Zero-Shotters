@@ -9,7 +9,7 @@ Implements API endpoints specified in API_CONTRACT.md for:
 from __future__ import annotations
 
 from pathlib import Path
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_from_directory
 import pandas as pd
 
 from src.services.scoring_service import ScoringService
@@ -68,14 +68,18 @@ def get_menu_classes():
     return jsonify({"error": "Menu classification data not found"}), 444
 
 
-@api_bp.route("/analytics/churn-risk", methods=["GET"])
-def get_churn_risk():
-    """Retrieve churn risk candidates intelligence."""
-    file_path = BASE_DIR / "reports" / "spark_execution" / "churn_candidates.csv"
-    if not file_path.exists():
-        file_path = BASE_DIR / "processed_data" / "analytics" / "churn_risk.csv"
+@api_bp.route("/charts/<path:filename>", methods=["GET"])
+def get_chart(filename):
+    """Serve committed high-resolution PNG charts."""
+    charts_dir = BASE_DIR / "reports" / "charts"
+    return send_from_directory(str(charts_dir), filename)
 
+
+@api_bp.route("/analytics/recommendations", methods=["GET"])
+def get_recommendations():
+    """Retrieve evidence-backed prioritized business recommendations."""
+    file_path = BASE_DIR / "processed_data" / "analytics" / "recommendations.csv"
     if file_path.exists():
         df = pd.read_csv(file_path)
         return jsonify(df.to_dict(orient="records"))
-    return jsonify({"error": "Churn risk data not found"}), 404
+    return jsonify([])
