@@ -125,42 +125,42 @@ function viewDual(){
            {c:'Low Performer',n:428,sf:.842,pf:.856,conf:'Low → Hidden (4.8%)',br:'Delisting decisions require analyst sign-off'}],{id:'errprof',mini:true}))}</div>`;
   } else if(tab==='nfr'){
     body=`<div class="grid g12 mb">
-      ${panel('Interactive NFR Dual-Pipeline Model Scoring Calculator', 'Scores incoming requests against live warm models (PySpark MLlib + Scikit-Learn Python) under the 5-second NFR limit (&lt; 5000 ms)',
+      ${panel('✨ Interactive NFR Dual-Pipeline Model Scoring Calculator', 'Scores incoming requests against live warm models (PySpark MLlib + Scikit-Learn Python) under the 5-second NFR limit (&lt; 5000 ms)',
         `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:16px;">
           <div class="field">
-            <label style="font-size:11px; color:var(--sub); display:block; margin-bottom:6px; font-weight:600;">Scoring Task</label>
-            <select id="nfr-task" style="width:100%; padding:9px 12px; background:var(--panel-2); border:1px solid var(--line-2); border-radius:8px; color:var(--text); font-size:13px;">
+            <label style="font-size:11px; color:var(--text-sub); display:block; margin-bottom:6px; font-weight:600;">Scoring Task</label>
+            <select id="nfr-task" style="width:100%; padding:10px 14px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:var(--r-sm); color:var(--text-main); font-size:13px;">
               <option value="order_value">High-Value Order Classification</option>
               <option value="churn">Customer Churn Risk Prediction</option>
             </select>
           </div>
           <div class="field">
-            <label style="font-size:11px; color:var(--sub); display:block; margin-bottom:6px; font-weight:600;">Order Amount / Spend (PKR)</label>
-            <input id="nfr-amount" type="number" value="3200" style="width:100%; padding:9px 12px; background:var(--panel-2); border:1px solid var(--line-2); border-radius:8px; color:var(--text); font-size:13px;"/>
+            <label style="font-size:11px; color:var(--text-sub); display:block; margin-bottom:6px; font-weight:600;">Order Amount / Spend (PKR)</label>
+            <input id="nfr-amount" type="number" value="3200" style="width:100%; padding:10px 14px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:var(--r-sm); color:var(--text-main); font-size:13px;"/>
           </div>
           <div class="field">
-            <label style="font-size:11px; color:var(--sub); display:block; margin-bottom:6px; font-weight:600;">Line Items / Quantity Count</label>
-            <input id="nfr-items" type="number" value="5" style="width:100%; padding:9px 12px; background:var(--panel-2); border:1px solid var(--line-2); border-radius:8px; color:var(--text); font-size:13px;"/>
+            <label style="font-size:11px; color:var(--text-sub); display:block; margin-bottom:6px; font-weight:600;">Line Items / Quantity Count</label>
+            <input id="nfr-items" type="number" value="5" style="width:100%; padding:10px 14px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:var(--r-sm); color:var(--text-main); font-size:13px;"/>
           </div>
           <div class="field">
-            <label style="font-size:11px; color:var(--sub); display:block; margin-bottom:6px; font-weight:600;">Customer Past Orders</label>
-            <input id="nfr-orders" type="number" value="14" style="width:100%; padding:9px 12px; background:var(--panel-2); border:1px solid var(--line-2); border-radius:8px; color:var(--text); font-size:13px;"/>
+            <label style="font-size:11px; color:var(--text-sub); display:block; margin-bottom:6px; font-weight:600;">Customer Past Orders</label>
+            <input id="nfr-orders" type="number" value="14" style="width:100%; padding:10px 14px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:var(--r-sm); color:var(--text-main); font-size:13px;"/>
           </div>
           <div class="field">
-            <label style="font-size:11px; color:var(--sub); display:block; margin-bottom:6px; font-weight:600;">Customer Total Spend (PKR)</label>
-            <input id="nfr-spend" type="number" value="24500" style="width:100%; padding:9px 12px; background:var(--panel-2); border:1px solid var(--line-2); border-radius:8px; color:var(--text); font-size:13px;"/>
+            <label style="font-size:11px; color:var(--text-sub); display:block; margin-bottom:6px; font-weight:600;">Customer Total Spend (PKR)</label>
+            <input id="nfr-spend" type="number" value="24500" style="width:100%; padding:10px 14px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:var(--r-sm); color:var(--text-main); font-size:13px;"/>
           </div>
           <div class="field">
-            <label style="font-size:11px; color:var(--sub); display:block; margin-bottom:6px; font-weight:600;">Promotional Discount Applied</label>
-            <select id="nfr-promo" style="width:100%; padding:9px 12px; background:var(--panel-2); border:1px solid var(--line-2); border-radius:8px; color:var(--text); font-size:13px;">
+            <label style="font-size:11px; color:var(--text-sub); display:block; margin-bottom:6px; font-weight:600;">Promotional Discount Applied</label>
+            <select id="nfr-promo" style="width:100%; padding:10px 14px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:var(--r-sm); color:var(--text-main); font-size:13px;">
               <option value="1">Yes (Active Promotion)</option>
               <option value="0">No Promotion</option>
             </select>
           </div>
         </div>
-        <button class="btn gold" id="btn-run-nfr-scoring" style="padding:10px 22px; font-size:13px; font-weight:600; cursor:pointer;">Run Dual-Pipeline Scoring Demo</button>
+        <button class="btn ai-aura" id="btn-run-nfr-scoring" style="padding:12px 28px; font-size:13px; font-weight:700; cursor:pointer;">Run Dual-Pipeline Scoring Demo</button>
         <div id="nfr-scoring-result"></div>
-        ` + note('This predictor calls the live Flask REST API endpoint <code>POST /api/v1/predict/ensemble</code> to evaluate the warm MLlib + Scikit-Learn models in real time.', 'em', '⚡'))}
+        ` + note('This predictor calls the live Flask REST API endpoint <code>POST /api/v1/predict/ensemble</code> to evaluate warm MLlib + Scikit-Learn models in real time.', 'em', '⚡'))}
     </div>`;
   } else {
     body=`<div class="grid g2 mb">${panel('Independence evidence','What proves the two pipelines are genuinely separate',

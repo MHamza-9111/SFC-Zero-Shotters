@@ -641,33 +641,43 @@ setInterval(()=>{ /* keep relative labels fresh without re-rendering charts */
         const passBadge = data.nfr_pass ? '<span class="tag em">PASS (&lt; 5000 ms)</span>' : '<span class="tag ox">FAIL</span>';
         const taskLabel = task === 'order_value' ? 'High-Value Order' : 'Customer Churn Risk';
         const decisionText = pred.ensemble_label === 1 ? (task === 'order_value' ? 'HIGH VALUE ORDER' : 'HIGH CHURN RISK') : (task === 'order_value' ? 'STANDARD ORDER' : 'LOW CHURN RISK');
-        const decisionColor = pred.ensemble_label === 1 ? 'var(--emerald-2)' : 'var(--sub)';
+        const decisionColor = pred.ensemble_label === 1 ? 'var(--emerald)' : 'var(--text-sub)';
 
         resultBox.innerHTML = `
-          <div style="background:var(--panel-2); border:1px solid var(--line-2); border-radius:10px; padding:16px; margin-top:12px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+          <div style="background:var(--bg-panel-2); border:1px solid var(--line-glow); border-radius:var(--r-md); padding:20px; margin-top:16px; box-shadow:var(--sh-glow);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
               <div>
-                <b style="color:var(--gold); font-size:15px;">Live Dual-Pipeline Ensemble Scoring</b>
-                <div style="font-size:11px; color:var(--sub);">${esc(taskLabel)} · ${data.record_count} record scored</div>
+                <b class="grad-text" style="font-size:16px; font-family:var(--font-display);">✨ Live Dual-Pipeline Ensemble Scoring</b>
+                <div style="font-size:11px; color:var(--text-sub);">${esc(taskLabel)} · ${data.record_count} record scored via Flask API</div>
               </div>
-              <div style="font-family:JetBrains Mono,monospace; font-size:12px;">
-                Latency: <b style="color:var(--gold-2);">${data.latency_ms} ms</b> ${passBadge}
+              <div style="font-family:var(--font-mono); font-size:12px; display:flex; align-items:center; gap:8px;">
+                Latency: <b style="color:var(--gold);">${data.latency_ms} ms</b> ${passBadge}
               </div>
             </div>
             <div class="grid g4" style="gap:12px;">
-              <div style="background:var(--panel-3); padding:12px; border-radius:8px; border:1px solid var(--line);">
-                <div style="font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:0.05em;">PySpark MLlib Proba</div>
-                <div style="font-size:20px; font-weight:700; color:var(--copper-2); margin-top:4px;">${(pred.pipeline_proba * 100).toFixed(1)}%</div>
-                <div style="font-size:10px; color:var(--muted); margin-top:2px;">Warm PySpark pipeline model</div>
+              <div class="kpi-card">
+                <div class="kpi-lbl">PySpark MLlib Proba</div>
+                <div class="kpi-val grad-text-gold">${(pred.pipeline_proba * 100).toFixed(1)}%</div>
+                <div class="kpi-sub">Warm PySpark pipeline model</div>
               </div>
-              <div style="background:var(--panel-3); padding:12px; border-radius:8px; border:1px solid var(--line);">
-                <div style="font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:0.05em;">Python Sklearn Proba</div>
-                <div style="font-size:20px; font-weight:700; color:var(--emerald-2); margin-top:4px;">${(pred.python_proba * 100).toFixed(1)}%</div>
-                <div style="font-size:10px; color:var(--muted); margin-top:2px;">Independent Python DS model</div>
+              <div class="kpi-card">
+                <div class="kpi-lbl">Python Sklearn Proba</div>
+                <div class="kpi-val grad-text-emerald">${(pred.python_proba * 100).toFixed(1)}%</div>
+                <div class="kpi-sub">Independent Python DS model</div>
               </div>
-              <div style="background:var(--panel-3); padding:12px; border-radius:8px; border:1px solid var(--line);">
-                <div style="font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:0.05em;">Ensemble Avg Proba</div>
-                <div style="font-size:20px; font-weight:700; color:var(--gold-2); margin-top:4px;">${(pred.ensemble_proba * 100).toFixed(1)}%</div>
+              <div class="kpi-card">
+                <div class="kpi-lbl">Ensemble Avg Proba</div>
+                <div class="kpi-val grad-text">${(pred.ensemble_proba * 100).toFixed(1)}%</div>
+                <div class="kpi-sub">50/50 dual probability average</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-lbl">Ensemble Decision</div>
+                <div style="font-size:18px; font-weight:800; color:${decisionColor}; margin-top:8px;">${decisionText}</div>
+                <div class="kpi-sub">Threshold = 0.50</div>
+              </div>
+            </div>
+          </div>
+        `;
                 <div style="font-size:10px; color:var(--muted); margin-top:2px;">50/50 dual probability average</div>
               </div>
               <div style="background:var(--panel-3); padding:12px; border-radius:8px; border:1px solid var(--line);">
