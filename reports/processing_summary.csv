@@ -1,12 +1,12 @@
 dataset,purpose,rows,processing_run
-customers,Customer analytics and segmentation,50000,2026-09-25 12:39:46
-orders,Order processing and time-based analysis,99900,2026-09-25 12:39:46
-orders_completed,Completed orders used for revenue analytics,79930,2026-09-25 12:39:46
-order_items,"Sales, revenue and profit calculations",997205,2026-09-25 12:39:46
-menu_items,Menu performance and profitability,150,2026-09-25 12:39:46
-restaurants,Restaurant performance,20,2026-09-25 12:39:46
-wastage,Wastage and cost analysis,50000,2026-09-25 12:39:46
-ratings,Rating and feedback analysis,99356,2026-09-25 12:39:46
-inventory,Inventory and stock analysis,50000,2026-09-25 12:39:46
-pricing_history,Price-change and price-sensitivity preparation,283,2026-09-25 12:39:46
-promotions,Promotion usage summary,120,2026-09-25 12:39:46
+customers,Customer analytics and segmentation,50000,2026-09-26 00:07:12
+orders,Order processing and time-based analysis,99900,2026-09-26 00:07:12
+orders_completed,Completed orders used for revenue analytics,79930,2026-09-26 00:07:12
+order_items,"Sales, revenue and profit calculations",997205,2026-09-26 00:07:12
+menu_items,Menu performance and profitability,150,2026-09-26 00:07:12
+restaurants,Restaurant performance,20,2026-09-26 00:07:12
+wastage,Wastage and cost analysis,50000,2026-09-26 00:07:12
+ratings,Rating and feedback analysis,99356,2026-09-26 00:07:12
+inventory,Inventory and stock analysis,50000,2026-09-26 00:07:12
+pricing_history,Price-change and price-sensitivity preparation,283,2026-09-26 00:07:12
+promotions,Promotion usage summary,120,2026-09-26 00:07:12

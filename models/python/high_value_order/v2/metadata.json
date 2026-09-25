@@ -1,0 +1,24 @@
+{
+  "model": "RandomForestClassifier (sklearn)",
+  "features": [
+    "order_hour",
+    "day_of_week_code",
+    "order_month",
+    "is_weekend",
+    "is_promo_order",
+    "channel_code",
+    "payment_code",
+    "basket_size",
+    "basket_quantity",
+    "avg_unit_price",
+    "discount_rate_percentage",
+    "total_orders",
+    "total_spend"
+  ],
+  "n_train": 79630,
+  "threshold": 18306.68,
+  "task": "high_value_order",
+  "version": 2,
+  "engine": "python",
+  "trained_at": "2026-09-26 00:08:18"
+}

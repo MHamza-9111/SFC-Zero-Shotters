@@ -1,39 +1,39 @@
 run_time,dataset,action,affected_rows,reason
-2026-09-25 12:39:24,locations.csv,processed,20,Clean location records saved.
-2026-09-25 12:39:24,restaurants.csv,fk_validation_location_id,0,Restaurants must reference a known location.
-2026-09-25 12:39:24,restaurants.csv,processed,20,Clean restaurant records saved.
-2026-09-25 12:39:24,menu_categories.csv,processed,10,Clean category records saved.
-2026-09-25 12:39:24,menu_items.csv,fk_validation_restaurant_category,0,Menu items must reference known restaurants and categories.
-2026-09-25 12:39:24,menu_items.csv,processed,150,Clean menu item records saved.
-2026-09-25 12:39:24,customers.csv,quarantine,250,Problematic records saved to customers_quarantine.csv
-2026-09-25 12:39:24,customers.csv,duplicate_removal,250,Duplicate customer_id records quarantined; first occurrence retained.
-2026-09-25 12:39:24,customers.csv,missing_value_standardization,496,Missing email retained as blank because no valid value can be inferred.
-2026-09-25 12:39:24,customers.csv,processed,50000,Clean customer records saved; missing emails retained as blank.
-2026-09-25 12:39:24,orders.csv,missing_value_standardization,998,Missing payment method retained as blank; value was not guessed.
-2026-09-25 12:39:24,orders.csv,fk_validation_customer_id,0,Orders must reference a known customer.
-2026-09-25 12:39:24,orders.csv,fk_validation_restaurant_id,0,Orders must reference a known restaurant.
-2026-09-25 12:39:24,orders.csv,quarantine,100,Problematic records saved to orders_quarantine.csv
-2026-09-25 12:39:24,orders.csv,fk_validation_analysis_period,100,Order dates must fall inside the 12-month analysis period.
-2026-09-25 12:39:24,orders.csv,processed,99900,Clean order records saved.
-2026-09-25 12:39:24,order_items.csv,quarantine,1001,Problematic records saved to order_items_quarantine.csv
-2026-09-25 12:39:24,order_items.csv,fk_validation_order_id,1001,Order items must reference a known order.
-2026-09-25 12:39:24,order_items.csv,fk_validation_menu_item_id,0,Order items must reference a known menu item.
-2026-09-25 12:39:24,order_items.csv,fk_validation_restaurant_consistency,0,Order items must come from the order's own restaurant menu.
-2026-09-25 12:39:24,order_items.csv,duplicate_line_detection,285,Exact duplicate order lines detected and retained for review.
-2026-09-25 12:39:24,order_items.csv,quarantine,1994,Problematic records saved to order_items_quarantine.csv
-2026-09-25 12:39:24,order_items.csv,processed,997205,Clean order item records saved.
-2026-09-25 12:39:24,pricing_history.csv,fk_validation_menu_item_id,0,Pricing history must reference a known menu item.
-2026-09-25 12:39:24,pricing_history.csv,processed,283,Clean pricing history records saved.
-2026-09-25 12:39:24,promotions.csv,fk_validation_menu_item_id,0,Promotions must reference a known menu item.
-2026-09-25 12:39:24,promotions.csv,fk_validation_restaurant_id,0,Promotions must reference a known restaurant.
-2026-09-25 12:39:24,promotions.csv,processed,120,Clean promotion records saved.
-2026-09-25 12:39:24,ratings.csv,quarantine,107,Problematic records saved to ratings_quarantine.csv
-2026-09-25 12:39:24,ratings.csv,fk_validation_order_id,107,Ratings must reference a known order.
-2026-09-25 12:39:24,ratings.csv,fk_validation_customer_match,0,Ratings must come from the customer of the rated order.
-2026-09-25 12:39:24,ratings.csv,quarantine,537,Problematic records saved to ratings_quarantine.csv
-2026-09-25 12:39:24,ratings.csv,fk_validation_item_in_order,537,Ratings must reference an item present in the order.
-2026-09-25 12:39:24,ratings.csv,processed,99356,Clean rating records saved.
-2026-09-25 12:39:24,inventory.csv,fk_validation_restaurant_item_pair,0,Inventory records must reference items of their own restaurant.
-2026-09-25 12:39:24,inventory.csv,processed,50000,Clean inventory records saved.
-2026-09-25 12:39:24,wastage.csv,fk_validation_restaurant_item_pair,0,Wastage records must reference items of their own restaurant.
-2026-09-25 12:39:24,wastage.csv,processed,50000,Clean wastage records saved.
+2026-09-26 00:06:56,locations.csv,processed,20,Clean location records saved.
+2026-09-26 00:06:56,restaurants.csv,fk_validation_location_id,0,Restaurants must reference a known location.
+2026-09-26 00:06:56,restaurants.csv,processed,20,Clean restaurant records saved.
+2026-09-26 00:06:56,menu_categories.csv,processed,10,Clean category records saved.
+2026-09-26 00:06:56,menu_items.csv,fk_validation_restaurant_category,0,Menu items must reference known restaurants and categories.
+2026-09-26 00:06:56,menu_items.csv,processed,150,Clean menu item records saved.
+2026-09-26 00:06:56,customers.csv,quarantine,250,Problematic records saved to customers_quarantine.csv
+2026-09-26 00:06:56,customers.csv,duplicate_removal,250,Duplicate customer_id records quarantined; first occurrence retained.
+2026-09-26 00:06:56,customers.csv,missing_value_standardization,496,Missing email retained as blank because no valid value can be inferred.
+2026-09-26 00:06:56,customers.csv,processed,50000,Clean customer records saved; missing emails retained as blank.
+2026-09-26 00:06:56,orders.csv,missing_value_standardization,998,Missing payment method retained as blank; value was not guessed.
+2026-09-26 00:06:56,orders.csv,fk_validation_customer_id,0,Orders must reference a known customer.
+2026-09-26 00:06:56,orders.csv,fk_validation_restaurant_id,0,Orders must reference a known restaurant.
+2026-09-26 00:06:56,orders.csv,quarantine,100,Problematic records saved to orders_quarantine.csv
+2026-09-26 00:06:56,orders.csv,fk_validation_analysis_period,100,Order dates must fall inside the 12-month analysis period.
+2026-09-26 00:06:56,orders.csv,processed,99900,Clean order records saved.
+2026-09-26 00:06:56,order_items.csv,quarantine,1001,Problematic records saved to order_items_quarantine.csv
+2026-09-26 00:06:56,order_items.csv,fk_validation_order_id,1001,Order items must reference a known order.
+2026-09-26 00:06:56,order_items.csv,fk_validation_menu_item_id,0,Order items must reference a known menu item.
+2026-09-26 00:06:56,order_items.csv,fk_validation_restaurant_consistency,0,Order items must come from the order's own restaurant menu.
+2026-09-26 00:06:56,order_items.csv,duplicate_line_detection,285,Exact duplicate order lines detected and retained for review.
+2026-09-26 00:06:56,order_items.csv,quarantine,1994,Problematic records saved to order_items_quarantine.csv
+2026-09-26 00:06:56,order_items.csv,processed,997205,Clean order item records saved.
+2026-09-26 00:06:56,pricing_history.csv,fk_validation_menu_item_id,0,Pricing history must reference a known menu item.
+2026-09-26 00:06:56,pricing_history.csv,processed,283,Clean pricing history records saved.
+2026-09-26 00:06:56,promotions.csv,fk_validation_menu_item_id,0,Promotions must reference a known menu item.
+2026-09-26 00:06:56,promotions.csv,fk_validation_restaurant_id,0,Promotions must reference a known restaurant.
+2026-09-26 00:06:56,promotions.csv,processed,120,Clean promotion records saved.
+2026-09-26 00:06:56,ratings.csv,quarantine,107,Problematic records saved to ratings_quarantine.csv
+2026-09-26 00:06:56,ratings.csv,fk_validation_order_id,107,Ratings must reference a known order.
+2026-09-26 00:06:56,ratings.csv,fk_validation_customer_match,0,Ratings must come from the customer of the rated order.
+2026-09-26 00:06:56,ratings.csv,quarantine,537,Problematic records saved to ratings_quarantine.csv
+2026-09-26 00:06:56,ratings.csv,fk_validation_item_in_order,537,Ratings must reference an item present in the order.
+2026-09-26 00:06:56,ratings.csv,processed,99356,Clean rating records saved.
+2026-09-26 00:06:56,inventory.csv,fk_validation_restaurant_item_pair,0,Inventory records must reference items of their own restaurant.
+2026-09-26 00:06:56,inventory.csv,processed,50000,Clean inventory records saved.
+2026-09-26 00:06:56,wastage.csv,fk_validation_restaurant_item_pair,0,Wastage records must reference items of their own restaurant.
+2026-09-26 00:06:56,wastage.csv,processed,50000,Clean wastage records saved.

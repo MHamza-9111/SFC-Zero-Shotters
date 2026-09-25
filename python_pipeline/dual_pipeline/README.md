@@ -1,6 +1,6 @@
 # Dual-Pipeline Comparison Sets (Python side)
 
-Generated: 2026-09-25 12:40:24
+Generated: 2026-09-26 00:07:41
 
 These files are the Python-pipeline side of the SRS dual-pipeline
 comparison. Hamza's Spark pipeline must independently re-derive the

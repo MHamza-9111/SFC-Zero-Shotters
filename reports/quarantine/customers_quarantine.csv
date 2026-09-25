@@ -499,3 +499,253 @@ customer_id,first_name,last_name,gender,date_of_birth,registration_date,location
 28480,Customer28480,User28480,Other,1986-10-04,2024-12-21,14,Takeaway,Burgers,customer28480@example.com,3005080608,Duplicate customer_id; first occurrence retained.
 33488,Customer33488,User33488,Female,1997-06-12,2024-11-13,3,Takeaway,Beverages,customer33488@example.com,3004374368,Duplicate customer_id; first occurrence retained.
 28694,Customer28694,User28694,Other,1974-01-20,2024-09-03,5,Website/App,Desserts,customer28694@example.com,3005646280,Duplicate customer_id; first occurrence retained.
+40057,Customer40057,User40057,Male,1977-01-13,2024-01-23,20,Third-party Delivery,Pizza,customer40057@example.com,3002517580,Duplicate customer_id; first occurrence retained.
+31739,Customer31739,User31739,Male,1983-11-04,2024-04-09,5,Third-party Delivery,Biryani,customer31739@example.com,3009874117,Duplicate customer_id; first occurrence retained.
+33930,Customer33930,User33930,Male,1979-06-22,2024-01-03,5,Takeaway,Burgers,customer33930@example.com,3003264561,Duplicate customer_id; first occurrence retained.
+41400,Customer41400,User41400,Other,1990-02-13,2024-12-17,10,Third-party Delivery,Beverages,customer41400@example.com,3001868741,Duplicate customer_id; first occurrence retained.
+24627,Customer24627,User24627,Other,1992-06-01,2024-11-14,18,Third-party Delivery,BBQ,customer24627@example.com,3006668344,Duplicate customer_id; first occurrence retained.
+31897,Customer31897,User31897,Male,1994-04-06,2024-08-04,11,Third-party Delivery,Desserts,customer31897@example.com,3008070013,Duplicate customer_id; first occurrence retained.
+42829,Customer42829,User42829,Male,2003-05-03,2024-01-13,5,Takeaway,BBQ,customer42829@example.com,3001542752,Duplicate customer_id; first occurrence retained.
+44510,Customer44510,User44510,Female,1986-09-28,2024-09-01,5,Third-party Delivery,Beverages,customer44510@example.com,3004522739,Duplicate customer_id; first occurrence retained.
+39051,Customer39051,User39051,Male,1986-01-22,2024-05-25,11,Dine-in,Burgers,customer39051@example.com,3002545282,Duplicate customer_id; first occurrence retained.
+12199,Customer12199,User12199,Other,1982-09-10,2024-11-09,1,Website/App,Desserts,customer12199@example.com,3008579580,Duplicate customer_id; first occurrence retained.
+34847,Customer34847,User34847,Female,2004-10-10,2024-05-22,13,Third-party Delivery,Biryani,customer34847@example.com,3001780507,Duplicate customer_id; first occurrence retained.
+17976,Customer17976,User17976,Female,1994-05-17,2024-02-16,8,Takeaway,BBQ,customer17976@example.com,3004892975,Duplicate customer_id; first occurrence retained.
+19453,Customer19453,User19453,Female,1993-12-16,2024-04-01,4,Takeaway,Salads,customer19453@example.com,3004133979,Duplicate customer_id; first occurrence retained.
+36817,Customer36817,User36817,Male,1981-06-10,2024-08-16,6,Dine-in,Salads,customer36817@example.com,3008196034,Duplicate customer_id; first occurrence retained.
+15954,Customer15954,User15954,Female,1996-01-21,2024-01-26,20,Takeaway,Desserts,customer15954@example.com,3006460157,Duplicate customer_id; first occurrence retained.
+25435,Customer25435,User25435,Other,2001-01-08,2024-01-09,9,Takeaway,BBQ,customer25435@example.com,3006120647,Duplicate customer_id; first occurrence retained.
+44072,Customer44072,User44072,Other,1998-01-19,2024-06-15,16,Dine-in,Rice,customer44072@example.com,3001868603,Duplicate customer_id; first occurrence retained.
+6728,Customer6728,User6728,Male,1975-10-15,2024-01-21,7,Dine-in,Desserts,customer6728@example.com,3009812089,Duplicate customer_id; first occurrence retained.
+34810,Customer34810,User34810,Other,1978-03-19,2024-05-07,1,Takeaway,Beverages,customer34810@example.com,3007347690,Duplicate customer_id; first occurrence retained.
+46282,Customer46282,User46282,Male,1972-10-19,2024-07-25,13,Website/App,Sandwiches,customer46282@example.com,3005743378,Duplicate customer_id; first occurrence retained.
+46086,Customer46086,User46086,Other,2003-08-04,2024-05-08,17,Dine-in,Desserts,customer46086@example.com,3003905389,Duplicate customer_id; first occurrence retained.
+12957,Customer12957,User12957,Male,1982-12-08,2024-06-15,10,Third-party Delivery,Pasta,,3004492769,Duplicate customer_id; first occurrence retained.
+22101,Customer22101,User22101,Male,1973-11-18,2024-05-23,11,Takeaway,Biryani,customer22101@example.com,3002490605,Duplicate customer_id; first occurrence retained.
+36739,Customer36739,User36739,Other,1979-03-16,2024-07-22,10,Dine-in,Burgers,customer36739@example.com,3002422812,Duplicate customer_id; first occurrence retained.
+35824,Customer35824,User35824,Female,1999-09-04,2024-03-13,12,Dine-in,Pizza,customer35824@example.com,3006862324,Duplicate customer_id; first occurrence retained.
+15679,Customer15679,User15679,Male,1977-02-01,2024-02-25,19,Third-party Delivery,Beverages,customer15679@example.com,3005019995,Duplicate customer_id; first occurrence retained.
+28706,Customer28706,User28706,Male,1984-03-23,2024-05-27,7,Takeaway,BBQ,customer28706@example.com,3008286152,Duplicate customer_id; first occurrence retained.
+35193,Customer35193,User35193,Female,1976-08-12,2024-03-28,12,Takeaway,Rice,customer35193@example.com,3007203988,Duplicate customer_id; first occurrence retained.
+6045,Customer6045,User6045,Other,1973-09-17,2024-06-25,17,Dine-in,Beverages,customer6045@example.com,3003054642,Duplicate customer_id; first occurrence retained.
+25201,Customer25201,User25201,Female,1994-12-24,2024-11-06,3,Dine-in,BBQ,customer25201@example.com,3001252422,Duplicate customer_id; first occurrence retained.
+27207,Customer27207,User27207,Male,1980-06-10,2024-01-05,19,Takeaway,Sandwiches,customer27207@example.com,3006075904,Duplicate customer_id; first occurrence retained.
+6846,Customer6846,User6846,Male,2002-09-04,2024-07-20,1,Takeaway,Pasta,customer6846@example.com,3004641570,Duplicate customer_id; first occurrence retained.
+9599,Customer9599,User9599,Female,1984-01-27,2024-09-03,13,Takeaway,BBQ,customer9599@example.com,3009401868,Duplicate customer_id; first occurrence retained.
+15228,Customer15228,User15228,Other,1985-06-04,2024-09-11,6,Third-party Delivery,Beverages,customer15228@example.com,3008880509,Duplicate customer_id; first occurrence retained.
+422,Customer422,User422,Other,1975-05-07,2024-12-24,12,Takeaway,Sandwiches,customer422@example.com,3009599207,Duplicate customer_id; first occurrence retained.
+8787,Customer8787,User8787,Female,2001-11-15,2024-03-27,8,Website/App,Pasta,customer8787@example.com,3002409476,Duplicate customer_id; first occurrence retained.
+7091,Customer7091,User7091,Other,1973-05-16,2024-11-14,3,Website/App,Pasta,customer7091@example.com,3008056599,Duplicate customer_id; first occurrence retained.
+48995,Customer48995,User48995,Male,1971-08-27,2024-12-16,8,Website/App,Beverages,customer48995@example.com,3008922043,Duplicate customer_id; first occurrence retained.
+14563,Customer14563,User14563,Female,1993-04-11,2024-10-02,12,Website/App,Burgers,customer14563@example.com,3005624134,Duplicate customer_id; first occurrence retained.
+46845,Customer46845,User46845,Female,1983-12-19,2024-04-28,3,Third-party Delivery,BBQ,customer46845@example.com,3006600586,Duplicate customer_id; first occurrence retained.
+46490,Customer46490,User46490,Female,2000-01-02,2024-03-15,4,Website/App,Pizza,customer46490@example.com,3009819919,Duplicate customer_id; first occurrence retained.
+26981,Customer26981,User26981,Other,1981-11-26,2024-02-19,3,Third-party Delivery,Rice,customer26981@example.com,3007046768,Duplicate customer_id; first occurrence retained.
+42814,Customer42814,User42814,Male,1984-08-24,2024-12-26,15,Takeaway,Pizza,customer42814@example.com,3009422213,Duplicate customer_id; first occurrence retained.
+16545,Customer16545,User16545,Other,1995-08-04,2024-08-01,4,Takeaway,Sandwiches,customer16545@example.com,3007672592,Duplicate customer_id; first occurrence retained.
+37776,Customer37776,User37776,Other,2004-01-13,2024-03-23,19,Website/App,BBQ,customer37776@example.com,3004029225,Duplicate customer_id; first occurrence retained.
+30174,Customer30174,User30174,Male,1986-08-16,2024-02-21,17,Website/App,Beverages,customer30174@example.com,3006993872,Duplicate customer_id; first occurrence retained.
+7566,Customer7566,User7566,Female,1983-10-15,2024-10-25,2,Dine-in,Pasta,customer7566@example.com,3008697848,Duplicate customer_id; first occurrence retained.
+42329,Customer42329,User42329,Female,1984-09-20,2024-05-08,5,Third-party Delivery,Pasta,customer42329@example.com,3007438422,Duplicate customer_id; first occurrence retained.
+23201,Customer23201,User23201,Other,1986-02-23,2024-03-16,13,Takeaway,BBQ,customer23201@example.com,3009497680,Duplicate customer_id; first occurrence retained.
+18117,Customer18117,User18117,Male,1982-10-18,2024-10-14,11,Takeaway,Biryani,customer18117@example.com,3007891722,Duplicate customer_id; first occurrence retained.
+21942,Customer21942,User21942,Female,1995-07-02,2024-04-26,10,Website/App,Salads,customer21942@example.com,3008828417,Duplicate customer_id; first occurrence retained.
+37277,Customer37277,User37277,Female,1985-10-04,2024-07-18,12,Takeaway,Desserts,customer37277@example.com,3004433894,Duplicate customer_id; first occurrence retained.
+34734,Customer34734,User34734,Other,1998-11-19,2024-07-22,18,Third-party Delivery,Rice,customer34734@example.com,3003708863,Duplicate customer_id; first occurrence retained.
+20382,Customer20382,User20382,Male,1992-07-02,2024-07-13,6,Third-party Delivery,Pizza,customer20382@example.com,3007495988,Duplicate customer_id; first occurrence retained.
+30235,Customer30235,User30235,Female,1973-05-05,2024-09-12,8,Website/App,Pizza,customer30235@example.com,3001467765,Duplicate customer_id; first occurrence retained.
+7016,Customer7016,User7016,Other,1988-09-21,2024-01-25,15,Takeaway,Burgers,customer7016@example.com,3008392752,Duplicate customer_id; first occurrence retained.
+46269,Customer46269,User46269,Other,1989-05-05,2024-09-13,14,Third-party Delivery,Sandwiches,customer46269@example.com,3002350599,Duplicate customer_id; first occurrence retained.
+13688,Customer13688,User13688,Male,1994-11-08,2024-12-16,17,Takeaway,Burgers,customer13688@example.com,3001671297,Duplicate customer_id; first occurrence retained.
+2198,Customer2198,User2198,Other,1993-07-27,2024-07-15,2,Third-party Delivery,Rice,customer2198@example.com,3007610243,Duplicate customer_id; first occurrence retained.
+11911,Customer11911,User11911,Female,1982-11-15,2024-03-20,11,Website/App,Pizza,customer11911@example.com,3003775576,Duplicate customer_id; first occurrence retained.
+1065,Customer1065,User1065,Female,1989-04-10,2024-12-09,18,Dine-in,Biryani,customer1065@example.com,3004756912,Duplicate customer_id; first occurrence retained.
+46821,Customer46821,User46821,Other,1970-04-17,2024-12-26,11,Website/App,BBQ,customer46821@example.com,3004815946,Duplicate customer_id; first occurrence retained.
+27613,Customer27613,User27613,Other,1998-03-22,2024-04-06,7,Dine-in,Biryani,customer27613@example.com,3005702036,Duplicate customer_id; first occurrence retained.
+14437,Customer14437,User14437,Female,1998-04-28,2024-10-18,12,Takeaway,Sandwiches,customer14437@example.com,3001241223,Duplicate customer_id; first occurrence retained.
+48930,Customer48930,User48930,Male,1986-06-13,2024-02-18,16,Dine-in,BBQ,customer48930@example.com,3007785756,Duplicate customer_id; first occurrence retained.
+17680,Customer17680,User17680,Female,1995-06-08,2024-08-17,11,Dine-in,Pizza,customer17680@example.com,3006802513,Duplicate customer_id; first occurrence retained.
+5757,Customer5757,User5757,Male,1991-01-14,2024-10-22,16,Takeaway,Burgers,customer5757@example.com,3004473685,Duplicate customer_id; first occurrence retained.
+48076,Customer48076,User48076,Female,1991-11-24,2024-07-09,2,Dine-in,Desserts,customer48076@example.com,3003322068,Duplicate customer_id; first occurrence retained.
+24102,Customer24102,User24102,Male,2003-02-08,2024-11-02,15,Website/App,Sandwiches,customer24102@example.com,3009626871,Duplicate customer_id; first occurrence retained.
+44360,Customer44360,User44360,Male,1972-05-12,2024-09-14,7,Website/App,BBQ,customer44360@example.com,3004506841,Duplicate customer_id; first occurrence retained.
+18957,Customer18957,User18957,Other,1985-06-14,2024-11-15,11,Third-party Delivery,Salads,customer18957@example.com,3005640435,Duplicate customer_id; first occurrence retained.
+22840,Customer22840,User22840,Female,1973-01-17,2024-07-20,6,Dine-in,Burgers,customer22840@example.com,3005795857,Duplicate customer_id; first occurrence retained.
+31607,Customer31607,User31607,Other,1989-12-04,2024-12-18,12,Third-party Delivery,Rice,customer31607@example.com,3001597599,Duplicate customer_id; first occurrence retained.
+23853,Customer23853,User23853,Male,2004-12-08,2024-08-19,8,Takeaway,Pasta,customer23853@example.com,3005438742,Duplicate customer_id; first occurrence retained.
+1792,Customer1792,User1792,Female,1974-09-12,2024-02-16,10,Website/App,Sandwiches,customer1792@example.com,3001381383,Duplicate customer_id; first occurrence retained.
+29499,Customer29499,User29499,Female,1979-05-24,2024-02-07,6,Third-party Delivery,Biryani,customer29499@example.com,3007048139,Duplicate customer_id; first occurrence retained.
+7807,Customer7807,User7807,Male,1995-10-17,2024-02-11,8,Takeaway,BBQ,customer7807@example.com,3007028690,Duplicate customer_id; first occurrence retained.
+19738,Customer19738,User19738,Female,1979-10-22,2024-02-01,9,Third-party Delivery,Pasta,customer19738@example.com,3008274189,Duplicate customer_id; first occurrence retained.
+45816,Customer45816,User45816,Female,1976-01-12,2024-03-24,9,Dine-in,Pasta,customer45816@example.com,3009878783,Duplicate customer_id; first occurrence retained.
+9489,Customer9489,User9489,Other,2002-06-22,2024-08-11,3,Third-party Delivery,BBQ,customer9489@example.com,3004938416,Duplicate customer_id; first occurrence retained.
+17145,Customer17145,User17145,Male,2003-08-25,2024-04-22,1,Third-party Delivery,Rice,customer17145@example.com,3005286955,Duplicate customer_id; first occurrence retained.
+12001,Customer12001,User12001,Female,1982-03-15,2024-06-19,5,Takeaway,Pasta,customer12001@example.com,3002331964,Duplicate customer_id; first occurrence retained.
+25230,Customer25230,User25230,Other,1984-01-24,2024-02-23,8,Takeaway,Rice,customer25230@example.com,3001695382,Duplicate customer_id; first occurrence retained.
+17532,Customer17532,User17532,Other,1973-01-22,2024-08-19,20,Website/App,Beverages,customer17532@example.com,3001573692,Duplicate customer_id; first occurrence retained.
+19045,Customer19045,User19045,Female,1984-07-02,2024-08-05,2,Third-party Delivery,Desserts,customer19045@example.com,3004491874,Duplicate customer_id; first occurrence retained.
+2494,Customer2494,User2494,Female,1981-03-15,2024-07-08,10,Third-party Delivery,Burgers,customer2494@example.com,3002796352,Duplicate customer_id; first occurrence retained.
+9148,Customer9148,User9148,Female,1999-11-18,2024-06-10,2,Third-party Delivery,Salads,customer9148@example.com,3005364478,Duplicate customer_id; first occurrence retained.
+13113,Customer13113,User13113,Female,1981-08-03,2024-12-02,14,Third-party Delivery,Beverages,customer13113@example.com,3009448222,Duplicate customer_id; first occurrence retained.
+49571,Customer49571,User49571,Male,1981-08-26,2024-08-04,3,Website/App,Salads,customer49571@example.com,3006467683,Duplicate customer_id; first occurrence retained.
+47890,Customer47890,User47890,Other,1997-01-17,2024-03-16,11,Dine-in,Rice,customer47890@example.com,3005894495,Duplicate customer_id; first occurrence retained.
+11311,Customer11311,User11311,Female,1982-05-19,2024-06-07,18,Dine-in,Burgers,customer11311@example.com,3002965226,Duplicate customer_id; first occurrence retained.
+1187,Customer1187,User1187,Other,2000-07-11,2024-01-06,9,Dine-in,Biryani,customer1187@example.com,3001163307,Duplicate customer_id; first occurrence retained.
+14565,Customer14565,User14565,Male,1981-07-20,2024-08-13,8,Third-party Delivery,Sandwiches,customer14565@example.com,3008762821,Duplicate customer_id; first occurrence retained.
+34581,Customer34581,User34581,Female,1998-04-05,2024-03-19,16,Dine-in,Sandwiches,customer34581@example.com,3007809837,Duplicate customer_id; first occurrence retained.
+25658,Customer25658,User25658,Other,1985-11-03,2024-10-12,5,Website/App,Biryani,customer25658@example.com,3008452991,Duplicate customer_id; first occurrence retained.
+36624,Customer36624,User36624,Male,1992-05-07,2024-11-09,19,Takeaway,Beverages,customer36624@example.com,3009543072,Duplicate customer_id; first occurrence retained.
+42470,Customer42470,User42470,Female,1988-01-08,2024-10-07,20,Website/App,Sandwiches,customer42470@example.com,3004071188,Duplicate customer_id; first occurrence retained.
+27752,Customer27752,User27752,Female,1978-12-05,2024-11-06,7,Dine-in,Salads,customer27752@example.com,3002747634,Duplicate customer_id; first occurrence retained.
+17625,Customer17625,User17625,Other,1990-03-26,2024-12-01,16,Takeaway,Sandwiches,customer17625@example.com,3001443353,Duplicate customer_id; first occurrence retained.
+8834,Customer8834,User8834,Female,1987-01-27,2024-09-17,11,Dine-in,Desserts,customer8834@example.com,3006154282,Duplicate customer_id; first occurrence retained.
+36760,Customer36760,User36760,Male,1991-07-02,2024-06-07,18,Takeaway,Salads,customer36760@example.com,3004272842,Duplicate customer_id; first occurrence retained.
+48223,Customer48223,User48223,Male,1989-09-18,2024-01-13,2,Third-party Delivery,Sandwiches,customer48223@example.com,3006903258,Duplicate customer_id; first occurrence retained.
+24184,Customer24184,User24184,Other,1999-11-09,2024-02-27,20,Website/App,BBQ,customer24184@example.com,3002457428,Duplicate customer_id; first occurrence retained.
+37611,Customer37611,User37611,Male,1999-04-03,2024-07-27,10,Takeaway,Desserts,customer37611@example.com,3005039639,Duplicate customer_id; first occurrence retained.
+19628,Customer19628,User19628,Other,1973-04-26,2024-10-12,7,Takeaway,BBQ,customer19628@example.com,3001175671,Duplicate customer_id; first occurrence retained.
+28290,Customer28290,User28290,Male,1970-01-14,2024-11-16,3,Dine-in,Biryani,customer28290@example.com,3009980917,Duplicate customer_id; first occurrence retained.
+36689,Customer36689,User36689,Male,1999-11-06,2024-09-22,3,Dine-in,Biryani,customer36689@example.com,3007580350,Duplicate customer_id; first occurrence retained.
+3471,Customer3471,User3471,Female,1972-09-24,2024-12-02,19,Takeaway,Salads,customer3471@example.com,3009321087,Duplicate customer_id; first occurrence retained.
+14420,Customer14420,User14420,Male,1974-05-24,2024-08-05,5,Takeaway,Biryani,customer14420@example.com,3005999945,Duplicate customer_id; first occurrence retained.
+44918,Customer44918,User44918,Male,1973-05-06,2024-02-02,2,Website/App,Salads,customer44918@example.com,3007108322,Duplicate customer_id; first occurrence retained.
+24864,Customer24864,User24864,Female,2001-08-03,2024-09-03,20,Takeaway,Desserts,customer24864@example.com,3004574569,Duplicate customer_id; first occurrence retained.
+18005,Customer18005,User18005,Other,1996-05-05,2024-03-28,1,Takeaway,Pizza,customer18005@example.com,3003288387,Duplicate customer_id; first occurrence retained.
+45242,Customer45242,User45242,Other,1972-09-03,2024-01-12,19,Third-party Delivery,Sandwiches,customer45242@example.com,3009733176,Duplicate customer_id; first occurrence retained.
+9317,Customer9317,User9317,Male,2003-03-14,2024-08-17,5,Takeaway,Desserts,customer9317@example.com,3006918016,Duplicate customer_id; first occurrence retained.
+45090,Customer45090,User45090,Female,1970-02-20,2024-06-21,12,Website/App,Desserts,customer45090@example.com,3001267574,Duplicate customer_id; first occurrence retained.
+4259,Customer4259,User4259,Female,2002-10-12,2024-10-04,12,Takeaway,Biryani,customer4259@example.com,3006115954,Duplicate customer_id; first occurrence retained.
+3983,Customer3983,User3983,Female,1975-09-06,2024-08-05,7,Takeaway,Sandwiches,customer3983@example.com,3005605141,Duplicate customer_id; first occurrence retained.
+20478,Customer20478,User20478,Female,2004-02-23,2024-01-07,18,Dine-in,Sandwiches,customer20478@example.com,3006479445,Duplicate customer_id; first occurrence retained.
+3809,Customer3809,User3809,Female,1989-12-27,2024-12-05,4,Website/App,Desserts,customer3809@example.com,3004732223,Duplicate customer_id; first occurrence retained.
+34785,Customer34785,User34785,Female,1983-02-10,2024-10-11,18,Website/App,Biryani,customer34785@example.com,3004707280,Duplicate customer_id; first occurrence retained.
+16589,Customer16589,User16589,Male,2004-07-23,2024-06-08,15,Takeaway,Biryani,customer16589@example.com,3002088755,Duplicate customer_id; first occurrence retained.
+38835,Customer38835,User38835,Other,1995-07-26,2024-01-14,15,Website/App,Pasta,customer38835@example.com,3007032821,Duplicate customer_id; first occurrence retained.
+31140,Customer31140,User31140,Male,1979-02-28,2024-11-27,14,Takeaway,Pizza,customer31140@example.com,3005585981,Duplicate customer_id; first occurrence retained.
+4959,Customer4959,User4959,Female,2003-03-02,2024-08-05,4,Third-party Delivery,Biryani,customer4959@example.com,3005534903,Duplicate customer_id; first occurrence retained.
+15863,Customer15863,User15863,Other,1971-01-16,2024-04-23,19,Takeaway,Beverages,customer15863@example.com,3008991932,Duplicate customer_id; first occurrence retained.
+11238,Customer11238,User11238,Female,1994-01-14,2024-12-20,10,Takeaway,Burgers,customer11238@example.com,3003233293,Duplicate customer_id; first occurrence retained.
+40311,Customer40311,User40311,Other,1978-10-14,2024-10-16,14,Takeaway,Biryani,customer40311@example.com,3005380412,Duplicate customer_id; first occurrence retained.
+32422,Customer32422,User32422,Male,1976-09-02,2024-06-11,8,Website/App,Desserts,customer32422@example.com,3007093616,Duplicate customer_id; first occurrence retained.
+24908,Customer24908,User24908,Male,1995-10-28,2024-03-20,6,Dine-in,Burgers,customer24908@example.com,3009384307,Duplicate customer_id; first occurrence retained.
+11929,Customer11929,User11929,Other,1974-06-16,2024-11-07,14,Takeaway,Pasta,customer11929@example.com,3007927403,Duplicate customer_id; first occurrence retained.
+11427,Customer11427,User11427,Other,1987-12-07,2024-07-14,9,Website/App,Sandwiches,customer11427@example.com,3001202931,Duplicate customer_id; first occurrence retained.
+38977,Customer38977,User38977,Female,1989-09-13,2024-03-25,17,Dine-in,Beverages,customer38977@example.com,3009427137,Duplicate customer_id; first occurrence retained.
+27188,Customer27188,User27188,Female,1972-11-19,2024-03-15,18,Website/App,Burgers,customer27188@example.com,3003907311,Duplicate customer_id; first occurrence retained.
+3336,Customer3336,User3336,Female,1990-08-09,2024-11-21,9,Third-party Delivery,Pasta,customer3336@example.com,3004603245,Duplicate customer_id; first occurrence retained.
+31420,Customer31420,User31420,Male,1984-12-11,2024-03-01,11,Takeaway,BBQ,customer31420@example.com,3007554030,Duplicate customer_id; first occurrence retained.
+27546,Customer27546,User27546,Other,1974-04-27,2024-04-26,8,Website/App,Salads,customer27546@example.com,3005470473,Duplicate customer_id; first occurrence retained.
+12396,Customer12396,User12396,Male,1992-05-25,2024-07-22,8,Takeaway,Burgers,customer12396@example.com,3009297205,Duplicate customer_id; first occurrence retained.
+41164,Customer41164,User41164,Male,1988-09-01,2024-03-08,15,Website/App,Pasta,customer41164@example.com,3009294925,Duplicate customer_id; first occurrence retained.
+32799,Customer32799,User32799,Female,1976-10-27,2024-09-12,4,Dine-in,Desserts,customer32799@example.com,3008396277,Duplicate customer_id; first occurrence retained.
+39628,Customer39628,User39628,Female,1971-08-27,2024-06-02,12,Dine-in,BBQ,customer39628@example.com,3007739004,Duplicate customer_id; first occurrence retained.
+27725,Customer27725,User27725,Male,1970-10-06,2024-09-17,13,Takeaway,Pizza,customer27725@example.com,3008007974,Duplicate customer_id; first occurrence retained.
+17330,Customer17330,User17330,Male,1991-07-27,2024-08-22,5,Website/App,BBQ,customer17330@example.com,3004736762,Duplicate customer_id; first occurrence retained.
+40245,Customer40245,User40245,Female,1983-06-23,2024-07-25,8,Third-party Delivery,Desserts,customer40245@example.com,3001623920,Duplicate customer_id; first occurrence retained.
+18299,Customer18299,User18299,Male,1991-09-28,2024-04-18,12,Takeaway,BBQ,customer18299@example.com,3001250058,Duplicate customer_id; first occurrence retained.
+22052,Customer22052,User22052,Female,2000-06-23,2024-06-03,6,Dine-in,Biryani,customer22052@example.com,3001617895,Duplicate customer_id; first occurrence retained.
+20879,Customer20879,User20879,Male,1984-12-16,2024-02-27,6,Dine-in,Burgers,customer20879@example.com,3009018872,Duplicate customer_id; first occurrence retained.
+34081,Customer34081,User34081,Other,1987-07-03,2024-11-28,7,Website/App,BBQ,customer34081@example.com,3002426464,Duplicate customer_id; first occurrence retained.
+3400,Customer3400,User3400,Female,1978-11-28,2024-12-03,2,Website/App,Sandwiches,customer3400@example.com,3007963424,Duplicate customer_id; first occurrence retained.
+19970,Customer19970,User19970,Female,1973-10-24,2024-11-12,20,Dine-in,Beverages,customer19970@example.com,3004996543,Duplicate customer_id; first occurrence retained.
+35637,Customer35637,User35637,Other,1989-09-20,2024-05-24,13,Third-party Delivery,Pasta,customer35637@example.com,3004960120,Duplicate customer_id; first occurrence retained.
+27291,Customer27291,User27291,Other,1977-03-17,2024-10-28,8,Website/App,Pizza,customer27291@example.com,3004465799,Duplicate customer_id; first occurrence retained.
+27775,Customer27775,User27775,Female,1979-10-01,2024-04-28,17,Website/App,Pasta,customer27775@example.com,3006732770,Duplicate customer_id; first occurrence retained.
+27328,Customer27328,User27328,Other,1993-03-24,2024-05-16,9,Website/App,Burgers,customer27328@example.com,3005325704,Duplicate customer_id; first occurrence retained.
+2368,Customer2368,User2368,Other,1983-01-12,2024-07-10,4,Website/App,Salads,customer2368@example.com,3004214210,Duplicate customer_id; first occurrence retained.
+42409,Customer42409,User42409,Male,2002-11-02,2024-12-03,5,Website/App,Pizza,customer42409@example.com,3008699431,Duplicate customer_id; first occurrence retained.
+18625,Customer18625,User18625,Male,1985-01-11,2024-01-24,8,Takeaway,Pasta,customer18625@example.com,3004865112,Duplicate customer_id; first occurrence retained.
+16799,Customer16799,User16799,Other,2002-04-25,2024-06-25,15,Third-party Delivery,BBQ,customer16799@example.com,3004350097,Duplicate customer_id; first occurrence retained.
+39277,Customer39277,User39277,Male,1994-02-14,2024-06-06,3,Takeaway,Pasta,customer39277@example.com,3001502702,Duplicate customer_id; first occurrence retained.
+9200,Customer9200,User9200,Male,2004-01-15,2024-08-18,12,Website/App,Salads,customer9200@example.com,3002437078,Duplicate customer_id; first occurrence retained.
+12933,Customer12933,User12933,Male,1984-04-14,2024-10-23,20,Third-party Delivery,Pizza,customer12933@example.com,3008498003,Duplicate customer_id; first occurrence retained.
+5133,Customer5133,User5133,Female,1975-01-08,2024-06-13,12,Third-party Delivery,BBQ,customer5133@example.com,3001869156,Duplicate customer_id; first occurrence retained.
+44077,Customer44077,User44077,Other,1992-03-17,2024-03-12,3,Takeaway,Burgers,customer44077@example.com,3001514341,Duplicate customer_id; first occurrence retained.
+1743,Customer1743,User1743,Male,1970-02-06,2024-01-09,16,Dine-in,Rice,customer1743@example.com,3008856881,Duplicate customer_id; first occurrence retained.
+6131,Customer6131,User6131,Male,1987-03-18,2024-02-04,12,Third-party Delivery,Sandwiches,customer6131@example.com,3006668655,Duplicate customer_id; first occurrence retained.
+6628,Customer6628,User6628,Male,1999-06-02,2024-12-27,14,Takeaway,Rice,customer6628@example.com,3005163886,Duplicate customer_id; first occurrence retained.
+1725,Customer1725,User1725,Male,1995-03-06,2024-01-16,5,Takeaway,Rice,customer1725@example.com,3007160440,Duplicate customer_id; first occurrence retained.
+23936,Customer23936,User23936,Female,1997-08-17,2024-04-03,19,Third-party Delivery,Biryani,customer23936@example.com,3003950840,Duplicate customer_id; first occurrence retained.
+26936,Customer26936,User26936,Female,2000-03-28,2024-12-09,2,Dine-in,Beverages,customer26936@example.com,3003892635,Duplicate customer_id; first occurrence retained.
+12320,Customer12320,User12320,Other,1972-02-25,2024-08-04,13,Website/App,Pasta,customer12320@example.com,3005565859,Duplicate customer_id; first occurrence retained.
+21754,Customer21754,User21754,Other,2001-07-21,2024-04-07,9,Third-party Delivery,BBQ,customer21754@example.com,3005897029,Duplicate customer_id; first occurrence retained.
+7707,Customer7707,User7707,Female,1997-12-24,2024-12-21,10,Dine-in,Burgers,customer7707@example.com,3006167749,Duplicate customer_id; first occurrence retained.
+27470,Customer27470,User27470,Male,1971-09-23,2024-02-15,14,Dine-in,Biryani,customer27470@example.com,3002725074,Duplicate customer_id; first occurrence retained.
+46331,Customer46331,User46331,Other,1984-01-09,2024-11-20,8,Takeaway,Burgers,customer46331@example.com,3002399287,Duplicate customer_id; first occurrence retained.
+21114,Customer21114,User21114,Male,1984-05-13,2024-09-01,10,Dine-in,Beverages,customer21114@example.com,3003078436,Duplicate customer_id; first occurrence retained.
+14778,Customer14778,User14778,Other,1995-07-05,2024-09-08,1,Third-party Delivery,Rice,customer14778@example.com,3004844491,Duplicate customer_id; first occurrence retained.
+11943,Customer11943,User11943,Other,1992-05-28,2024-05-02,19,Third-party Delivery,BBQ,customer11943@example.com,3002890075,Duplicate customer_id; first occurrence retained.
+15498,Customer15498,User15498,Male,1986-12-06,2024-10-01,2,Dine-in,Sandwiches,customer15498@example.com,3006210867,Duplicate customer_id; first occurrence retained.
+21496,Customer21496,User21496,Female,1999-07-27,2024-06-24,13,Website/App,BBQ,customer21496@example.com,3002257243,Duplicate customer_id; first occurrence retained.
+20833,Customer20833,User20833,Other,1983-08-18,2024-11-17,3,Takeaway,Biryani,customer20833@example.com,3004514128,Duplicate customer_id; first occurrence retained.
+31490,Customer31490,User31490,Other,2004-08-03,2024-08-27,19,Dine-in,Salads,customer31490@example.com,3004660627,Duplicate customer_id; first occurrence retained.
+9308,Customer9308,User9308,Other,1989-03-01,2024-12-13,12,Website/App,BBQ,customer9308@example.com,3005610252,Duplicate customer_id; first occurrence retained.
+20545,Customer20545,User20545,Male,1976-02-06,2024-01-18,11,Website/App,Pasta,customer20545@example.com,3007778818,Duplicate customer_id; first occurrence retained.
+48303,Customer48303,User48303,Male,2003-11-19,2024-10-25,4,Takeaway,Desserts,customer48303@example.com,3001600197,Duplicate customer_id; first occurrence retained.
+24447,Customer24447,User24447,Male,1996-05-24,2024-07-07,17,Takeaway,Pizza,customer24447@example.com,3005048672,Duplicate customer_id; first occurrence retained.
+4728,Customer4728,User4728,Male,1987-03-22,2024-03-16,10,Third-party Delivery,Sandwiches,customer4728@example.com,3006864827,Duplicate customer_id; first occurrence retained.
+781,Customer781,User781,Female,1981-07-26,2024-03-01,10,Website/App,Rice,customer781@example.com,3008566133,Duplicate customer_id; first occurrence retained.
+12769,Customer12769,User12769,Other,2003-05-09,2024-04-27,15,Third-party Delivery,Sandwiches,customer12769@example.com,3003517586,Duplicate customer_id; first occurrence retained.
+24508,Customer24508,User24508,Other,1998-05-12,2024-02-27,2,Third-party Delivery,Burgers,customer24508@example.com,3004801443,Duplicate customer_id; first occurrence retained.
+41966,Customer41966,User41966,Female,1980-08-08,2024-03-13,11,Takeaway,Rice,customer41966@example.com,3004838845,Duplicate customer_id; first occurrence retained.
+10969,Customer10969,User10969,Female,1981-04-02,2024-06-01,9,Third-party Delivery,Beverages,customer10969@example.com,3003339832,Duplicate customer_id; first occurrence retained.
+43826,Customer43826,User43826,Male,1971-04-22,2024-12-16,1,Takeaway,Pasta,customer43826@example.com,3006508646,Duplicate customer_id; first occurrence retained.
+5690,Customer5690,User5690,Male,1974-09-02,2024-03-08,18,Website/App,Beverages,customer5690@example.com,3008396985,Duplicate customer_id; first occurrence retained.
+48110,Customer48110,User48110,Male,1973-07-07,2024-05-05,5,Third-party Delivery,Biryani,customer48110@example.com,3002011939,Duplicate customer_id; first occurrence retained.
+9469,Customer9469,User9469,Male,1989-08-06,2024-10-09,17,Website/App,Biryani,customer9469@example.com,3004082659,Duplicate customer_id; first occurrence retained.
+10815,Customer10815,User10815,Other,2004-07-24,2024-11-19,17,Website/App,Desserts,customer10815@example.com,3006379514,Duplicate customer_id; first occurrence retained.
+27732,Customer27732,User27732,Female,1989-02-18,2024-04-24,8,Third-party Delivery,Sandwiches,customer27732@example.com,3001183661,Duplicate customer_id; first occurrence retained.
+46025,Customer46025,User46025,Other,1998-11-16,2024-06-11,14,Takeaway,BBQ,customer46025@example.com,3008367848,Duplicate customer_id; first occurrence retained.
+16529,Customer16529,User16529,Other,1992-08-21,2024-09-06,19,Website/App,Pizza,customer16529@example.com,3004198269,Duplicate customer_id; first occurrence retained.
+39919,Customer39919,User39919,Other,1971-10-10,2024-03-25,20,Takeaway,Desserts,customer39919@example.com,3001152634,Duplicate customer_id; first occurrence retained.
+40623,Customer40623,User40623,Other,1995-02-05,2024-10-03,10,Website/App,Sandwiches,customer40623@example.com,3006342483,Duplicate customer_id; first occurrence retained.
+27747,Customer27747,User27747,Female,2003-12-14,2024-12-03,11,Dine-in,BBQ,customer27747@example.com,3004113117,Duplicate customer_id; first occurrence retained.
+8005,Customer8005,User8005,Male,1984-09-08,2024-04-09,20,Website/App,Pizza,customer8005@example.com,3006349380,Duplicate customer_id; first occurrence retained.
+35002,Customer35002,User35002,Female,1987-10-26,2024-05-18,1,Takeaway,Salads,customer35002@example.com,3008375436,Duplicate customer_id; first occurrence retained.
+23256,Customer23256,User23256,Other,1973-11-23,2024-02-01,6,Website/App,Biryani,customer23256@example.com,3007133187,Duplicate customer_id; first occurrence retained.
+4194,Customer4194,User4194,Female,1971-12-11,2024-04-13,5,Website/App,Pizza,customer4194@example.com,3003597713,Duplicate customer_id; first occurrence retained.
+16249,Customer16249,User16249,Other,1990-08-21,2024-05-24,7,Dine-in,Burgers,customer16249@example.com,3001794718,Duplicate customer_id; first occurrence retained.
+7880,Customer7880,User7880,Other,1998-04-07,2024-12-22,9,Third-party Delivery,Sandwiches,customer7880@example.com,3009094549,Duplicate customer_id; first occurrence retained.
+7314,Customer7314,User7314,Female,1976-05-12,2024-08-19,12,Website/App,Desserts,customer7314@example.com,3004305201,Duplicate customer_id; first occurrence retained.
+47192,Customer47192,User47192,Female,2003-05-02,2024-05-23,18,Takeaway,Beverages,customer47192@example.com,3007636607,Duplicate customer_id; first occurrence retained.
+5040,Customer5040,User5040,Male,1990-02-09,2024-04-11,18,Dine-in,BBQ,customer5040@example.com,3008901410,Duplicate customer_id; first occurrence retained.
+7960,Customer7960,User7960,Female,1995-08-18,2024-03-14,8,Third-party Delivery,Sandwiches,customer7960@example.com,3003119933,Duplicate customer_id; first occurrence retained.
+22935,Customer22935,User22935,Other,1972-09-05,2024-01-16,4,Third-party Delivery,Salads,customer22935@example.com,3007397038,Duplicate customer_id; first occurrence retained.
+2583,Customer2583,User2583,Male,1977-03-08,2024-08-13,7,Dine-in,Desserts,customer2583@example.com,3008713924,Duplicate customer_id; first occurrence retained.
+43159,Customer43159,User43159,Male,1984-10-20,2024-02-26,5,Website/App,Beverages,customer43159@example.com,3003166309,Duplicate customer_id; first occurrence retained.
+4968,Customer4968,User4968,Other,2001-06-20,2024-12-20,8,Dine-in,Burgers,customer4968@example.com,3002200482,Duplicate customer_id; first occurrence retained.
+13231,Customer13231,User13231,Female,2003-12-21,2024-03-08,14,Takeaway,Pizza,customer13231@example.com,3003466565,Duplicate customer_id; first occurrence retained.
+1793,Customer1793,User1793,Male,1988-06-06,2024-12-03,5,Dine-in,Pasta,customer1793@example.com,3002902103,Duplicate customer_id; first occurrence retained.
+49468,Customer49468,User49468,Other,1989-11-09,2024-04-19,11,Dine-in,Pasta,customer49468@example.com,3002968873,Duplicate customer_id; first occurrence retained.
+45549,Customer45549,User45549,Other,1988-06-10,2024-10-08,15,Website/App,Biryani,customer45549@example.com,3005026986,Duplicate customer_id; first occurrence retained.
+11115,Customer11115,User11115,Other,1976-04-13,2024-05-26,20,Takeaway,Burgers,customer11115@example.com,3002697084,Duplicate customer_id; first occurrence retained.
+9704,Customer9704,User9704,Female,1983-03-20,2024-01-02,17,Website/App,Burgers,customer9704@example.com,3002159902,Duplicate customer_id; first occurrence retained.
+6363,Customer6363,User6363,Male,1971-03-06,2024-02-23,5,Takeaway,Salads,customer6363@example.com,3006674910,Duplicate customer_id; first occurrence retained.
+19175,Customer19175,User19175,Male,1979-02-28,2024-02-24,7,Third-party Delivery,Pizza,customer19175@example.com,3007316773,Duplicate customer_id; first occurrence retained.
+45088,Customer45088,User45088,Other,1983-08-08,2024-10-15,14,Third-party Delivery,Sandwiches,customer45088@example.com,3009644082,Duplicate customer_id; first occurrence retained.
+25266,Customer25266,User25266,Male,1987-12-18,2024-06-24,17,Dine-in,Pizza,customer25266@example.com,3004810213,Duplicate customer_id; first occurrence retained.
+27996,Customer27996,User27996,Other,1979-10-05,2024-04-04,19,Takeaway,Burgers,customer27996@example.com,3009492300,Duplicate customer_id; first occurrence retained.
+32759,Customer32759,User32759,Other,1986-08-22,2024-03-17,2,Website/App,Biryani,customer32759@example.com,3009640710,Duplicate customer_id; first occurrence retained.
+31991,Customer31991,User31991,Other,1996-11-11,2024-10-21,19,Dine-in,Rice,customer31991@example.com,3008625620,Duplicate customer_id; first occurrence retained.
+41168,Customer41168,User41168,Male,1978-03-06,2024-06-22,5,Website/App,Pizza,customer41168@example.com,3007151444,Duplicate customer_id; first occurrence retained.
+24993,Customer24993,User24993,Male,1997-12-21,2024-08-16,18,Third-party Delivery,Sandwiches,customer24993@example.com,3009459768,Duplicate customer_id; first occurrence retained.
+13990,Customer13990,User13990,Male,1971-09-04,2024-04-13,12,Website/App,Sandwiches,customer13990@example.com,3008715905,Duplicate customer_id; first occurrence retained.
+2084,Customer2084,User2084,Male,2003-05-08,2024-12-25,16,Website/App,Rice,customer2084@example.com,3008215607,Duplicate customer_id; first occurrence retained.
+49916,Customer49916,User49916,Male,1988-03-05,2024-10-19,4,Dine-in,Salads,customer49916@example.com,3005889694,Duplicate customer_id; first occurrence retained.
+38392,Customer38392,User38392,Male,1983-05-09,2024-03-05,11,Dine-in,Pasta,customer38392@example.com,3009763227,Duplicate customer_id; first occurrence retained.
+31322,Customer31322,User31322,Male,1975-10-19,2024-09-15,11,Third-party Delivery,Pizza,customer31322@example.com,3001849228,Duplicate customer_id; first occurrence retained.
+29172,Customer29172,User29172,Other,1987-04-01,2024-09-16,15,Third-party Delivery,Rice,customer29172@example.com,3008263837,Duplicate customer_id; first occurrence retained.
+31793,Customer31793,User31793,Male,1978-04-12,2024-05-26,19,Dine-in,Pizza,customer31793@example.com,3005578817,Duplicate customer_id; first occurrence retained.
+5220,Customer5220,User5220,Female,2004-10-02,2024-01-20,17,Third-party Delivery,Burgers,customer5220@example.com,3008092502,Duplicate customer_id; first occurrence retained.
+17863,Customer17863,User17863,Other,2003-12-03,2024-10-04,14,Website/App,Pizza,customer17863@example.com,3004668675,Duplicate customer_id; first occurrence retained.
+6397,Customer6397,User6397,Male,2004-01-20,2024-08-01,6,Dine-in,Salads,customer6397@example.com,3008852522,Duplicate customer_id; first occurrence retained.
+49079,Customer49079,User49079,Female,1999-12-15,2024-03-01,10,Takeaway,Desserts,customer49079@example.com,3008918501,Duplicate customer_id; first occurrence retained.
+29686,Customer29686,User29686,Female,1997-09-09,2024-07-26,5,Third-party Delivery,BBQ,customer29686@example.com,3009095765,Duplicate customer_id; first occurrence retained.
+22833,Customer22833,User22833,Other,1986-04-07,2024-12-15,9,Website/App,Desserts,customer22833@example.com,3001623343,Duplicate customer_id; first occurrence retained.
+11653,Customer11653,User11653,Female,1986-10-06,2024-03-14,2,Website/App,Biryani,customer11653@example.com,3002828544,Duplicate customer_id; first occurrence retained.
+43835,Customer43835,User43835,Male,1985-09-06,2024-02-07,20,Third-party Delivery,Salads,customer43835@example.com,3007014334,Duplicate customer_id; first occurrence retained.
+45616,Customer45616,User45616,Male,2002-05-13,2024-04-18,1,Takeaway,Desserts,customer45616@example.com,3006681112,Duplicate customer_id; first occurrence retained.
+6177,Customer6177,User6177,Male,1970-01-03,2024-09-22,5,Dine-in,Beverages,customer6177@example.com,3009191803,Duplicate customer_id; first occurrence retained.
+28480,Customer28480,User28480,Other,1986-10-04,2024-12-21,14,Takeaway,Burgers,customer28480@example.com,3005080608,Duplicate customer_id; first occurrence retained.
+33488,Customer33488,User33488,Female,1997-06-12,2024-11-13,3,Takeaway,Beverages,customer33488@example.com,3004374368,Duplicate customer_id; first occurrence retained.
+28694,Customer28694,User28694,Other,1974-01-20,2024-09-03,5,Website/App,Desserts,customer28694@example.com,3005646280,Duplicate customer_id; first occurrence retained.

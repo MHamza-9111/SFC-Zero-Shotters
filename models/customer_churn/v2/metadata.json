@@ -1,0 +1,32 @@
+{
+  "task": "customer_churn",
+  "type": "binary",
+  "version": 2,
+  "engine": {
+    "engine": "pandas",
+    "engine_detail": "pandas+pyarrow fallback (no JVM available)",
+    "work_root": "C:\\Users\\mugha\\Desktop\\SFC-Zero-Shotters-main"
+  },
+  "model_file": "model.joblib",
+  "trained_at": "2026-09-26 00:09:14",
+  "random_state": 42,
+  "features": [
+    "recency_days",
+    "f_log_orders",
+    "f_log_spend",
+    "average_order_value",
+    "discount_dependency",
+    "promo_dependency",
+    "top_category_share",
+    "unique_categories"
+  ],
+  "metrics": {
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "roc_auc": 1.0
+  },
+  "n_train": 26775,
+  "n_eval": 5355,
+  "churn_rate_train": 0.7399,
+  "label_rule": "no completed order in final 60 days of window (recency proxy); observation window >= 180 days"
+}
