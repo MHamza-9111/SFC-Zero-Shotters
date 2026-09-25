@@ -186,3 +186,42 @@ server-side surface for the UI.
 * Bypass the ensemble for a single pipeline - the NFR is defined on
   the combined prediction; per-pipeline probabilities are returned for
   transparency, not as a separate product.
+
+## 7. Dashboard endpoints (implemented)
+
+The executive dashboard (DineIQ UI) is served by `src/backend/app.py`
+and reads **only** real pipeline artifacts through
+`src/services/dashboard_service.py` (processed layer when present,
+otherwise the committed evidence of section 4). All routes live under
+`/api/v1` and return JSON; collection routes support `location_id`
+(area filter) and `date` (`YYYY-MM-DD` business date) where meaningful.
+
+| Route | Purpose / widget |
+| --- | --- |
+| `GET /dashboard/meta` | Locations, channels, payment methods, business-date range, data-source registry (layer + row counts) |
+| `GET /dashboard/overview` | KPI row, service pulse, recent orders, today's payments & transactions, top dishes/areas, category mix |
+| `GET /dashboard/revenue-series?range=` | `today` (hourly) / `week` / `month` (daily) / `year` (monthly population aggregate) with previous-period trend |
+| `GET /dashboard/orders` | Order book: `q` (text or `DQ-0001` ref), `status`, `channel`, `payment`, `sort`, paging |
+| `GET /dashboard/orders/<id>` | Order detail incl. line items (or an explicit note when lines sit outside the loaded slice) |
+| `GET /dashboard/dishes` | Top dishes ranked by revenue with `range`, `q`, `limit` |
+| `GET /dashboard/menu-intelligence` | Menu business classes (incl. dual-pipeline predictions) + market-basket combos + category share |
+| `GET /dashboard/inventory` | Wastage watchlist + committed wastage/slow-mover analytic outputs |
+| `GET /dashboard/payments` | Payment-method totals & shares (`range`), monthly mix per method |
+| `GET /dashboard/transactions` | Settlement list: `method`, `status`, `q`, paging |
+| `GET /dashboard/locations` | Area ranking, 12-month series per area, peak hours, venue-type mix |
+| `GET /dashboard/customers` | Churn watchlist with risk tiers (`high` ≥ 180d, `medium` ≥ 90d) |
+| `GET /dashboard/promotions` | Promotion effectiveness with `promotion_trap` verdicts |
+| `GET /dashboard/alerts` | Notification center derived from trap/churn/quarantine/NFR evidence |
+| `GET /dashboard/search?q=` | Unified search across orders, dishes, areas, guests |
+| `GET /dashboard/reports` | Chart gallery + quality/cleaning/quarantine/dual-pipeline summaries |
+| `POST /dashboard/reload` | Re-read the data layer (Settings page) |
+| `GET /api/v1/models` | Section 2 registry (versioned artifacts, active/archived status) |
+| `GET /api/v1/pipeline/status` | Section 3 job status (steps, NFR health, dual-pipeline agreement) |
+| `GET /api/v1/predict/tasks` | Feature specifications + sample-driven scorer form contract |
+
+Scoring aliases accepted by `POST /api/v1/predict/ensemble`:
+`order_value|order-value|high_value_order`, `churn|customer_churn`,
+`menu_class|menu_business_class`. When one pipeline's artifact is not
+deployed (currently `menu_business_class` ships the big-data artifact
+only), the response sets `fallback` and states the single-model
+`decision_rule` instead of pretending an ensemble ran.
