@@ -108,6 +108,8 @@
         const pulse = ov.service_pulse || {};
         const channels = pulse.channels || [];
         const colors = ["green", "blue", "amber", "rose"];
+        // Stable accent per channel (matches the reference's coloured pulse values).
+        const CHANNEL_COLORS = { "Dine-in": "green", "Takeaway": "amber", "Website/App": "blue", "Third-party Delivery": "rose" };
         sub.textContent = `${fmt.num(pulse.orders)} order(s) · ${fmt.num(pulse.items_sold)} items sold`;
 
         if (!channels.length) {
@@ -117,7 +119,7 @@
         wrap.innerHTML = channels.slice(0, 4).map((c, i) => `
             <a class="pulse-tile" href="/orders?channel=${encodeURIComponent(c.name)}">
                 <div class="pulse-label">${esc(c.name)}</div>
-                <div class="pulse-value ${colors[i % colors.length]}">${fmt.num(c.orders)}</div>
+                <div class="pulse-value ${CHANNEL_COLORS[c.name] || colors[i % colors.length]}">${fmt.num(c.orders)}</div>
                 <div class="pulse-share">${c.share}% of today's orders</div>
             </a>`).join("");
     }

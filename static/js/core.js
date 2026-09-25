@@ -248,14 +248,20 @@
         }
     });
 
+    /* Hard-hide overlays on boot: inline styles beat any stale cached CSS. */
+    ["modal-order", "modal-info"].forEach((id) => {
+        const m = document.getElementById(id);
+        if (m) { m.hidden = true; m.style.display = "none"; }
+    });
+
     /* ---------------- Modals ---------------- */
     DQ.openModal = function (id) {
         const m = document.getElementById(id);
-        if (m) { m.hidden = false; document.body.style.overflow = "hidden"; }
+        if (m) { m.hidden = false; m.style.display = "flex"; document.body.style.overflow = "hidden"; }
     };
     DQ.closeModal = function (id) {
         const m = document.getElementById(id);
-        if (m) { m.hidden = true; document.body.style.overflow = ""; }
+        if (m) { m.hidden = true; m.style.display = "none"; document.body.style.overflow = ""; }
     };
     DQ.infoModal = function (title, html) {
         document.getElementById("info-modal-title").textContent = title;

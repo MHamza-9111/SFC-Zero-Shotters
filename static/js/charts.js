@@ -60,12 +60,19 @@
 
     const charts = DQ.charts = {};
 
+    charts._nodes = new Set();
+
     charts.store = function (el, payload) {
         el._chartData = payload;
+        charts._nodes.add(el);
     };
 
     charts.rerenderStored = function () {
-        document.querySelectorAll("[_chartData]").forEach(node => {
+        charts._nodes.forEach(node => {
+            if (!node.isConnected) {
+                charts._nodes.delete(node);
+                return;
+            }
             const p = node._chartData;
             if (!p) return;
             if (p.type === "area") charts.areaLine(node, p.points, p.opts);

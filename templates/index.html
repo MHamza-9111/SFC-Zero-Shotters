@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DineIQ — Restaurant Intelligence Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=2">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b0c0e'/><circle cx='16' cy='16' r='7' fill='%2335e888'/></svg>">
 </head>
 <body data-view="{{ view }}" data-views="{{ views | join(',') }}">
@@ -682,7 +682,7 @@
 </div>
 
 <!-- ======================= Modals / overlays ======================= -->
-<div class="modal" id="modal-order" hidden>
+<div class="modal" id="modal-order" hidden style="display:none">
     <div class="modal-card">
         <div class="modal-head">
             <h3 id="order-modal-title">Order</h3>
@@ -692,7 +692,7 @@
     </div>
 </div>
 
-<div class="modal" id="modal-info" hidden>
+<div class="modal" id="modal-info" hidden style="display:none">
     <div class="modal-card modal-card-sm">
         <div class="modal-head">
             <h3 id="info-modal-title">Notice</h3>
@@ -707,10 +707,10 @@
 
 <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
 
-<script src="{{ url_for('static', filename='js/core.js') }}"></script>
-<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
-<script src="{{ url_for('static', filename='js/overview.js') }}"></script>
-<script src="{{ url_for('static', filename='js/pages.js') }}"></script>
+<script src="{{ url_for('static', filename='js/core.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/overview.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/pages.js') }}?v=2"></script>
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
