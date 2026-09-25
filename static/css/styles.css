@@ -76,6 +76,10 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* The `hidden` attribute must win over component display rules
+   (e.g. .modal { display: flex }) or overlays would show on load. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
