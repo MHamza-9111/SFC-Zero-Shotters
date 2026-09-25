@@ -70,9 +70,9 @@ Runs the full pipeline in order (generation is optional with
 `--skip-generation`).
 
 ## Tests
-Directory: `Ali Jaan/tests/`
+Directory: `tests/`
 
-Run with: `python -m pytest Ali Jaan/tests -q`
+Run with: `python -m pytest tests -q`
 
 The test suite generates a medium-scale dataset in a temp directory and
 validates the generator invariants, cleaning PK/FK/quarantine behaviour,
@@ -80,7 +80,7 @@ processing outputs (including completed-orders-only revenue), advanced
 analytics outputs, and the dual-pipeline comparison sets.
 
 ## Dual-Pipeline Comparison Sets
-Directory: `Ali Jaan/data_cleaning/dual_pipeline/`
+Directory: `data_cleaning/dual_pipeline/`
 
 The Python side of the SRS dual-pipeline comparison: unseen cases plus
 independent Python predictions for the order-value classification (300

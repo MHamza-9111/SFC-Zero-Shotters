@@ -1,7 +1,7 @@
 # DineIQ Analytics - Cleaning Decisions
 
 ## Raw Data Preservation
-Original files in `Main/raw_data/` are preserved and are not overwritten.
+Original files in `raw_data/` are preserved and are not overwritten.
 
 ## Missing Values
 Missing customer email and order payment-method values are retained as

@@ -204,7 +204,7 @@ def menu_business_classes(menu_perf, rating_item, wastage_item):
     #   Hidden Opportunity - good profitability (margin) but low sales
     #   Low Performer      - weak demand AND weak profitability
     # The four conditions partition all items, so none reaches the default.
-    # Keep in sync with Main/spark_pipeline/features.py (dual pipeline).
+    # Keep in sync with spark_jobs/features.py (dual pipeline).
     high_demand = df["units_sold"] >= u_med
     high_profit = df["estimated_profit"] >= p_med
     high_margin = df["profit_margin_percentage"] >= m_med
@@ -1527,7 +1527,7 @@ record by record.
   metrics for reference.
 
 Comparison: build the same features in Spark from
-`Ali Jaan/processed_data/`, train a Spark MLlib classifier on the
+`processed_data/`, train a Spark MLlib classifier on the
 remaining orders, predict the 300 unseen orders, and report
 matches, the disagreement list, and the agreement percentage.
 
@@ -1564,7 +1564,7 @@ against the actuals.
 
 - The Spark side must NOT read these prediction files as inputs.
 - Both sides must use the same cleaned data layer
-  (`Ali Jaan/processed_data/`).
+  (`processed_data/`).
 - Disagreements must be listed, not hidden.
 """
     (dual_dir / "README.md").write_text(dual_readme, encoding="utf-8")

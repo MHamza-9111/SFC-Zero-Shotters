@@ -2,7 +2,7 @@
 
 Interactive, step-by-step walkthrough of the Python data pipeline.
 Each notebook runs the real pipeline code (imported from
-`Ali Jaan/`), so what you see in the notebook is exactly what the
+``), so what you see in the notebook is exactly what the
 scripts produce.
 
 ## Notebooks
@@ -27,9 +27,9 @@ MODE = "quick"   # or "full"
   written into `notebook/outputs/quick/`. Fast (~30 s per notebook)
   and never touches the repository's canonical data.
 - **`full`**: full SRS scale (1M order lines) in the canonical
-  locations (`Main/raw_data` → `Ali Jaan/processed_data` →
-  `Ali Jaan/processed_data/analytics` →
-  `Ali Jaan/data_cleaning/dual_pipeline`). Same outputs as
+  locations (`raw_data` → `processed_data` →
+  `processed_data/analytics` →
+  `data_cleaning/dual_pipeline`). Same outputs as
   `run_pipeline.py`.
 
 Notebooks are **self-contained**: each one runs every step it depends
@@ -40,7 +40,7 @@ delete the corresponding output directory.
 
 ```bash
 python -m venv .venv
-.venv/bin/pip install -r Main/requirements.txt
+.venv/bin/pip install -r requirements.txt
 
 # in Jupyter:
 jupyter notebook notebook/
@@ -53,4 +53,4 @@ jupyter notebook notebook/
 - Quick-mode outputs: `notebook/outputs/` (git-ignored)
 - Full-mode outputs: the canonical repository directories
   (large data is git-ignored; small reports and the dual-pipeline
-  comparison sets are committed under `Ali Jaan/data_cleaning/`)
+  comparison sets are committed under `data_cleaning/`)

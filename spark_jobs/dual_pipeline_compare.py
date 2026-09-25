@@ -3,7 +3,7 @@ Step 4 - Dual-pipeline comparison (SRS: independent pipelines compared
 on unseen cases).
 
 Inputs (committed, produced by Ali's independent Python pipeline):
-  Ali Jaan/data_cleaning/dual_pipeline/
+  data_cleaning/dual_pipeline/
     order_value_unseen_cases.csv        300 orders + 13 features + actual
     order_value_python_predictions.csv  Python RF predictions
     churn_unseen_cases.csv              200 customers + features + actual
@@ -12,11 +12,11 @@ Inputs (committed, produced by Ali's independent Python pipeline):
     menu_class_python_predictions.csv   Python RF predictions
 
 This step loads the LATEST versioned model trained by step 3
-(Main/models, never retraining) and scores the same cases. For every
+(models, never retraining) and scores the same cases. For every
 case it records: ID, actual, Python output, pipeline output, match
 flag and - for disagreements - a short explanation.
 
-Outputs (committed evidence under Main/evidence/dual_pipeline/):
+Outputs (committed evidence under reports/dual_pipeline/):
   <task>_comparison.csv   per-case side-by-side
   <task>_agreement.csv    agreement statistics
   dual_pipeline_summary.csv

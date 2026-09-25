@@ -4,10 +4,10 @@ Canonical schema for the DineIQ synthetic data layer.
 
 Layers:
 
-- Raw: `Main/raw_data/` (generated, preserved, never modified)
-- Processed: `Ali Jaan/processed_data/` (cleaned CSV, canonical analytical source)
-- Analytics: `Ali Jaan/processed_data/analytics/` (integrated + intelligence outputs)
-- Parquet: `Main/parquet_data/` (reserved for the Spark pipeline)
+- Raw: `raw_data/` (generated, preserved, never modified)
+- Processed: `processed_data/` (cleaned CSV, canonical analytical source)
+- Analytics: `processed_data/analytics/` (integrated + intelligence outputs)
+- Parquet: `parquet_data/` (reserved for the Spark pipeline)
 
 All amounts are in PKR. Dates are `YYYY-MM-DD`.
 

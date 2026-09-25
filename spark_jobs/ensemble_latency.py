@@ -1,7 +1,7 @@
 """
 Step 5 - NFR performance test: 5-second ensemble prediction.
 
-Per the instructor clarification (Main/SRS_CLARIFICATIONS.md):
+Per the instructor clarification (documentation/SRS_CLARIFICATIONS.md):
 
   * On upload, BOTH pipelines' saved models produce the combined
     (ensemble) prediction.
@@ -11,15 +11,15 @@ Per the instructor clarification (Main/SRS_CLARIFICATIONS.md):
   * Pass condition: total ensemble time < 5000 ms.
 
 This step:
-  1. loads the latest pipeline models from Main/models/
-  2. loads the Python models from Ali Jaan/models/
-     (produced by Ali Jaan/data_cleaning/model_artifacts.py)
+  1. loads the latest pipeline models from models/
+  2. loads the Python models from models/
+     (produced by data_cleaning/model_artifacts.py)
   3. times a 100-record batch end-to-end:
        python predict -> pipeline predict -> combine (probability
        average) -> ensemble label
   4. writes the measured latency report (committed evidence).
 
-The same protocol is also re-run by Main/tests/test_spark_pipeline.py
+The same protocol is also re-run by tests/spark/test_spark_pipeline.py
 so the NFR is asserted, not just reported.
 """
 
@@ -52,7 +52,7 @@ def _load_python_model(models_root: Path, task: str):
     if not vs:
         raise FileNotFoundError(
             f"Python model artifact missing: {base} "
-            f"(run Ali Jaan/data_cleaning/model_artifacts.py)")
+            f"(run data_cleaning/model_artifacts.py)")
     vdir = vs[-1]
     meta = json.loads((vdir / "metadata.json").read_text())
     model = joblib.load(vdir / "model.joblib")

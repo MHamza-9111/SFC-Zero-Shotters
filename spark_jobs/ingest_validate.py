@@ -6,7 +6,7 @@ Step 1 - Ingestion and validation (SRS: Big Data Engineering).
   * Primary-key and foreign-key validation across datasets
   * Numeric-range and analysis-period validation
   * Data-quality report (CSV, one row per check)
-  * Validated data written to partitioned Parquet in Main/parquet_data/
+  * Validated data written to partitioned Parquet in parquet_data/
 """
 
 from __future__ import annotations

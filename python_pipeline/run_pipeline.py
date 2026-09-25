@@ -2,7 +2,7 @@
 DineIQ Analytics - Full Python data pipeline runner.
 
 Runs, in order:
-  1. Data generation            (Ali Jaan/data_generator)
+  1. Data generation            (data_generator)
   2. Raw data quality assessment (data_quality_check.py)
   3. Cleaning + quarantine       (clean_dineiq_data.py)
   4. Integration + core analytics (process_dineiq_data.py)

@@ -2,7 +2,7 @@
 DineIQ Analytics - Big Data pipeline (owner: Hamza).
 
 Consumes the canonical cleaned CSV layer produced by Ali Jaan's
-Python pipeline (Ali Jaan/processed_data/) and delivers:
+Python pipeline (processed_data/) and delivers:
 
   1. ingest_validate       explicit-schema ingestion, PK/FK validation,
                            data-quality report, partitioned Parquet
@@ -18,5 +18,5 @@ Engines:
   PandasEngine - documented fallback when no JVM is available; every
                  artifact is labelled with the engine that produced it.
 
-Run:  python -m Main.spark_pipeline.run_all --engine auto
+Run:  python -m spark_jobs.run_all --engine auto
 """

@@ -8,7 +8,7 @@ aggregations are computed with pandas merge/groupby so the identical
 evidence files are produced, labelled with the engine used.
 
 Outputs (one CSV each; full copies under <reports>/spark_sql/,
-capped evidence copies under Main/evidence/spark_sql/):
+capped evidence copies under reports/spark_sql/):
   orders_enriched        - order-level join: order, restaurant, location,
                            customer, promotion
   order_item_revenue     - completed-order revenue lines with category

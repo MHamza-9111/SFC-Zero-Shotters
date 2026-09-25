@@ -11,9 +11,9 @@ Two run modes:
   MODE = "full"
       Full SRS-scale data (1M order lines) in the canonical
       repository directories:
-        Main/raw_data -> Ali Jaan/processed_data
-        -> Ali Jaan/processed_data/analytics
-        -> Ali Jaan/data_cleaning/dual_pipeline
+        raw_data -> processed_data
+        -> processed_data/analytics
+        -> data_cleaning/dual_pipeline
       Same outputs as run_pipeline.py.
 
 Each notebook is self-contained: it runs every pipeline step it
@@ -30,14 +30,14 @@ import yaml
 BASE = Path(__file__).resolve().parents[1]
 
 # Make the pipeline modules importable from notebooks.
-for _p in (BASE / "Ali Jaan" / "data_generator",
-           BASE / "Ali Jaan" / "data_cleaning"):
+for _p in (BASE / "data_generator",
+           BASE / "python_pipeline" / "cleaning"):
     _s = str(_p)
     if _s not in sys.path:
         sys.path.insert(0, _s)
 
 
-# Medium scale used by quick mode (matches Ali Jaan/tests/conftest.py).
+# Medium scale used by quick mode (matches tests/conftest.py).
 QUICK_CONFIG = {
     "seed": 42,
     "scale": {
@@ -60,8 +60,8 @@ QUICK_CONFIG = {
     },
     "time": {"start_date": "2025-01-01", "end_date": "2025-12-31"},
     "output": {
-        "raw_dir": "Main/raw_data",
-        "processed_dir": "Ali Jaan/processed_data",
+        "raw_dir": "raw_data",
+        "processed_dir": "processed_data",
     },
 }
 
@@ -73,13 +73,13 @@ def setup_paths(mode: str = "quick") -> dict:
     if mode == "full":
         return {
             "mode": "full",
-            "raw": BASE / "Main" / "raw_data",
-            "processed": BASE / "Ali Jaan" / "processed_data",
-            "reports": BASE / "Ali Jaan" / "data_cleaning",
-            "quarantine": BASE / "Ali Jaan" / "data_cleaning" / "quarantine",
-            "analytics": BASE / "Ali Jaan" / "processed_data" / "analytics",
-            "dual": BASE / "Ali Jaan" / "data_cleaning" / "dual_pipeline",
-            "config": BASE / "Ali Jaan" / "config" / "data_generation_config.yaml",
+            "raw": BASE / "raw_data",
+            "processed": BASE / "processed_data",
+            "reports": BASE / "python_pipeline" / "cleaning",
+            "quarantine": BASE / "python_pipeline" / "cleaning" / "quarantine",
+            "analytics": BASE / "processed_data" / "analytics",
+            "dual": BASE / "python_pipeline" / "cleaning" / "dual_pipeline",
+            "config": BASE / "config" / "data_generation_config.yaml",
         }
 
     root = BASE / "notebook" / "outputs" / "quick"

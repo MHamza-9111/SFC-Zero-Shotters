@@ -1,6 +1,6 @@
 # Dual-Pipeline Comparison Sets (Python side)
 
-Generated: 2026-09-24 10:15:06
+Generated: 2026-09-25 12:40:24
 
 These files are the Python-pipeline side of the SRS dual-pipeline
 comparison. Hamza's Spark pipeline must independently re-derive the
@@ -19,7 +19,7 @@ record by record.
   metrics for reference.
 
 Comparison: build the same features in Spark from
-`Ali Jaan/processed_data/`, train a Spark MLlib classifier on the
+`processed_data/`, train a Spark MLlib classifier on the
 remaining orders, predict the 300 unseen orders, and report
 matches, the disagreement list, and the agreement percentage.
 
@@ -56,5 +56,5 @@ against the actuals.
 
 - The Spark side must NOT read these prediction files as inputs.
 - Both sides must use the same cleaned data layer
-  (`Ali Jaan/processed_data/`).
+  (`processed_data/`).
 - Disagreements must be listed, not hidden.

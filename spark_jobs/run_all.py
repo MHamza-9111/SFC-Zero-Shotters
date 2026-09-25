@@ -1,7 +1,7 @@
 """
 DineIQ Big Data pipeline - full run.
 
-  python -m Main.spark_pipeline.run_all [--engine auto|spark|pandas]
+  python -m spark_jobs.run_all [--engine auto|spark|pandas]
                                         [--processed-dir PATH]
                                         [--parquet-dir PATH]
                                         [--reports-dir PATH]
@@ -28,7 +28,7 @@ import argparse
 import sys
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parents[2]
+BASE = Path(__file__).resolve().parents[1]
 
 from . import (dual_pipeline_compare, ensemble_latency, ingest_validate,  # noqa: E402
                mllib_models, spark_sql)
@@ -63,7 +63,7 @@ def main(argv=None) -> int:
                              "latency"])
     args = ap.parse_args(argv)
 
-    work_root = Path(args.processed_dir).resolve().parents[2]
+    work_root = Path(args.processed_dir).resolve().parent
     engine = get_engine(prefer=args.engine, work_root=work_root)
     print(f"Selected engine: {engine.display}")
     print(f"Input (canonical): {args.processed_dir}")

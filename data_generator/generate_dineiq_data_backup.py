@@ -25,8 +25,8 @@ WASTAGE_REASONS = [
     "Preparation Error", "Spoilage", "Unsold"
 ]
 
-BASE = Path(__file__).resolve().parents[2]
-RAW = BASE / "Main" / "raw_data"
+BASE = Path(__file__).resolve().parents[1]
+RAW = BASE / "raw_data"
 
 def ensure_dirs():
     RAW.mkdir(parents=True, exist_ok=True)

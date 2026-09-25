@@ -1,0 +1,34 @@
+{
+  "task": "menu_business_class",
+  "type": "multiclass",
+  "version": 1,
+  "engine": {
+    "engine": "pandas",
+    "engine_detail": "pandas+pyarrow fallback (no JVM available)",
+    "work_root": "C:\\Users\\mugha\\Desktop\\SFC-Zero-Shotters-main"
+  },
+  "model_file": "model.joblib",
+  "trained_at": "2026-09-25 12:42:41",
+  "random_state": 42,
+  "features": [
+    "units_sold",
+    "revenue",
+    "estimated_profit",
+    "profit_margin_percentage",
+    "average_rating",
+    "wastage_ratio"
+  ],
+  "metrics": {
+    "accuracy": 0.9583,
+    "macro_f1": 0.9495
+  },
+  "n_train": 120,
+  "n_eval": 24,
+  "classes": [
+    "Hidden Opportunity",
+    "Low Performer",
+    "Profit Driver",
+    "Volume Driver"
+  ],
+  "label_rule": "median-based 4-class rule incl. contradictory cases"
+}

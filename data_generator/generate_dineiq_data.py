@@ -145,9 +145,9 @@ def load_config(path: Path = CONFIG_PATH) -> dict:
         },
         "time": {"start_date": "2025-01-01", "end_date": "2025-12-31"},
         "output": {
-            "raw_dir": "Main/raw_data",
-            "processed_dir": "Ali Jaan/processed_data",
-            "parquet_dir": "Main/parquet_data",
+            "raw_dir": "raw_data",
+            "processed_dir": "processed_data",
+            "parquet_dir": "spark_jobs/parquet_data",
         },
     }
 

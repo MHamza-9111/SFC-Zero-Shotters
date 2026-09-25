@@ -55,8 +55,8 @@ failures, dual pipeline 300/300 + 200/200 + 30/30 (100 %), NFR PASS,
 
 ### Fix
 
-- One rule, identical in `Ali Jaan/data_cleaning/run_advanced_analytics.py`
-  and `Main/spark_pipeline/features.py` (median splits; the four
+- One rule, identical in `data_cleaning/run_advanced_analytics.py`
+  and `spark_jobs/features.py` (median splits; the four
   conditions partition every item, so no default is reached):
   Profit Driver = high demand + high profit + high margin; Volume Driver
   = any other high-demand item; Hidden Opportunity = low demand + high
@@ -68,7 +68,7 @@ failures, dual pipeline 300/300 + 200/200 + 30/30 (100 %), NFR PASS,
 
 ### Dashboard charts
 
-- `Main/charts/` (20 PNGs) is now committed; it had been gitignored, so
+- `reports/charts/` (20 PNGs) is now committed; it had been gitignored, so
   the charts never reached GitHub.
 - Chart corrections: 05 compares average orders **per day** (the yearly
   totals made weekdays look busier because a year has 261 weekdays vs
@@ -87,19 +87,19 @@ failures, dual pipeline 300/300 + 200/200 + 30/30 (100 %), NFR PASS,
 
 ### What was delivered
 
-- `Main/spark_pipeline/` - the complete Big Data pipeline
+- `spark_jobs/` - the complete Big Data pipeline
   (ingestion/validation -> Spark SQL -> models -> dual-pipeline
   comparison -> NFR latency test), runnable end-to-end:
-  `python -m Main.spark_pipeline.run_all`.
-- `Main/setup_spark.sh` - production setup (venv, JRE 17, Spark smoke
+  `python -m spark_jobs.run_all`.
+- `setup_spark.sh` - production setup (venv, JRE 17, Spark smoke
   test).
-- `Ali Jaan/data_cleaning/model_artifacts.py` - versioned Python model
+- `data_cleaning/model_artifacts.py` - versioned Python model
   artifacts with exact-reproduction self-validation (300/300 and
   200/200 committed predictions reproduced).
-- Evidence committed under `Main/evidence/` (quality report, 10 SQL
+- Evidence committed under `reports/` (quality report, 10 SQL
   outputs, model evaluation, dual-pipeline comparison, NFR latency
   report), every file engine-labelled.
-- 14 new tests (`Main/tests/test_spark_pipeline.py`); full suite
+- 14 new tests (`tests/spark/test_spark_pipeline.py`); full suite
   38/38.
 
 ### Key decisions
@@ -201,7 +201,7 @@ failures, dual pipeline 300/300 + 200/200 + 30/30 (100 %), NFR PASS,
 ## 2026-09-24 - Python data pipeline (Ali Jaan)
 
 *See `notebook/README.md`, the committed dual-pipeline sets under
-`Ali Jaan/data_cleaning/dual_pipeline/`, and the AI usage log entry
+`data_cleaning/dual_pipeline/`, and the AI usage log entry
 for the full record of the Python-side work delivered this day
 (generator, cleaning with quarantine, processing, advanced
 analytics, 24 tests).*

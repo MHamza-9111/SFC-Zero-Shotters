@@ -1,5 +1,5 @@
 """
-Tests for the DineIQ Big Data pipeline (Main/spark_pipeline/).
+Tests for the DineIQ Big Data pipeline (spark_jobs/).
 
 Runs the real pipeline code on a small generated dataset in a temp
 directory (engine: the pandas fallback when no JVM is available - the
@@ -434,7 +434,7 @@ def test_nfr_latency_passes(pipeline_out):
     res = pipeline_out["latency"]["high_value_order"]
     # mini dataset carries 50 order cases, so the warm batch is
     # min(100, 50); the NFR protocol itself is the 100-record batch
-    # exercised by the full-scale evidence (Main/evidence/latency/).
+    # exercised by the full-scale evidence (reports/latency/).
     assert res["batch_size"] >= 50
     assert res["pass"]
     # sample carries both model versions (versioned artifact NFR rule)

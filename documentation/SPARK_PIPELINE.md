@@ -2,7 +2,7 @@
 
 Owner: **Hamza** (team lead / Spark-ML / Big Data)
 Status: **complete** - full-scale run on the canonical cleaned layer,
-evidence committed under `Main/evidence/`.
+evidence committed under `reports/`.
 
 This pipeline satisfies the SRS Big Data Engineering requirements:
 
@@ -12,7 +12,7 @@ This pipeline satisfies the SRS Big Data Engineering requirements:
 | Schema inference compared with explicit schema | inference-drift checks in `ingest_validate.py` (Spark engine) |
 | Data validation (PK/FK/ranges/period) + quality report | `ingest_validate.py` -> `spark_ingestion_quality_report.csv` |
 | Spark SQL joins, filters, aggregations | `spark_pipeline/spark_sql.py` (10 named queries) |
-| Partitioned Parquet in `Main/parquet_data` | `orders.parquet` (by `order_month`), `order_items.parquet` (by `restaurant_id`) |
+| Partitioned Parquet in `parquet_data` | `orders.parquet` (by `order_month`), `order_items.parquet` (by `restaurant_id`) |
 | Minimum 3 ML models (MLlib) trained + evaluated | `spark_pipeline/mllib_models.py` (3 tasks) |
 | Dual-pipeline comparison on unseen cases | `spark_pipeline/dual_pipeline_compare.py` |
 | NFR: ensemble prediction < 5 s, versioned artifacts | `spark_pipeline/ensemble_latency.py` + `SRS_CLARIFICATIONS.md` |
@@ -37,23 +37,23 @@ the identical code runs on Spark via `--engine spark`.
 Setup for a real Spark machine (venv + JRE 17 + smoke test):
 
 ```bash
-bash Main/setup_spark.sh
-./.venv/bin/python -m Main.spark_pipeline.run_all --engine spark
+bash setup_spark.sh
+./.venv/bin/python -m spark_jobs.run_all --engine spark
 ```
 
 ## Pipeline steps
 
 ```
-Ali Jaan/processed_data/   (canonical cleaned CSV layer, 12 datasets)
+processed_data/   (canonical cleaned CSV layer, 12 datasets)
         |
 1. ingest_validate    explicit-schema load -> PK/FK/range/period checks
-        |             -> quality report -> partitioned Parquet (Main/parquet_data)
+        |             -> quality report -> partitioned Parquet (parquet_data)
 2. spark_sql          10 analysis outputs (enriched orders, revenue lines,
         |             monthly/category/channel aggregations, peaks, basket
         |             lift, promo effectiveness, location ranking, churn list)
 3. mllib_models       3 models trained on data EXCLUDING the committed
         |             unseen case IDs (no leakage); evaluated on an internal
-        |             holdout; saved as versioned artifacts Main/models/<task>/v<n>/
+        |             holdout; saved as versioned artifacts models/<task>/v<n>/
 4. dual_pipeline_compare
         |             loads latest artifacts, scores the committed 300/200/30
         |             cases, per-case side-by-side + agreement statistics
@@ -64,8 +64,8 @@ Ali Jaan/processed_data/   (canonical cleaned CSV layer, 12 datasets)
 Run everything:
 
 ```bash
-./.venv/bin/python -m Main.spark_pipeline.run_all          # auto engine
-./.venv/bin/python -m Main.spark_pipeline.run_all --engine spark
+./.venv/bin/python -m spark_jobs.run_all          # auto engine
+./.venv/bin/python -m spark_jobs.run_all --engine spark
 ```
 
 ## Models (step 3)
@@ -76,13 +76,13 @@ Run everything:
 | `customer_churn` | LogisticRegression (seed 42) | acc 0.9989, macro-F1 0.9985, AUC 1.000 | no completed order in the final 60 days (recency proxy, >= 180-day observation window) |
 | `menu_business_class` | RandomForest (150 trees, seed 42) | acc 0.9583, macro-F1 0.9495 | 4-class SRS Step 10 median rule: Profit Driver = high demand + high profit + high margin; Volume Driver = any other high-demand item; Hidden Opportunity = low demand + high margin; Low Performer = low demand + low margin (contradictory cases flagged separately) |
 
-Artifacts: `Main/models/<task>/v<n>/model.joblib` (or native MLlib dir on
+Artifacts: `models/<task>/v<n>/model.joblib` (or native MLlib dir on
 Spark) + `metadata.json` (engine, hyperparameters, feature list, metrics,
 version, timestamp). The serving path (see `API_CONTRACT.md`) loads the
 latest version and never retrains.
 
 **Feature parity:** both pipelines train on features produced by one
-shared module, `Main/spark_pipeline/features.py` (single source of truth).
+shared module, `spark_jobs/features.py` (single source of truth).
 A parity check during development re-derived the 13 order features for all
 300 committed cases from the canonical layer and matched every value
 exactly; the Python artifacts additionally reproduce the committed
@@ -101,7 +101,7 @@ Full-scale result (committed evidence):
 100 % agreement is the expected outcome of the parity design: identical
 features (shared builder), identical hyperparameters and seed, identical
 training data (canonical layer minus the case IDs). The committed
-per-case files (`Main/evidence/dual_pipeline/*_comparison.csv`) still
+per-case files (`reports/dual_pipeline/*_comparison.csv`) still
 record IDs, actuals, both outputs, match flags and disagreement
 explanations, as the SRS requires; any future divergence (e.g. a model
 retrained with different data or hyperparameters) would show up here with
@@ -120,13 +120,13 @@ Measured (full scale, 5 warm runs, max reported):
 | high_value_order | 100 | 90.3 ms max | 5000 ms | **PASS** |
 | customer_churn | 200 | 1.7 ms max | 5000 ms | **PASS** |
 
-The same protocol is asserted in `Main/tests/test_spark_pipeline.py`.
+The same protocol is asserted in `tests/spark/test_spark_pipeline.py`.
 
 ## Tests
 
 ```bash
-./.venv/bin/python -m pytest Main/tests -q     # 14 pipeline tests
-./.venv/bin/python -m pytest "Ali Jaan/tests" Main/tests -q   # 38 total
+./.venv/bin/python -m pytest tests/spark -q     # 14 pipeline tests
+./.venv/bin/python -m pytest "tests" tests/spark -q   # 38 total
 ```
 
 The suite runs the real pipeline code on a small generated dataset in a
@@ -138,12 +138,12 @@ versioned model artifacts, dual comparison, and the NFR timing.
 
 | Path | Content |
 | --- | --- |
-| `Main/evidence/quality/spark_ingestion_quality_report.csv` | one row per validation check, full scale |
-| `Main/evidence/spark_sql/` | 10 analysis outputs (capped copies) + summary + engine label |
-| `Main/evidence/models/` | model evaluation summary + engine label |
-| `Main/evidence/dual_pipeline/` | per-case comparisons + agreement statistics + summary |
-| `Main/evidence/latency/` | NFR report, detail JSON, ensemble samples + engine label |
+| `reports/quality/spark_ingestion_quality_report.csv` | one row per validation check, full scale |
+| `reports/spark_sql/` | 10 analysis outputs (capped copies) + summary + engine label |
+| `reports/models/` | model evaluation summary + engine label |
+| `reports/dual_pipeline/` | per-case comparisons + agreement statistics + summary |
+| `reports/latency/` | NFR report, detail JSON, ensemble samples + engine label |
 
-Regenerable (gitignored) outputs: `Main/parquet_data/` (full Parquet
-layer), `Main/models/` (model binaries), `Main/reports/` (full-size SQL
+Regenerable (gitignored) outputs: `parquet_data/` (full Parquet
+layer), `models/` (model binaries), `reports/` (full-size SQL
 outputs and runtime reports).

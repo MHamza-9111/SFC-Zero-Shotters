@@ -1,0 +1,11 @@
+output,rows,evidence_rows,file,evidence_file
+orders_enriched,79930,2000,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\orders_enriched.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\orders_enriched.csv
+order_item_revenue,797829,2000,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\order_item_revenue.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\order_item_revenue.csv
+monthly_revenue,240,240,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\monthly_revenue.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\monthly_revenue.csv
+category_revenue_share,10,10,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\category_revenue_share.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\category_revenue_share.csv
+channel_monthly,48,48,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\channel_monthly.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\channel_monthly.csv
+peak_hours,28,28,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\peak_hours.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\peak_hours.csv
+top_item_combos,25,25,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\top_item_combos.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\top_item_combos.csv
+promo_effectiveness,120,120,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\promo_effectiveness.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\promo_effectiveness.csv
+location_ranking,20,20,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\location_ranking.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\location_ranking.csv
+churn_candidates,27384,5000,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_pipeline\spark_sql\churn_candidates.csv,C:\Users\mugha\Desktop\SFC-Zero-Shotters-main\reports\spark_sql\churn_candidates.csv

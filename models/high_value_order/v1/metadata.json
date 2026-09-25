@@ -1,0 +1,37 @@
+{
+  "task": "high_value_order",
+  "type": "binary",
+  "version": 1,
+  "engine": {
+    "engine": "pandas",
+    "engine_detail": "pandas+pyarrow fallback (no JVM available)",
+    "work_root": "C:\\Users\\mugha\\Desktop\\SFC-Zero-Shotters-main"
+  },
+  "model_file": "model.joblib",
+  "trained_at": "2026-09-25 12:42:34",
+  "random_state": 42,
+  "features": [
+    "order_hour",
+    "day_of_week_code",
+    "order_month",
+    "is_weekend",
+    "is_promo_order",
+    "channel_code",
+    "payment_code",
+    "basket_size",
+    "basket_quantity",
+    "avg_unit_price",
+    "discount_rate_percentage",
+    "total_orders",
+    "total_spend"
+  ],
+  "metrics": {
+    "accuracy": 0.9858,
+    "f1": 0.9284,
+    "roc_auc": 0.9975
+  },
+  "threshold": 18306.68,
+  "n_train": 79630,
+  "n_eval": 15926,
+  "label_rule": "total_amount >= 90th percentile of training orders"
+}

@@ -23,6 +23,10 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+*.tar.gz
+*.tgz
+*.zip
+*.gz
 
 # Virtual environments
 .venv/

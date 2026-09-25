@@ -14,15 +14,15 @@ around it, listed as *to wrap*).
 **SLO:** a request with up to 100 order records returns the combined
 prediction from **both** pipelines' models in **< 5 000 ms** end-to-end
 (measured full-scale: ~90 ms for 100 records; see
-`Main/evidence/latency/ensemble_latency_report.csv`).
+`reports/latency/ensemble_latency_report.csv`).
 
 Models are **loaded once at service start** from versioned artifacts
 (never retrained at request time), keeping the process warm:
 
 | Pipeline | Artifact loaded at startup |
 | --- | --- |
-| Big Data (this workspace) | `Main/models/high_value_order/v<n>/` (latest) |
-| Python | `Ali Jaan/models/high_value_order/v<n>/` (latest) |
+| Big Data (this workspace) | `models/high_value_order/v<n>/` (latest) |
+| Python | `models/high_value_order/v<n>/` (latest) |
 
 ### `POST /api/v1/predict/order-value`
 
@@ -54,7 +54,7 @@ Request (JSON):
 
 * `records` must contain 1..100 rows with exactly the 13 order features
   (identical names/semantics to
-  `Ali Jaan/data_cleaning/dual_pipeline/order_value_unseen_cases.csv` -
+  `data_cleaning/dual_pipeline/order_value_unseen_cases.csv` -
   that file is the reference for value ranges and coding).
 * `order_id` / `customer_id` are for audit correlation only; the models
   do not consume them.
@@ -80,7 +80,7 @@ Response `200` (JSON):
 ```
 
 Combination rule (fixed, documented in
-`Main/spark_pipeline/ensemble_latency.py`):
+`spark_jobs/ensemble_latency.py`):
 `probability_ensemble = (p_big_data + p_python) / 2`,
 `high_value_predicted = 1 if probability_ensemble >= 0.5 else 0`.
 
@@ -109,7 +109,7 @@ Response mirrors the order-value shape (`churn_predicted`,
       "task": "high_value_order",
       "pipeline": "big_data",
       "version": 1,
-      "artifact": "Main/models/high_value_order/v1/",
+      "artifact": "models/high_value_order/v1/",
       "trained_at": "2026-09-24 15:00:00",
       "engine": "pandas",
       "metrics": {"eval_accuracy": 0.9858, "eval_f1": 0.9284, "eval_roc_auc": 0.9975},
@@ -122,7 +122,7 @@ Response mirrors the order-value shape (`churn_predicted`,
 ```
 
 Source: read `metadata.json` from each `v<n>/` directory under
-`Main/models/` and `Ali Jaan/models/` (both use the same layout:
+`models/` and `models/` (both use the same layout:
 `model.joblib` + `metadata.json` with `task`, `version`, `engine`,
 `trained_at`, `features`, `metrics`).
 
@@ -139,8 +139,8 @@ actually serving.
 * **Pipeline job status:** a `GET /api/v1/pipeline/status` endpoint
   (to wrap) should report the last `run_all.py` outcome. The pipeline
   writes one line per step to stdout and evidence files under
-  `Main/evidence/`; the service can tail the run log or check
-  `Main/evidence/latency/ensemble_latency_report.csv`
+  `reports/`; the service can tail the run log or check
+  `reports/latency/ensemble_latency_report.csv`
   (columns `pass`, `total_ms_max`, `nfr_limit_ms`) to answer
   "is the ensemble healthy?".
 * **Error handling:** all endpoints return the JSON error envelope
@@ -154,14 +154,14 @@ Dashboard charts read committed/refreshed evidence, not live models:
 
 | Dashboard widget | Source file | Key columns |
 | --- | --- | --- |
-| Category revenue share | `Main/evidence/spark_sql/category_revenue_share.csv` | `category_name`, `revenue`, `share` |
-| Peak hours | `Main/evidence/spark_sql/peak_hours.csv` | `hour`, `day_type`, `orders` |
-| Top item combos (lift) | `Main/evidence/spark_sql/top_item_combos.csv` | `item_a_name`, `item_b_name`, `restaurant_id`, `orders_with_combo`, `lift` (within-restaurant; `chain_lift` column kept for transparency) |
-| Promo traps | `Main/evidence/spark_sql/promo_effectiveness.csv` | `promotion_name`, `aov_lift_percentage`, `promotion_trap` |
-| Location ranking | `Main/evidence/spark_sql/location_ranking.csv` | `city_area`, `revenue`, `avg_order_value` |
-| Churn candidates | `Main/evidence/spark_sql/churn_candidates.csv` | `customer_id`, `days_since`, `total_orders` |
-| Dual-pipeline agreement | `Main/evidence/dual_pipeline/dual_pipeline_summary.csv` | `task`, `agreement_percentage` |
-| NFR health | `Main/evidence/latency/ensemble_latency_report.csv` | `pass`, `total_ms_max` |
+| Category revenue share | `reports/spark_sql/category_revenue_share.csv` | `category_name`, `revenue`, `share` |
+| Peak hours | `reports/spark_sql/peak_hours.csv` | `hour`, `day_type`, `orders` |
+| Top item combos (lift) | `reports/spark_sql/top_item_combos.csv` | `item_a_name`, `item_b_name`, `restaurant_id`, `orders_with_combo`, `lift` (within-restaurant; `chain_lift` column kept for transparency) |
+| Promo traps | `reports/spark_sql/promo_effectiveness.csv` | `promotion_name`, `aov_lift_percentage`, `promotion_trap` |
+| Location ranking | `reports/spark_sql/location_ranking.csv` | `city_area`, `revenue`, `avg_order_value` |
+| Churn candidates | `reports/spark_sql/churn_candidates.csv` | `customer_id`, `days_since`, `total_orders` |
+| Dual-pipeline agreement | `reports/dual_pipeline/dual_pipeline_summary.csv` | `task`, `agreement_percentage` |
+| NFR health | `reports/latency/ensemble_latency_report.csv` | `pass`, `total_ms_max` |
 
 ## 5. Reference implementation (thin service)
 

@@ -1,0 +1,69 @@
+dataset,check,failures,detail
+locations,row_count,0,20 rows ingested
+locations,pk_null_location_id,0,null primary keys
+locations,pk_duplicate_location_id,0,duplicate primary keys
+restaurants,row_count,0,20 rows ingested
+restaurants,pk_null_restaurant_id,0,null primary keys
+restaurants,pk_duplicate_restaurant_id,0,duplicate primary keys
+menu_categories,row_count,0,10 rows ingested
+menu_categories,pk_null_category_id,0,null primary keys
+menu_categories,pk_duplicate_category_id,0,duplicate primary keys
+menu_items,row_count,0,150 rows ingested
+menu_items,pk_null_menu_item_id,0,null primary keys
+menu_items,pk_duplicate_menu_item_id,0,duplicate primary keys
+menu_items,base_price_non_positive,0,base_price <= 0
+menu_items,cost_exceeds_base_price,0,cost_price > base_price
+customers,row_count,0,"50,000 rows ingested"
+customers,pk_null_customer_id,0,null primary keys
+customers,pk_duplicate_customer_id,0,duplicate primary keys
+orders,row_count,0,"99,900 rows ingested"
+orders,pk_null_order_id,0,null primary keys
+orders,pk_duplicate_order_id,0,duplicate primary keys
+orders,negative_subtotal,0,financial value < 0
+orders,negative_discount_amount,0,financial value < 0
+orders,negative_tax_amount,0,financial value < 0
+orders,negative_delivery_fee,0,financial value < 0
+orders,negative_total_amount,0,financial value < 0
+orders,order_date_outside_period,0,expected 2025-01-01..2025-12-31
+order_items,row_count,0,"997,205 rows ingested"
+order_items,pk_null_order_item_id,0,null primary keys
+order_items,pk_duplicate_order_item_id,0,duplicate primary keys
+order_items,quantity_non_positive,0,quantity <= 0
+order_items,unit_price_negative,0,unit_price < 0
+pricing_history,row_count,0,283 rows ingested
+pricing_history,pk_null_price_history_id,0,null primary keys
+pricing_history,pk_duplicate_price_history_id,0,duplicate primary keys
+promotions,row_count,0,120 rows ingested
+promotions,pk_null_promotion_id,0,null primary keys
+promotions,pk_duplicate_promotion_id,0,duplicate primary keys
+promotions,discount_pct_outside_0_100,0,discount_percentage outside 0..100
+ratings,row_count,0,"99,356 rows ingested"
+ratings,pk_null_rating_id,0,null primary keys
+ratings,pk_duplicate_rating_id,0,duplicate primary keys
+ratings,rating_outside_1_5,0,rating outside 1..5
+inventory,row_count,0,"50,000 rows ingested"
+inventory,pk_null_inventory_id,0,null primary keys
+inventory,pk_duplicate_inventory_id,0,duplicate primary keys
+inventory,negative_opening_stock,0,stock value < 0
+inventory,negative_received_quantity,0,stock value < 0
+inventory,negative_sold_quantity,0,stock value < 0
+inventory,negative_closing_stock,0,stock value < 0
+inventory,negative_reorder_level,0,stock value < 0
+wastage,row_count,0,"50,000 rows ingested"
+wastage,pk_null_wastage_id,0,null primary keys
+wastage,pk_duplicate_wastage_id,0,duplicate primary keys
+wastage,quantity_wasted_non_positive,0,quantity <= 0
+orders,fk_customer_id,0,unknown customer_id
+orders,fk_restaurant_id,0,unknown restaurant_id
+orders,fk_promotion_id,0,unknown promotion_id
+order_items,fk_order_id,0,unknown order_id
+order_items,fk_menu_item_id,0,unknown menu_item_id
+order_items,fk_restaurant_consistency,0,item not from the order's restaurant
+ratings,fk_order_id,0,unknown order_id
+ratings,fk_customer_match,0,rater is not the order's customer
+ratings,fk_item_in_order,0,rated item not present in the order
+menu_items,fk_restaurant_id,0,unknown restaurant_id
+menu_items,fk_category_id,0,unknown category_id
+inventory,fk_restaurant_item_pair,0,item not owned by the restaurant
+wastage,fk_restaurant_item_pair,0,item not owned by the restaurant
+pricing_history,fk_menu_item_id,0,unknown menu_item_id

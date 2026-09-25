@@ -2,7 +2,7 @@
 # ---------------------------------------------------------------------------
 # DineIQ Big Data pipeline - Spark environment setup (production path).
 #
-# Sets up everything Main/spark_pipeline/ needs to run on the REAL
+# Sets up everything spark_jobs/ needs to run on the REAL
 # Spark engine:
 #   1. Python virtual environment + dependencies
 #   2. JRE 17 (required by PySpark)
@@ -10,11 +10,11 @@
 #
 # On machines without a JVM (or without network access to install one)
 # the pipeline automatically falls back to the documented pandas/pyarrow
-# engine (Main/spark_pipeline/engines.py); every artifact then carries
+# engine (spark_jobs/engines.py); every artifact then carries
 # an engine label recording which engine produced it.
 #
 # Usage:
-#   bash Main/setup_spark.sh
+#   bash setup_spark.sh
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
@@ -24,7 +24,7 @@ cd "$BASE"
 echo "==> [1/3] Python environment"
 python3 -m venv .venv
 ./.venv/bin/pip install --upgrade pip
-./.venv/bin/pip install -r Main/requirements.txt
+./.venv/bin/pip install -r requirements.txt
 
 echo "==> [2/3] Java runtime (JRE 17)"
 if command -v java >/dev/null 2>&1; then
@@ -60,4 +60,4 @@ PY
 
 echo
 echo "Setup complete. Run the full pipeline with:"
-echo "  ./.venv/bin/python -m Main.spark_pipeline.run_all --engine spark"
+echo "  ./.venv/bin/python -m spark_jobs.run_all --engine spark"

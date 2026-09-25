@@ -2,13 +2,13 @@
 Shared feature construction for BOTH pipelines.
 
 Single source of truth for the analytical features used by the
-Spark/MLlib models (Main/spark_pipeline/mllib_models.py) AND by the
-Python model artifacts (Ali Jaan/data_cleaning/model_artifacts.py).
+Spark/MLlib models (spark_jobs/mllib_models.py) AND by the
+Python model artifacts (data_cleaning/model_artifacts.py).
 Sharing this module is what guarantees feature parity for the
 dual-pipeline comparison required by the SRS.
 
 All builders read the canonical cleaned CSV layer produced by
-Ali's cleaning step (Ali Jaan/processed_data/).
+Ali's cleaning step (processed_data/).
 """
 
 from __future__ import annotations
@@ -249,7 +249,7 @@ def build_menu_frame(frames: dict) -> pd.DataFrame:
     u_med = df["units_sold"].median()
     p_med = df["estimated_profit"].median()
     m_med = df["profit_margin_percentage"].median()
-    # SRS Step 10 (same rule as Ali Jaan/.../run_advanced_analytics.py):
+    # SRS Step 10 (same rule as .../run_advanced_analytics.py):
     # Profit Driver = high demand + high profit + high margin; Volume
     # Driver = any other high-demand item; Hidden Opportunity = low
     # demand + high margin; Low Performer = low demand + low margin.

@@ -6,7 +6,7 @@
 #
 # Install:
 #   python -m venv .venv
-#   .venv/bin/pip install -r Main/requirements.txt
+#   .venv/bin/pip install -r requirements.txt
 
 pandas>=2.2
 numpy>=1.26
@@ -19,8 +19,8 @@ jupyter>=1.0
 ipykernel>=6.29
 matplotlib>=3.8
 
-# Big Data pipeline (Main/spark_pipeline/)
-# The Spark engine uses PySpark + a JVM (see Main/setup_spark.sh).
+# Big Data pipeline (spark_jobs/)
+# The Spark engine uses PySpark + a JVM (see setup_spark.sh).
 # When no JVM is available the pipeline falls back to the documented
 # pandas/pyarrow engine producing the same artifacts.
 pyspark>=3.5

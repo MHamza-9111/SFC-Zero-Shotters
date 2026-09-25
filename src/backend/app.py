@@ -8,12 +8,18 @@ Integrates PySpark / Python dual-pipeline predictions and restaurant intelligenc
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
-from flask import Flask, jsonify, render_template, request
 
-from src.api.routes import api_bp
-
+# Make the project root importable when this file is launched directly with:
+#   python src/backend/app.py
+# This also keeps normal package/module execution working.
 BASE_DIR = Path(__file__).resolve().parents[2]
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+from flask import Flask, jsonify, render_template, request
+from src.api.routes import api_bp
 
 
 def create_app() -> Flask:

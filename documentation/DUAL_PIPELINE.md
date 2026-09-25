@@ -24,7 +24,7 @@ Full per-case agreement logs are committed under:
 
 ## 2. NFR #1 Ensemble Latency Performance Benchmark
 
-Per instructor clarification (`Main/SRS_CLARIFICATIONS.md`), the application must load versioned models into a warm process and generate ensemble predictions for uploaded records **within 5 seconds (< 5000 ms)**.
+Per instructor clarification (`documentation/SRS_CLARIFICATIONS.md`), the application must load versioned models into a warm process and generate ensemble predictions for uploaded records **within 5 seconds (< 5000 ms)**.
 
 ### Latency Measurement Results (100-Record Batch)
 - **Measured Latency**: **90.3 ms**

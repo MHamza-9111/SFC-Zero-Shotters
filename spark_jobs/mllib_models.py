@@ -19,9 +19,9 @@ case IDs (300 orders / 200 customers / 30 menu cells), which the
 comparison stage then scores as unseen.
 
 Every model is persisted as a versioned artifact:
-    Main/models/<task>/v<n>/  (model + metadata.json)
+    models/<task>/v<n>/  (model + metadata.json)
 so the 5-second ensemble NFR always loads a fixed, inspectable
-version (Main/SRS_CLARIFICATIONS.md, rule 1).
+version (documentation/SRS_CLARIFICATIONS.md, rule 1).
 """
 
 from __future__ import annotations

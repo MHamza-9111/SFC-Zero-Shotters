@@ -2,15 +2,15 @@
 Python-pipeline model artifacts (owner: Ali Jaan's workspace).
 
 Persists the Python data-science models as versioned artifacts so the
-5-second ensemble NFR (Main/SRS_CLARIFICATIONS.md) can load them at
+5-second ensemble NFR (documentation/SRS_CLARIFICATIONS.md) can load them at
 serving time instead of retraining:
 
-  Ali Jaan/models/high_value_order/v<n>/model.joblib + metadata.json
-  Ali Jaan/models/customer_churn/v<n>/model.joblib + metadata.json
+  models/high_value_order/v<n>/model.joblib + metadata.json
+  models/customer_churn/v<n>/model.joblib + metadata.json
 
 Training contract (identical to the Spark pipeline's):
-  * same canonical input  : Ali Jaan/processed_data/
-  * same features         : Main/spark_pipeline/features.py
+  * same canonical input  : processed_data/
+  * same features         : spark_jobs/features.py
                             (shared single source of truth - this import
                              is what guarantees feature parity)
   * same hyperparameters  : RandomForest(n=150) / LogisticRegression,
@@ -132,7 +132,7 @@ def main() -> dict:
     # The day_of_week_code mapping is recovered from the committed case
     # file so it is identical to the one the original Python run used
     # (factorize codes are appearance-order dependent).
-    from Main.spark_pipeline.features import _day_code_map_from_cases
+    from spark_jobs.features import _day_code_map_from_cases
     day_map = _day_code_map_from_cases(
         CASES_DIR / "order_value_unseen_cases.csv")
     of = build_order_frame(frames, day_map)
