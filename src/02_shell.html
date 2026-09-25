@@ -1,0 +1,183 @@
+<body>
+
+<!-- ═══ LANDING + AUTHENTICATION GATE — SRS FR (i)(ii) ═══════════════════ -->
+<div id="gate">
+  <canvas id="tj-canvas" aria-hidden="true"></canvas>
+
+  <div class="landing">
+    <header class="landing-nav">
+      <div class="brand">
+        <div class="brand-mark">DQ</div>
+        <div>
+          <div class="brand-name">Dine<i>IQ</i></div>
+          <div class="brand-sub">MenuMatrix Intelligence</div>
+        </div>
+      </div>
+      <div class="landing-nav-r">
+        <div class="icon-btn" id="theme-toggle" title="Toggle light / dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5v2M8 12.5v2M2.6 2.6l1.4 1.4M12 12l1.4 1.4M1.5 8h2M12.5 8h2M2.6 13.4l1.4-1.4M12 4l1.4-1.4"/><circle cx="8" cy="8" r="3.2"/></svg></div>
+        <a href="#gate-signin" class="btn sm ghost">Sign In</a>
+      </div>
+    </header>
+
+    <section class="hero reveal">
+      <div class="tagline">Restaurant Intelligence Workspace</div>
+      <h1 class="hero-title">Every menu decision,<br/>backed by <span class="gold-t">a number</span>.</h1>
+      <p class="hero-sub">Explore menu performance, customer behaviour, demand, wastage, pricing and promotion insights in one focused restaurant intelligence workspace.</p>
+      <div class="hero-cta">
+        <a href="#gate-signin" class="btn gold">Enter the Intelligence Suite</a>
+        <a href="#hero-stats" class="btn ghost">Explore analytics</a>
+      </div>
+    </section>
+
+    <section class="hero-stats reveal" id="hero-stats">
+      <div class="gate-stats">
+        <div class="gate-stat"><b>Menu</b><span>Performance &amp; profitability</span></div>
+        <div class="gate-stat"><b>Customers</b><span>Segments &amp; RFM insights</span></div>
+        <div class="gate-stat"><b>Demand</b><span>Forecasting &amp; peak analysis</span></div>
+        <div class="gate-stat"><b>Operations</b><span>Wastage, pricing &amp; promotions</span></div>
+      </div>
+      <div class="tech-row">
+        <span class="tech-chip">Menu Intelligence</span><span class="tech-chip">Customer Analytics</span><span class="tech-chip">Market Basket</span>
+        <span class="tech-chip">Demand Forecast</span><span class="tech-chip">Wastage</span><span class="tech-chip">Pricing</span>
+        <span class="tech-chip">Recommendations</span><span class="tech-chip">What-if Analysis</span>
+      </div>
+    </section>
+
+    <section class="signin-section reveal" id="gate-signin">
+      <div class="gate-card">
+        <div class="gate-left">
+          <div class="gate-3d" aria-hidden="true">
+            <div class="gate-3d-rig">
+              <div class="gate-3d-face f1"></div><div class="gate-3d-face f2"></div><div class="gate-3d-face f3"></div>
+              <div class="gate-3d-face f4"></div><div class="gate-3d-face f5"></div><div class="gate-3d-face f6"></div>
+            </div>
+          </div>
+          <div class="gate-left-content">
+          <div class="gate-mark">
+            <div class="gate-logo">DQ</div>
+            <div>
+              <div class="gate-title">Dine<span class="gold-t">IQ</span> Analytics</div>
+              <small>MenuMatrix Dining Intelligence</small>
+            </div>
+          </div>
+          <p class="gate-pitch">A focused restaurant intelligence interface for exploring menu performance, customer segments, market-basket patterns, demand, wastage, pricing, promotions, anomalies and evidence-based recommendations.</p>
+          </div>
+        </div>
+        <div class="gate-right">
+          <h3>Demo Sign In</h3>
+          <div class="sub">Choose a role to preview the intelligence workspace.</div>
+          <div class="field">
+            <label for="g-user">Username</label>
+            <input id="g-user" type="text" placeholder="e.g. arslan.m" autocomplete="username" value="arslan.m"/>
+          </div>
+          <div class="field">
+            <label for="g-pass">Password</label>
+            <input id="g-pass" type="password" placeholder="••••••••" autocomplete="current-password" value="dineiq2024"/>
+          </div>
+          <label style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;">Access Role</label>
+          <div class="roles" id="g-roles" style="margin-top:7px;"></div>
+          <button class="btn gold wide" id="g-go" style="padding:12px;">Sign In to Intelligence Suite</button>
+          <div class="hint">
+            <b style="color:var(--sub)">Demo access</b> — this frontend uses demo authentication. Select a role to preview the corresponding workspace.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="landing-foot">
+      <span>DineIQ · Data Science Intelligence Arena</span>
+      <span>Restaurant analytics interface · demo data shown until backend integration</span>
+    </footer>
+  </div>
+</div>
+
+<!-- ═══ APP SHELL ═══════════════════════════════════════════════════════ -->
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="brand">
+        <div class="brand-mark">DQ</div>
+        <div>
+          <div class="brand-name">Dine<i>IQ</i></div>
+          <div class="brand-sub">MenuMatrix Intelligence</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-scroll" id="sidebar-nav"></div>
+    <div class="sb-foot">
+      <div class="user-card" id="user-card">
+        <div class="user-av" id="u-av">AM</div>
+        <div style="min-width:0">
+          <div class="user-name" id="u-name">Ahmed M.</div>
+          <div class="user-role" id="u-role">Restaurant Manager</div>
+        </div>
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-left:auto;opacity:.5"><path d="M4 6l4 4 4-4"/></svg>
+      </div>
+      <div class="sb-meta">
+        <div><span>Warehouse</span><b id="m-rows">1.05M lines</b></div>
+        <div><span>Parquet snapshot</span><b id="m-ver">v2.4.0</b></div>
+        <div><span>Model registry</span><b id="m-models">9 live</b></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="icon-btn only-mobile" id="tb-menu" title="Menu"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h12M2 12h12"/></svg></div>
+      <div class="icon-btn" id="tb-home" title="Back to home"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7.5L8 2l6 5.5"/><path d="M3.5 6.5V14h9V6.5"/></svg></div>
+      <div class="page-title" id="pg-title">Executive Overview<span id="pg-sub">FY2023-24 · 12-month window</span></div>
+      <div class="spacer"></div>
+      <div class="chip" id="tb-scope"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 100 10A5 5 0 008 1zm0 7.4A2.4 2.4 0 118 3.6a2.4 2.4 0 010 4.8zM8 11c-4 0-5.6 1.6-5.6 2.3V15h11.2v-1.7C13.6 12.6 12 11 8 11z"/></svg><span id="tb-scope-t">All 20 Locations</span></div>
+      <div class="chip" id="tb-range"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="2.5" width="13" height="12" rx="2"/><path d="M1.5 6h13M5 1.5v2M11 1.5v2"/></svg><span id="tb-range-t">Jun 2023 – May 2024</span></div>
+      <div class="chip gold" id="tb-export"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10.5v2.5a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13v-2.5M8 1.5v9M4.5 7L8 10.5 11.5 7"/></svg>Export</div>
+      <div class="chip" id="tb-pdf"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/><path d="M5.5 5h5M5.5 8h5M5.5 11h3"/></svg>Print / PDF</div>
+      <div class="icon-btn" id="tb-bell" title="Alerts"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a3.5 3.5 0 00-3.5 3.5c0 3-1.5 4-1.5 4h10s-1.5-1-1.5-4A3.5 3.5 0 008 2zM6.5 12.5a1.5 1.5 0 003 0"/></svg><span class="dot"></span></div>
+      <div class="icon-btn" id="tb-cmd" title="Command palette (Ctrl/⌘ + K)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg></div>
+      <div class="icon-btn" id="tb-theme" title="Toggle light / dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5v2M8 12.5v2M2.6 2.6l1.4 1.4M12 12l1.4 1.4M1.5 8h2M12.5 8h2M2.6 13.4l1.4-1.4M12 4l1.4-1.4"/><circle cx="8" cy="8" r="3.2"/></svg></div>
+    </header>
+
+    <div class="filterbar" id="filterbar">
+      <span class="lbl">Filters</span>
+      <select class="f-sel" id="f-range"></select>
+      <select class="f-sel" id="f-loc"></select>
+      <select class="f-sel" id="f-cat"></select>
+      <select class="f-sel" id="f-seg"></select>
+      <select class="f-sel" id="f-chan"></select>
+      <select class="f-sel" id="f-class"></select>
+      <select class="f-sel" id="f-price"></select>
+      <select class="f-sel" id="f-rating"></select>
+      <select class="f-sel" id="f-waste"></select>
+      <div class="search-wrap"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg><input class="f-in" id="f-q" type="text" placeholder="Search item / ID…"/></div>
+      <button class="btn sm ghost" id="f-reset">Reset</button>
+      <span class="spacer"></span>
+      <span class="chip" style="cursor:default"><span class="live-dot"></span><span id="f-count">—</span></span>
+    </div>
+
+    <main class="content" id="content"></main>
+  </div>
+</div>
+
+<div id="drawer">
+  <div class="dw-h">
+    <div>
+      <h3 id="dw-title">Item</h3>
+      <div class="sub" id="dw-sub">—</div>
+    </div>
+    <div class="icon-btn" id="dw-close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l8 8M12 4l-8 8"/></svg></div>
+  </div>
+  <div class="dw-b" id="dw-body"></div>
+</div>
+<div class="mask" id="dw-mask"></div>
+
+<div class="mask" id="nav-mask"></div>
+<div class="mask" id="pal-mask"></div>
+<div class="modal" id="pal-modal">
+  <div class="modal-h">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--gold)" stroke-width="1.5"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+    <input id="pal-input" type="text" placeholder="Jump to a dashboard, run an action, find an item or customer…"/>
+    <span class="tag">ESC</span>
+  </div>
+  <div class="modal-b" id="pal-list"></div>
+</div>
+
+<div id="toasts"></div>

@@ -18,6 +18,15 @@ from spark_jobs.engines import get_engine
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
+TASK_MAP = {
+    "order_value": "high_value_order",
+    "high_value_order": "high_value_order",
+    "churn": "customer_churn",
+    "customer_churn": "customer_churn",
+    "menu_class": "menu_business_class",
+    "menu_business_class": "menu_business_class",
+}
+
 
 class ScoringService:
     def __init__(self):
@@ -28,34 +37,92 @@ class ScoringService:
 
     def predict_ensemble(self, task: str, records: list[dict]) -> dict:
         """
-        Loads warm models (or relies on engine scoring) and computes ensemble predictions.
+        Loads warm models and computes ensemble predictions.
         """
         start_time = time.perf_counter()
         df = pd.DataFrame(records)
 
-        # Select features based on task
-        if task == "order_value":
+        canonical_task = TASK_MAP.get(task, task)
+
+        # Select features based on task and map user inputs
+        if canonical_task == "high_value_order":
             feature_cols = ORDER_FEATURES
-        elif task == "churn":
+            if "order_amount" in df.columns and "avg_unit_price" not in df.columns:
+                df["avg_unit_price"] = df["order_amount"]
+            if "item_count" in df.columns:
+                if "basket_size" not in df.columns:
+                    df["basket_size"] = df["item_count"]
+                if "basket_quantity" not in df.columns:
+                    df["basket_quantity"] = df["item_count"]
+            if "customer_orders" in df.columns and "total_orders" not in df.columns:
+                df["total_orders"] = df["customer_orders"]
+            if "customer_spend" in df.columns and "total_spend" not in df.columns:
+                df["total_spend"] = df["customer_spend"]
+            if "promo_applied" in df.columns and "is_promo_order" not in df.columns:
+                df["is_promo_order"] = df["promo_applied"]
+
+            defaults = {
+                "order_hour": 19,
+                "day_of_week_code": 5,
+                "order_month": 6,
+                "is_weekend": 1,
+                "is_promo_order": 0,
+                "channel_code": 1,
+                "payment_code": 1,
+                "basket_size": 3,
+                "basket_quantity": 4,
+                "avg_unit_price": 500.0,
+                "discount_rate_percentage": 0.0,
+                "total_orders": 5,
+                "total_spend": 2500.0,
+            }
+            for col, val in defaults.items():
+                if col not in df.columns:
+                    df[col] = val
+
+        elif canonical_task == "customer_churn":
             feature_cols = CHURN_FEATURES
+            if "orders" in df.columns and "f_log_orders" not in df.columns:
+                df["f_log_orders"] = np.log1p(df["orders"])
+            if "spend" in df.columns and "f_log_spend" not in df.columns:
+                df["f_log_spend"] = np.log1p(df["spend"])
+
+            defaults = {
+                "recency_days": 30,
+                "f_log_orders": np.log1p(10),
+                "f_log_spend": np.log1p(15000),
+                "average_order_value": 1500.0,
+                "discount_dependency": 0.1,
+                "promo_dependency": 0.2,
+                "top_category_share": 0.4,
+                "unique_categories": 3,
+            }
+            for col, val in defaults.items():
+                if col not in df.columns:
+                    df[col] = val
         else:
             feature_cols = [c for c in df.columns if c not in ["order_id", "customer_id"]]
 
+        X = df[feature_cols].astype(float)
+
         # 1. Pipeline model scoring
-        pipeline_model, p_meta = load_latest_model(self.models_dir, task)
-        p_preds, p_probas = self.engine.score_model(pipeline_model, df[feature_cols])
+        pipeline_model, p_meta = load_latest_model(self.models_dir, canonical_task)
+        if hasattr(pipeline_model, "predict_proba"):
+            p_probas = pipeline_model.predict_proba(X)[:, 1]
+        else:
+            p_preds = pipeline_model.predict(X)
+            p_probas = np.where(p_preds == 1, 0.85, 0.15)
 
         # 2. Python model scoring (if available)
         py_probas = np.array(p_probas)
         try:
-            py_model, py_meta = _load_python_model(self.python_models_dir, task)
+            py_model, py_meta = _load_python_model(self.python_models_dir, canonical_task)
             if hasattr(py_model, "predict_proba"):
-                py_probas = py_model.predict_proba(df[feature_cols])[:, 1]
+                py_probas = py_model.predict_proba(X)[:, 1]
             else:
-                py_preds = py_model.predict(df[feature_cols])
-                py_probas = np.where(py_preds == 1, 0.9, 0.1)
+                py_preds = py_model.predict(X)
+                py_probas = np.where(py_preds == 1, 0.85, 0.15)
         except Exception:
-            # Fallback to pipeline probabilities if standalone python artifact is building
             pass
 
         # 3. Ensemble combination (probability average)
@@ -66,6 +133,7 @@ class ScoringService:
 
         return {
             "task": task,
+            "canonical_task": canonical_task,
             "record_count": len(df),
             "latency_ms": round(elapsed_ms, 2),
             "nfr_pass": elapsed_ms < NFR_LIMIT_MS,
