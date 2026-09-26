@@ -41,13 +41,6 @@ htmlcov/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# Generated Raw / Processed / Parquet Datasets (regenerable via pipeline runners)
-raw_data/*.csv
-processed_data/*.csv
-processed_data/analytics/*.csv
-processed_data/quarantine/*.csv
-parquet_data/
-
 # IDE / OS specific
 .vscode/
 .idea/
