@@ -1,10 +1,9 @@
 """
-Tests for the DineIQ Big Data pipeline (spark_jobs/).
+Tests for the DineIQ Big Data pipeline (Main/spark_pipeline/).
 
 Runs the real pipeline code on a small generated dataset in a temp
-directory (engine: the pandas fallback when no JVM is available - the
-same engine-selection logic production uses), with mini dual-pipeline
-case sets built the same way as the committed full-scale ones.
+directory. When the Spark runtime is unavailable it exercises the same pandas engine-selection logic production uses, with mini
+dual-pipeline case sets built the same way as the committed full-scale ones.
 
 Coverage:
   * schemas: DDL / pandas dtype / PK completeness
@@ -150,6 +149,7 @@ def cases_dir(mini_env, tmp_path_factory):
                      "total_spend", "average_order_value",
                      "discount_dependency", "promo_dependency",
                      "top_category_share", "unique_categories",
+                     "total_items_purchased", "weekend_order_share",
                      "churned"]].copy()
     ccases = ccases.rename(columns={"churned": "actual_churn"})
     ccases.to_csv(out / "churn_unseen_cases.csv", index=False)
@@ -199,7 +199,6 @@ def cases_dir(mini_env, tmp_path_factory):
 
 def _churn_X(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame({
-        "recency_days": df["recency_days"].astype(float),
         "f_log_orders": np.log1p(df["total_orders"].astype(float)),
         "f_log_spend": np.log1p(df["total_spend"].astype(float)),
         "average_order_value": df["average_order_value"].astype(float),
@@ -207,6 +206,8 @@ def _churn_X(df: pd.DataFrame) -> pd.DataFrame:
         "promo_dependency": df["promo_dependency"].astype(float),
         "top_category_share": df["top_category_share"].astype(float),
         "unique_categories": df["unique_categories"].astype(float),
+        "total_items_purchased": df["total_items_purchased"].astype(float),
+        "weekend_order_share": df["weekend_order_share"].astype(float),
     }).fillna(0)
 
 
@@ -434,7 +435,7 @@ def test_nfr_latency_passes(pipeline_out):
     res = pipeline_out["latency"]["high_value_order"]
     # mini dataset carries 50 order cases, so the warm batch is
     # min(100, 50); the NFR protocol itself is the 100-record batch
-    # exercised by the full-scale evidence (reports/latency/).
+    # exercised by the full-scale evidence (Main/evidence/latency/).
     assert res["batch_size"] >= 50
     assert res["pass"]
     # sample carries both model versions (versioned artifact NFR rule)

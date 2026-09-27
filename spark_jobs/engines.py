@@ -68,7 +68,7 @@ class BaseEngine:
 
 class PandasEngine(BaseEngine):
     kind = "pandas"
-    display = "pandas+pyarrow fallback (no JVM available)"
+    display = "pandas fallback (PySpark runtime unavailable)"
 
     def __init__(self, work_root: Path):
         super().__init__(work_root)

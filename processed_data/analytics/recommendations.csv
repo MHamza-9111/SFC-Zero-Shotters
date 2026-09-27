@@ -1,0 +1,21 @@
+priority,recommendation,target_type,target_id,target_name,evidence,estimated_impact
+P1,"Promote high-margin, low-volume item (bundle, signage, staff suggestion)",menu_item,94,Menu Item 094 @ Restaurant 014,margin 63.0% (above median) with only 4994 units sold; class=Hidden Opportunity,Each extra 100 units adds ~46896 currency units of profit
+P1,"Promote high-margin, low-volume item (bundle, signage, staff suggestion)",menu_item,147,Menu Item 147 @ Restaurant 007,margin 62.9% (above median) with only 3338 units sold; class=Hidden Opportunity,Each extra 100 units adds ~38291 currency units of profit
+P1,"Promote high-margin, low-volume item (bundle, signage, staff suggestion)",menu_item,30,Menu Item 030 @ Restaurant 010,margin 62.9% (above median) with only 1857 units sold; class=Hidden Opportunity,Each extra 100 units adds ~29918 currency units of profit
+P1,"Promote high-margin, low-volume item (bundle, signage, staff suggestion)",menu_item,121,Menu Item 121 @ Restaurant 001,margin 62.3% (above median) with only 3894 units sold; class=Hidden Opportunity,Each extra 100 units adds ~62833 currency units of profit
+P1,"Promote high-margin, low-volume item (bundle, signage, staff suggestion)",menu_item,51,Menu Item 051 @ Restaurant 011,margin 61.8% (above median) with only 4342 units sold; class=Hidden Opportunity,Each extra 100 units adds ~60036 currency units of profit
+P2,Pause or restructure underperforming promotion,promotion,23,Promotion 023,"AOV lift -4.3% vs control, efficiency -0.623 on 390298 discount spent",Recovers discount spend without incremental revenue
+P2,Pause or restructure underperforming promotion,promotion,22,Promotion 022,"AOV lift -5.1% vs control, efficiency -0.695 on 235110 discount spent",Recovers discount spend without incremental revenue
+P2,Pause or restructure underperforming promotion,promotion,4,Promotion 004,"AOV lift -5.5% vs control, efficiency -1.012 on 154942 discount spent",Recovers discount spend without incremental revenue
+P2,Reduce overproduction / tighten prep planning,menu_item,25,Menu Item 025 @ restaurant 5,"wastage ratio 34.7%, cost 967075, trend stable",30% waste reduction saves ~290123
+P2,Reduce overproduction / tighten prep planning,menu_item,55,Menu Item 055 @ restaurant 15,"wastage ratio 25.0%, cost 775007, trend stable",30% waste reduction saves ~232502
+P2,Reduce overproduction / tighten prep planning,menu_item,2,Menu Item 002 @ restaurant 2,"wastage ratio 24.1%, cost 736781, trend stable",30% waste reduction saves ~221034
+P2,Reduce overproduction / tighten prep planning,menu_item,122,Menu Item 122 @ restaurant 2,"wastage ratio 23.3%, cost 728948, trend stable",30% waste reduction saves ~218684
+P2,Reduce overproduction / tighten prep planning,menu_item,32,Menu Item 032 @ restaurant 12,"wastage ratio 25.2%, cost 708768, trend stable",30% waste reduction saves ~212630
+P3,Menu review: item lost momentum,menu_item,97,Menu Item 097 @ restaurant 17,342 units in first 60 days vs 397 in last 60 days (+16%); status=low_velocity,Frees menu and kitchen capacity for stronger items
+P3,Menu review: item lost momentum,menu_item,23,Menu Item 023 @ restaurant 3,316 units in first 60 days vs 394 in last 60 days (+25%); status=low_velocity,Frees menu and kitchen capacity for stronger items
+P3,Menu review: item lost momentum,menu_item,88,Menu Item 088 @ restaurant 8,314 units in first 60 days vs 378 in last 60 days (+20%); status=low_velocity,Frees menu and kitchen capacity for stronger items
+P3,Menu review: item lost momentum,menu_item,5,Menu Item 005 @ restaurant 5,306 units in first 60 days vs 346 in last 60 days (+13%); status=low_velocity,Frees menu and kitchen capacity for stronger items
+P3,Menu review: item lost momentum,menu_item,70,Menu Item 070 @ restaurant 10,298 units in first 60 days vs 326 in last 60 days (+9%); status=low_velocity,Frees menu and kitchen capacity for stronger items
+P3,Align staffing and prep capacity with peak cell,period,Sunday/Dinner Peak/Third-party Delivery,Sunday Dinner Peak Third-party Delivery,peak cell carries 2.2% of all orders (AOV 11103),Fewer delays at peak; protects repeat demand
+P1,Win-back campaign for at-risk high-value customers,customer_group,high_value_at_risk,540 customers,high churn probability with lifetime spend 24291689,Retaining half of them protects ~12145844 lifetime spend

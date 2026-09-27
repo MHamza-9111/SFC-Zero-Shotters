@@ -1,0 +1,11 @@
+metric,value
+accuracy,0.7724
+roc_auc,0.8024
+macro_f1,0.6473
+train_size,21580
+test_size,5395
+churn_rate,0.7396
+definition,No completed order in the final 60 days of the analysis window
+observation_window,Customers with first order on or before 2025-07-04
+model,StandardScaler + LogisticRegression (sklearn)
+production_fit,All eligible customers except 200 committed dual-pipeline cases

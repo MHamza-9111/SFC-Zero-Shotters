@@ -3,7 +3,7 @@ Step 4 - Dual-pipeline comparison (SRS: independent pipelines compared
 on unseen cases).
 
 Inputs (committed, produced by Ali's independent Python pipeline):
-  data_cleaning/dual_pipeline/
+  python_pipeline/dual_pipeline/
     order_value_unseen_cases.csv        300 orders + 13 features + actual
     order_value_python_predictions.csv  Python RF predictions
     churn_unseen_cases.csv              200 customers + features + actual
@@ -12,7 +12,7 @@ Inputs (committed, produced by Ali's independent Python pipeline):
     menu_class_python_predictions.csv   Python RF predictions
 
 This step loads the LATEST versioned model trained by step 3
-(models, never retraining) and scores the same cases. For every
+(models/, never retraining) and scores the same cases. For every
 case it records: ID, actual, Python output, pipeline output, match
 flag and - for disagreements - a short explanation.
 
@@ -60,7 +60,26 @@ def _explain_churn(case, py, sp, proba, py_proba):
     return f"disagree: python={int(py)} pipeline={int(sp)} ({where})"
 
 
-def compare_order_value(models_dir: Path, cases_dir: Path, out_dir: Path):
+def _predict_with_engine(engine, model, X: pd.DataFrame, multiclass: bool = False):
+    """Score a feature frame with either sklearn or a Spark PipelineModel."""
+    if engine.kind != "spark":
+        labels = np.asarray(model.predict(X))
+        probabilities = np.asarray(model.predict_proba(X), dtype=float)
+        return labels, probabilities
+
+    spark_frame = engine.spark.createDataFrame(X.astype(float))
+    scored = model.transform(spark_frame)
+    if multiclass:
+        rows = scored.select("predictionLabel", "probability").collect()
+        labels = np.asarray([r["predictionLabel"] for r in rows])
+    else:
+        rows = scored.select("prediction", "probability").collect()
+        labels = np.asarray([int(r["prediction"]) for r in rows])
+    probabilities = np.vstack([np.asarray(r["probability"].toArray(), dtype=float) for r in rows])
+    return labels, probabilities
+
+
+def compare_order_value(engine, models_dir: Path, cases_dir: Path, out_dir: Path):
     cases = pd.read_csv(cases_dir / "order_value_unseen_cases.csv")
     py = pd.read_csv(cases_dir / "order_value_python_predictions.csv")
     df = cases.merge(py, on="order_id", how="left", suffixes=("", "_py"))
@@ -68,8 +87,9 @@ def compare_order_value(models_dir: Path, cases_dir: Path, out_dir: Path):
     model, meta = load_latest_model(models_dir, "high_value_order")
 
     X = df[ORDER_FEATURES].astype(float)
-    df["pipeline_predicted_high_value"] = model.predict(X).astype(int)
-    df["pipeline_probability"] = model.predict_proba(X)[:, 1]
+    pipeline_labels, pipeline_probabilities = _predict_with_engine(engine, model, X)
+    df["pipeline_predicted_high_value"] = pipeline_labels.astype(int)
+    df["pipeline_probability"] = pipeline_probabilities[:, 1]
     df["match"] = (df["python_predicted_high_value"].astype(int)
                    == df["pipeline_predicted_high_value"].astype(int))
     df["explanation"] = [
@@ -99,7 +119,7 @@ def compare_order_value(models_dir: Path, cases_dir: Path, out_dir: Path):
     return df, agg, meta
 
 
-def compare_churn(models_dir: Path, cases_dir: Path, out_dir: Path):
+def compare_churn(engine, models_dir: Path, cases_dir: Path, out_dir: Path):
     cases = pd.read_csv(cases_dir / "churn_unseen_cases.csv")
     py = pd.read_csv(cases_dir / "churn_python_predictions.csv")
     df = cases.merge(py, on="customer_id", how="left", suffixes=("", "_py"))
@@ -109,7 +129,6 @@ def compare_churn(models_dir: Path, cases_dir: Path, out_dir: Path):
     # The case file carries the raw customer aggregates; the log
     # features are derived exactly as in the training frame.
     X = pd.DataFrame({
-        "recency_days": df["recency_days"].astype(float),
         "f_log_orders": np.log1p(df["total_orders"].astype(float)),
         "f_log_spend": np.log1p(df["total_spend"].astype(float)),
         "average_order_value": df["average_order_value"].astype(float),
@@ -117,9 +136,12 @@ def compare_churn(models_dir: Path, cases_dir: Path, out_dir: Path):
         "promo_dependency": df["promo_dependency"].astype(float),
         "top_category_share": df["top_category_share"].astype(float),
         "unique_categories": df["unique_categories"].astype(float),
+        "total_items_purchased": df["total_items_purchased"].astype(float),
+        "weekend_order_share": df["weekend_order_share"].astype(float),
     }).fillna(0)
-    df["pipeline_predicted_churn"] = model.predict(X).astype(int)
-    df["pipeline_probability"] = model.predict_proba(X)[:, 1]
+    pipeline_labels, pipeline_probabilities = _predict_with_engine(engine, model, X)
+    df["pipeline_predicted_churn"] = pipeline_labels.astype(int)
+    df["pipeline_probability"] = pipeline_probabilities[:, 1]
     df["match"] = (df["python_predicted_churn"].astype(int)
                    == df["pipeline_predicted_churn"].astype(int))
     df["explanation"] = [
@@ -152,7 +174,7 @@ def compare_churn(models_dir: Path, cases_dir: Path, out_dir: Path):
     return df, agg, meta
 
 
-def compare_menu(models_dir: Path, cases_dir: Path, out_dir: Path):
+def compare_menu(engine, models_dir: Path, cases_dir: Path, out_dir: Path):
     cases = pd.read_csv(cases_dir / "menu_class_unseen_cases.csv")
     py = pd.read_csv(cases_dir / "menu_class_python_predictions.csv")
     df = cases.merge(py, on=["menu_item_id", "restaurant_id"],
@@ -161,7 +183,8 @@ def compare_menu(models_dir: Path, cases_dir: Path, out_dir: Path):
     model, meta = load_latest_model(models_dir, "menu_business_class")
 
     X = df[MENU_FEATURES].astype(float)
-    df["pipeline_predicted_class"] = model.predict(X)
+    pipeline_labels, _ = _predict_with_engine(engine, model, X, multiclass=True)
+    df["pipeline_predicted_class"] = pipeline_labels
     df["match"] = df["python_predicted_class"] == df["pipeline_predicted_class"]
     df["explanation"] = [
         "" if m else (f"disagree: python={pc} pipeline={sc} "
@@ -207,21 +230,21 @@ def run(engine, models_dir: Path, cases_dir: Path, out_dir: Path) -> pd.DataFram
 
     summary_rows = []
 
-    df, agg, _ = compare_order_value(models_dir, cases_dir, out_dir)
+    df, agg, _ = compare_order_value(engine, models_dir, cases_dir, out_dir)
     df.to_csv(out_dir / "order_value_comparison.csv", index=False)
     agg.to_csv(out_dir / "order_value_agreement.csv", index=False)
     print(f"  high_value_order  : "
           f"{int(agg['matching_cases'].iloc[0])}/300 match "
           f"({agg['agreement_percentage'].iloc[0]}%)")
 
-    df, agg, _ = compare_churn(models_dir, cases_dir, out_dir)
+    df, agg, _ = compare_churn(engine, models_dir, cases_dir, out_dir)
     df.to_csv(out_dir / "churn_comparison.csv", index=False)
     agg.to_csv(out_dir / "churn_agreement.csv", index=False)
     print(f"  customer_churn    : "
           f"{int(agg['matching_cases'].iloc[0])}/200 match "
           f"({agg['agreement_percentage'].iloc[0]}%)")
 
-    df, agg, _ = compare_menu(models_dir, cases_dir, out_dir)
+    df, agg, _ = compare_menu(engine, models_dir, cases_dir, out_dir)
     df.to_csv(out_dir / "menu_class_comparison.csv", index=False)
     agg.to_csv(out_dir / "menu_class_agreement.csv", index=False)
     print(f"  menu_business     : "

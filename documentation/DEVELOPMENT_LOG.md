@@ -4,6 +4,11 @@ Competition deliverable: chronological record of significant
 decisions, problems, and resolutions. Entries are added by the team
 member who made the work.
 
+Historical entries dated 2026-09-24 retain the paths and ownership labels
+used by the separate workspaces at that time. This merged checkout uses
+the current top-level paths documented in `README.md`; historical path
+names do not describe folders in the present tree.
+
 ---
 
 ## 2026-09-24 - Market-basket lift: removed co-location artifact
@@ -55,8 +60,8 @@ failures, dual pipeline 300/300 + 200/200 + 30/30 (100 %), NFR PASS,
 
 ### Fix
 
-- One rule, identical in `data_cleaning/run_advanced_analytics.py`
-  and `spark_jobs/features.py` (median splits; the four
+- One rule, identical in `Ali Jaan/data_cleaning/run_advanced_analytics.py`
+  and `Main/spark_pipeline/features.py` (median splits; the four
   conditions partition every item, so no default is reached):
   Profit Driver = high demand + high profit + high margin; Volume Driver
   = any other high-demand item; Hidden Opportunity = low demand + high
@@ -68,7 +73,7 @@ failures, dual pipeline 300/300 + 200/200 + 30/30 (100 %), NFR PASS,
 
 ### Dashboard charts
 
-- `reports/charts/` (20 PNGs) is now committed; it had been gitignored, so
+- `Main/charts/` (20 PNGs) is now committed; it had been gitignored, so
   the charts never reached GitHub.
 - Chart corrections: 05 compares average orders **per day** (the yearly
   totals made weekdays look busier because a year has 261 weekdays vs
@@ -87,19 +92,19 @@ failures, dual pipeline 300/300 + 200/200 + 30/30 (100 %), NFR PASS,
 
 ### What was delivered
 
-- `spark_jobs/` - the complete Big Data pipeline
+- `Main/spark_pipeline/` - the complete Big Data pipeline
   (ingestion/validation -> Spark SQL -> models -> dual-pipeline
   comparison -> NFR latency test), runnable end-to-end:
-  `python -m spark_jobs.run_all`.
-- `setup_spark.sh` - production setup (venv, JRE 17, Spark smoke
+  `python -m Main.spark_pipeline.run_all`.
+- `Main/setup_spark.sh` - production setup (venv, JRE 17, Spark smoke
   test).
-- `data_cleaning/model_artifacts.py` - versioned Python model
+- `Ali Jaan/data_cleaning/model_artifacts.py` - versioned Python model
   artifacts with exact-reproduction self-validation (300/300 and
   200/200 committed predictions reproduced).
-- Evidence committed under `reports/` (quality report, 10 SQL
+- Evidence committed under `Main/evidence/` (quality report, 10 SQL
   outputs, model evaluation, dual-pipeline comparison, NFR latency
   report), every file engine-labelled.
-- 14 new tests (`tests/spark/test_spark_pipeline.py`); full suite
+- 14 new tests (`Main/tests/test_spark_pipeline.py`); full suite
   38/38.
 
 ### Key decisions
@@ -201,7 +206,61 @@ failures, dual pipeline 300/300 + 200/200 + 30/30 (100 %), NFR PASS,
 ## 2026-09-24 - Python data pipeline (Ali Jaan)
 
 *See `notebook/README.md`, the committed dual-pipeline sets under
-`data_cleaning/dual_pipeline/`, and the AI usage log entry
+`Ali Jaan/data_cleaning/dual_pipeline/`, and the AI usage log entry
 for the full record of the Python-side work delivered this day
 (generator, cleaning with quarantine, processing, advanced
 analytics, 24 tests).*
+
+---
+
+## 2026-09-26 - SRS application repair and production-path verification
+
+### Changes
+
+- Reconnected the dashboard and API views, warm model scoring, sign-in,
+  role enforcement, audit logging, CSV exports, and server health/readiness.
+- Added Administrator-controlled CRUD across 12 operational resources,
+  including field/range, FK, order-item ownership, promotion-window, and
+  rating consistency checks. Operational SQLite customers store no direct
+  personal identifiers.
+- Added CSRF checks for session writes, production secure-cookie defaults,
+  a Waitress WSGI entry point, and runtime database/session-key exclusions.
+- Corrected configuration, Spark runner, model-artifact, notebook, and
+  setup-script references that still pointed at the former `Main/` and
+  `Ali Jaan/` workspaces.
+- Made the large processing and SQL report CSV writes atomic after a
+  Windows overwrite failure interrupted the first full pipeline run.
+- Replaced stale status badges, API notes, runbooks, test claims, and SRS
+  traceability with paths and limitations matching this checkout.
+
+### Verification
+
+- Python pipeline `--skip-generation` completed on the existing
+  1,000,200 raw order lines and preserved raw inputs.
+- `spark_jobs.run_all --engine auto` completed using the pandas/pyarrow
+  fallback with zero quality failures, 100% held-out comparison on
+  300/200/30 records, and warm latency below 5,000 ms. The host had no
+  usable JVM; this run does not demonstrate Spark execution.
+- Existing tests: 90 passed. Python compilation and all seven JavaScript
+  syntax checks passed. API/SQLite verification exercised all 12 CRUD
+  resources, access control, CSRF, validation, audit, and FK delete
+  protection.
+
+### Acceptance limits
+
+The CRUD SQLite store remains separate from the analytics CSV snapshots,
+so CRUD edits do not trigger analytics recomputation. The Spark runtime,
+5M-line target, cross-device browser review, hosted load test, 99% uptime,
+TLS/deployment setup, and external competition deliverables still need
+validation or publication in the target environment. See
+`SRS_MAPPING.md`, `TESTING.md`, and `AI_USAGE.md`.
+### 2026-09-27 — Phase 2 defect/UI remediation and verification
+
+- Removed churn label leakage by excluding `recency_days` from model features in both Python and Spark feature definitions. Added legitimate purchase-volume and weekend-behavior features after the leakage diagnosis.
+- Audited related classifiers and removed current-order value from high-value-order customer-history features; rebuilt menu business classification features so target-defining profitability values are outputs rather than model inputs.
+- Implemented distinct rating-anomaly rules and separated rating vs sales/operational anomalies at the dashboard API boundary.
+- Removed interactive 3D card/table hover motion and added data-driven insight framing plus keyboard semantics for interactive table rows while preserving the Industrial Intelligence design system and existing responsive/theme tokens.
+- Added `/channels` to the existing page allow-list so all rendered dashboard views are routable.
+- Retrained/versioned Python artifacts and reproduced committed dual-pipeline predictions exactly.
+- Verification in this environment: 24 Python integration tests passed; Python compileall and all JS syntax checks passed. Flask, PySpark, pyarrow and fastparquet are unavailable locally, so browser/HTTP and genuine Spark/Parquet execution remain explicitly unverified. Java 21 is present.
+- Final leakage-free churn holdout: accuracy 0.7724, ROC-AUC 0.8024, macro-F1 0.6473. Forecast model MAE 180,918.10 vs naive 317,352.07. High-value order holdout accuracy 0.9867 / F1 0.9231 / ROC-AUC 0.9987.

@@ -1,0 +1,62 @@
+anomaly_type,entity,period,value,z_score,note
+daily_sales_spike_or_drop,restaurant_2,2025-06-08,495293.99,4.32,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_2,2025-12-14,443515.99,3.57,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_2,2025-12-20,414014.41,3.15,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_3,2025-03-16,242548.43,3.05,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_3,2025-08-16,249915.94,3.23,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_3,2025-12-14,244468.86,3.1,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_4,2025-06-21,187830.63,3.07,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_4,2025-06-29,209560.62,3.72,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_4,2025-07-05,195939.32,3.31,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_5,2025-05-25,413055.94,3.61,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_5,2025-07-13,375688.15,3.03,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_5,2025-08-24,386571.47,3.2,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_5,2025-11-22,379600.98,3.09,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_6,2025-09-23,363358.25,3.5,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_6,2025-11-30,358298.8,3.41,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_6,2025-12-12,354848.48,3.35,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_7,2025-06-28,306603.94,3.37,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_7,2025-12-07,357456.0,4.36,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_8,2025-08-09,172427.86,3.32,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_8,2025-12-27,181839.7,3.66,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_9,2025-11-16,131525.3,4.4,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_10,2025-01-18,172105.27,3.84,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_10,2025-06-07,154312.42,3.14,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_10,2025-12-21,154899.38,3.16,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_11,2025-06-07,296611.25,3.56,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_11,2025-12-28,270638.57,3.01,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_12,2025-05-11,528794.08,3.65,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_12,2025-06-28,480159.89,3.04,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_13,2025-12-13,232697.0,3.22,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_13,2025-12-20,228138.39,3.11,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_14,2025-05-03,203085.99,3.67,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_14,2025-07-12,189991.54,3.25,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_15,2025-04-20,389143.3,3.03,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_15,2025-06-13,464911.36,4.2,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_17,2025-06-08,290441.97,3.69,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_17,2025-12-20,263818.39,3.1,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_17,2025-12-27,262931.7,3.08,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_18,2025-11-08,179332.91,3.08,Daily revenue more than 3 std deviations from restaurant mean
+daily_sales_spike_or_drop,restaurant_19,2025-11-15,95435.06,3.95,Daily revenue more than 3 std deviations from restaurant mean
+order_total_outlier,order_479,2025-12-05,37005.15,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_523,2025-10-22,37339.97,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_2220,2025-05-09,35554.52,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_3356,2025-03-12,36703.04,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_5563,2025-08-20,36613.09,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_25701,2025-09-16,35894.17,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_30171,2025-12-25,36075.44,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_34388,2025-05-11,36572.54,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_36053,2025-05-11,35856.58,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_39278,2025-09-12,38137.1,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_48626,2025-05-10,39449.71,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_53130,2025-12-05,39225.94,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_59617,2025-08-29,37399.25,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_87933,2025-03-01,36592.04,,Order total above Q3 + 3*IQR (35435.03)
+order_total_outlier,order_90788,2025-10-08,37009.96,,Order total above Q3 + 3*IQR (35435.03)
+rating_volume_burst,menu_item_27,2025-12,72.0,,Menu Item 027: rating volume exceeds item-level Q3 + 3*IQR threshold
+rating_volume_burst,menu_item_30,2025-10,19.0,,Menu Item 030: rating volume exceeds item-level Q3 + 3*IQR threshold
+rating_volume_burst,menu_item_30,2025-12,21.0,,Menu Item 030: rating volume exceeds item-level Q3 + 3*IQR threshold
+rating_volume_burst,menu_item_73,2025-08,47.0,,Menu Item 073: rating volume exceeds item-level Q3 + 3*IQR threshold
+rating_volume_burst,menu_item_73,2025-12,60.0,,Menu Item 073: rating volume exceeds item-level Q3 + 3*IQR threshold
+rating_volume_burst,menu_item_108,2025-12,104.0,,Menu Item 108: rating volume exceeds item-level Q3 + 3*IQR threshold
+rating_volume_burst,menu_item_150,2025-06,61.0,,Menu Item 150: rating volume exceeds item-level Q3 + 3*IQR threshold

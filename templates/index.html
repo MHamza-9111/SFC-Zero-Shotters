@@ -1,179 +1,439 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DineIQ Analytics — Master Restaurant Intelligence Platform</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="DineIQ Analytics — Next-generation restaurant intelligence platform with dual ML pipeline, demand forecasting, and menu intelligence.">
+  <title>DineIQ Analytics — Restaurant Intelligence</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="brand">
-            <div class="brand-logo">IQ</div>
-            <div class="brand-title">DineIQ Analytics Platform</div>
+<body data-view="{{ view }}" data-theme="dark">
+  <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+  <div class="cursor-aura" id="cursor-aura"></div>
+  <div class="ambient-glow ambient-glow-1"></div>
+  <div class="ambient-glow ambient-glow-2"></div>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5 3h14v18l-3-2-4 2-4-2-3 2z"/><path d="M8 8h8M8 12h8M8 16h4"/></symbol>
+    <symbol id="i-menu-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5v14A2.5 2.5 0 0 1 6.5 17H20M8 7h8M8 11h7"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5M16 5a3.5 3.5 0 0 1 0 6.5M17.5 15c2.1.6 3.5 2.2 4 5"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M4 8h16l-1.4 13H5.4zM9 8V6a3 3 0 0 1 6 0v2"/><path d="M9 12v1M15 12v1"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="8" cy="9" r="1.4"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="m12 3 9 5v9l-9 5-9-5V8zM3 8l9 5 9-5M12 13v9M7.5 5.5l9 5"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H21v16H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 7h14a3 3 0 0 1 3 3v2h-6a2 2 0 0 0 0 4h6M16 14h.01"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 6-7"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 17 9 11l4 4 8-9M15 6h6v6"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2zM12 9v5M12 17h.01"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4m14-6h4m-4 6h4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5z"/><path d="m8.5 12 2.3 2.3 4.8-5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.5 9A7 7 0 0 1 18 6l2 2M4 16l2 2a7 7 0 0 0 12.5-3"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l5 5v13H6zM14 3v6h5M9 13h7M9 17h7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9h.01M18 15h.01"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="sidebar-head">
+        <a class="brand" href="/" aria-label="DineIQ Analytics home">
+          <span class="brand-mark"><svg aria-hidden="true"><use href="#i-chart"/></svg></span>
+          <span class="brand-copy"><strong>DineIQ <em>Analytics</em></strong><small>INTELLIGENCE PLATFORM</small></span>
+        </a>
+        <button class="icon-btn sidebar-close" id="sidebar-close" aria-label="Close navigation"><svg><use href="#i-close"/></svg></button>
+      </div>
+
+      <div class="branch-wrap">
+        <button class="branch-selector" id="branch-selector" type="button" aria-haspopup="true" aria-expanded="false">
+          <span class="branch-icon"><svg><use href="#i-pin"/></svg></span>
+          <span class="branch-text"><span class="branch-label">Operating scope</span><span class="branch-name" id="branch-name">Loading locations</span></span>
+          <svg class="branch-chevron"><use href="#i-chevron"/></svg>
+        </button>
+        <div class="dropdown branch-menu" id="branch-menu" hidden>
+          <label class="sr-only" for="branch-search">Find a location</label>
+          <input class="control dropdown-search" id="branch-search" type="search" placeholder="Find a location">
+          <div id="branch-list"></div>
         </div>
-        <div class="status-badge">
-            <span class="status-dot"></span>
-            <span id="api-status">OPERATIONAL</span>
+      </div>
+
+      <nav class="nav side-nav" id="nav">
+        <div class="nav-group-label">Overview</div>
+        <a class="nav-item" data-view="overview" href="/"><svg><use href="#i-grid"/></svg><span>Executive dashboard</span></a>
+        <div class="nav-group-label">Operations</div>
+        <a class="nav-item" data-view="orders" href="/orders"><svg><use href="#i-receipt"/></svg><span>Orders</span></a>
+        <a class="nav-item" data-view="inventory" href="/inventory"><svg><use href="#i-box"/></svg><span>Wastage &amp; stock</span></a>
+        <a class="nav-item" data-view="payments" href="/payments"><svg><use href="#i-wallet"/></svg><span>Payments</span></a>
+        <a class="nav-item" data-view="promotions" href="/promotions"><svg><use href="#i-tag"/></svg><span>Promotions</span></a>
+        <a class="nav-item" data-view="locations" href="/locations"><svg><use href="#i-pin"/></svg><span>Locations</span></a>
+        <a class="nav-item" data-view="data" href="/data"><svg><use href="#i-doc"/></svg><span>Data management</span></a>
+        <div class="nav-group-label">Intelligence</div>
+        <a class="nav-item" data-view="menu" href="/menu"><svg><use href="#i-menu-book"/></svg><span>Menu performance</span></a>
+        <a class="nav-item" data-view="channels" href="/channels"><svg><use href="#i-globe"/></svg><span>Channel intelligence</span></a>
+        <a class="nav-item" data-view="customers" href="/customers"><svg><use href="#i-users"/></svg><span>Customer intelligence</span></a>
+        <a class="nav-item" data-view="basket" href="/basket"><svg><use href="#i-bag"/></svg><span>Market basket</span></a>
+        <a class="nav-item" data-view="price" href="/price"><svg><use href="#i-trend"/></svg><span>Price intelligence</span></a>
+        <a class="nav-item" data-view="forecast" href="/forecast"><svg><use href="#i-chart"/></svg><span>Demand forecast</span></a>
+        <a class="nav-item" data-view="peak" href="/peak"><svg><use href="#i-clock"/></svg><span>Peak periods</span></a>
+        <a class="nav-item" data-view="anomalies" href="/anomalies"><svg><use href="#i-alert"/></svg><span>Alerts &amp; anomalies</span></a>
+        <a class="nav-item" data-view="recommendations" href="/recommendations"><svg><use href="#i-spark"/></svg><span>Recommendations</span></a>
+        <a class="nav-item" data-view="whatif" href="/whatif"><svg><use href="#i-trend"/></svg><span>What-if scenarios</span></a>
+        <div class="nav-group-label">Platform</div>
+        <a class="nav-item" data-view="models" href="/models"><svg><use href="#i-cpu"/></svg><span>Models &amp; serving</span></a>
+        <a class="nav-item" data-view="quality" href="/quality"><svg><use href="#i-shield"/></svg><span>Data quality</span></a>
+        <a class="nav-item" data-view="reports" href="/reports"><svg><use href="#i-doc"/></svg><span>Reports</span></a>
+        <a class="nav-item" data-view="team" href="/team"><svg><use href="#i-users"/></svg><span>Team &amp; access</span></a>
+        <a class="nav-item" data-view="billing" href="/billing"><svg><use href="#i-chart"/></svg><span>Usage</span></a>
+        <a class="nav-item" data-view="settings" href="/settings"><svg><use href="#i-check"/></svg><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="system-card">
+          <div class="system-row"><span class="status-dot" id="sys-dot"></span><span id="sys-label">Checking service</span></div>
+          <div class="system-sub" id="sys-sub">Connecting to the analytics API</div>
         </div>
-    </nav>
+      </div>
+    </aside>
 
-    <div class="container">
-        <!-- Hero Metrics -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Target Dataset Scale</div>
-                <div class="stat-value">1,000,000+</div>
-                <div class="stat-desc">Synthetic order lines generated & validated</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Dual-Pipeline Agreement</div>
-                <div class="stat-value" id="agreement-stat">100.0%</div>
-                <div class="stat-desc">530 / 530 unseen evaluation cases match</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Ensemble Latency (NFR #1)</div>
-                <div class="stat-value" id="latency-stat">90.3 ms</div>
-                <div class="stat-desc">Warm-process serving limit < 5,000 ms (PASS)</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Automated Test Coverage</div>
-                <div class="stat-value">38 / 38</div>
-                <div class="stat-desc">PySpark + Scikit-Learn test suite passing</div>
-            </div>
+    <button class="sidebar-scrim" id="sidebar-scrim" type="button" aria-label="Close navigation" hidden></button>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation"><svg><use href="#i-menu"/></svg></button>
+          <div class="topbar-title"><span class="eyebrow">DineIQ Analytics</span><h1 id="page-title">Executive dashboard</h1></div>
         </div>
-
-        <!-- Navigation Tabs -->
-        <div class="tabs-nav">
-            <button class="tab-btn active" data-tab="overview">Executive Overview</button>
-            <button class="tab-btn" data-tab="menu">Menu Intelligence</button>
-            <button class="tab-btn" data-tab="customers">Customer Analytics</button>
-            <button class="tab-btn" data-tab="models">Dual-Pipeline Models & NFR Demo</button>
-        </div>
-
-        <!-- Tab 1: Executive Overview -->
-        <div id="overview" class="tab-content active">
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <div class="chart-title">01. Data Ingestion Quality Assessment</div>
-                    <img class="chart-img" src="/api/v1/charts/01_data_quality.png" alt="Data Quality">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">03. Monthly Revenue by Restaurant Location</div>
-                    <img class="chart-img" src="/api/v1/charts/03_monthly_revenue_location.png" alt="Monthly Revenue">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">04. Menu Category Revenue Share</div>
-                    <img class="chart-img" src="/api/v1/charts/04_category_revenue_share.png" alt="Category Revenue Share">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">09. Restaurant Location Performance Ranking</div>
-                    <img class="chart-img" src="/api/v1/charts/09_location_ranking.png" alt="Location Ranking">
-                </div>
+        <button class="branch-chip" id="branch-chip" type="button"><svg><use href="#i-pin"/></svg><span id="branch-chip-name">All locations</span><svg class="branch-chevron"><use href="#i-chevron"/></svg></button>
+        <div class="topbar-right">
+          <div class="search-wrap">
+            <svg class="search-icon"><use href="#i-search"/></svg>
+            <label class="sr-only" for="global-search">Search orders, dishes, customers and locations</label>
+            <input class="control search" id="global-search" type="search" placeholder="Search orders, dishes... (Ctrl+K)" autocomplete="off">
+            <div class="dropdown search-results" id="search-results" hidden></div>
+          </div>
+          <div class="dropdown-wrap">
+            <button class="icon-btn notification-button" id="notif-btn" type="button" aria-label="View current alerts" aria-haspopup="true" aria-expanded="false">
+              <svg><use href="#i-bell"/></svg><span class="notification-count" id="notif-count" hidden></span>
+            </button>
+            <div class="dropdown notification-panel" id="notif-panel" hidden>
+              <div class="dropdown-heading"><strong>Current alerts</strong><span id="notif-meta">Checking</span></div>
+              <div id="notif-list"></div>
             </div>
+          </div>
+          <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false"><svg id="theme-icon"><use href="#i-sun"/></svg></button>
+          <button class="btn btn-ghost refresh-button" id="refresh-dashboard" type="button"><svg><use href="#i-refresh"/></svg><span>Refresh</span></button>
+          <button class="btn btn-ghost" id="logout-button" type="button" aria-label="Sign out">Sign out</button>
         </div>
+      </header>
 
-        <!-- Tab 2: Menu Intelligence -->
-        <div id="menu" class="tab-content">
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <div class="chart-title">11. Menu Business Classes (SRS Step 10 Rules)</div>
-                    <img class="chart-img" src="/api/v1/charts/11_menu_business_classes.png" alt="Menu Business Classes">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">07. Top Item Combinations & Market Basket Lift</div>
-                    <img class="chart-img" src="/api/v1/charts/07_top_item_combos.png" alt="Top Item Combos">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">13. Wastage Risk & Cost Analysis</div>
-                    <img class="chart-img" src="/api/v1/charts/13_wastage_risk.png" alt="Wastage Risk">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">15. Slow-Moving Menu Items (First 60d vs Last 60d)</div>
-                    <img class="chart-img" src="/api/v1/charts/15_slow_moving_items.png" alt="Slow Moving Items">
-                </div>
+      <main class="content" id="main-content">
+        <section class="view" id="view-overview" data-title="Executive dashboard">
+          <div class="view-heading">
+            <div><div class="eyebrow">Intelligence command center</div><h2>Executive Surface</h2><p>Operational reality, predictive signals, and system health.</p></div>
+            <div class="date-controls" aria-label="Business date">
+              <button class="icon-btn" id="asof-prev" type="button" aria-label="Previous date">‹</button>
+              <label class="sr-only" for="asof-date">Business date</label><input class="control date-input" id="asof-date" type="date">
+              <button class="icon-btn" id="asof-next" type="button" aria-label="Next date">›</button>
+              <button class="btn btn-ghost" id="asof-latest" type="button">Latest</button>
             </div>
-        </div>
+          </div>
+          
+          <div class="notice coverage-note" id="coverage-note" style="margin-bottom:16px;"></div>
 
-        <!-- Tab 3: Customer Analytics -->
-        <div id="customers" class="tab-content">
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <div class="chart-title">10. RFM Customer Segments Profile</div>
-                    <img class="chart-img" src="/api/v1/charts/10_rfm_segments.png" alt="RFM Segments">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">12. Customer Churn Risk Model Score Distribution</div>
-                    <img class="chart-img" src="/api/v1/charts/12_churn_risk.png" alt="Churn Risk">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">05. Peak Ordering Hours & Day-of-Week Patterns</div>
-                    <img class="chart-img" src="/api/v1/charts/05_peak_hours.png" alt="Peak Hours">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">14. Price Sensitivity & Elasticity Analysis</div>
-                    <img class="chart-img" src="/api/v1/charts/14_price_sensitivity.png" alt="Price Sensitivity">
-                </div>
+          <!-- PRIMARY COMMAND SURFACE -->
+          <div class="grid g4 kpi-grid" id="kpi-grid"></div>
+
+          <!-- ASYMMETRIC SECONDARY SURFACE -->
+          <div class="grid dashboard-grid" style="grid-template-columns: 2fr 1fr;">
+            <section class="card">
+              <div class="card-head"><div><h3 class="card-title">Network Revenue Topography</h3><div class="card-sub" id="rev-sub">Real-time monetary velocity against operational capacity</div></div><div class="card-metric"><strong id="rev-total">—</strong><span id="rev-trend"></span></div></div>
+              <div class="card-tools"><div class="segmented" id="rev-range"><button type="button" data-range="week" class="active">Week</button><button type="button" data-range="month">Month</button><button type="button" data-range="year">Year</button></div><span class="muted" id="rev-source"></span></div>
+              <div class="chart chart-large" id="rev-chart"></div>
+            </section>
+            
+            <div class="grid g1" style="gap:16px;">
+              <section class="card">
+                <div class="card-head"><div><h3 class="card-title">Service Pulse</h3><div class="card-sub" id="pulse-sub">Active channel distribution</div></div></div>
+                <div class="card-body"><div class="pulse-grid" id="pulse-grid" style="grid-template-columns: repeat(2, 1fr);"></div></div>
+              </section>
+              <section class="card">
+                <div class="card-head"><div><h3 class="card-title">Category Distribution</h3><div class="card-sub">Revenue share by catalog node</div></div></div>
+                <div class="card-body compact-body"><div id="cat-list"></div></div>
+              </section>
             </div>
-        </div>
+          </div>
 
-        <!-- Tab 4: Dual Pipeline Models & Live Predictor Demo -->
-        <div id="models" class="tab-content">
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <div class="chart-title">17. Dual Pipeline Agreement (100% Unseen Match)</div>
-                    <img class="chart-img" src="/api/v1/charts/17_dual_pipeline_agreement.png" alt="Dual Pipeline Agreement">
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">20. Ensemble Serving Latency vs 5-Second NFR Budget</div>
-                    <img class="chart-img" src="/api/v1/charts/20_ensemble_latency.png" alt="Ensemble Latency">
-                </div>
+          <!-- TERTIARY INTELLIGENCE ROW -->
+          <div class="grid g3 dashboard-grid">
+            <section class="card">
+              <div class="card-head"><div><h3 class="card-title">Recent Event Log</h3><div class="card-sub" id="recent-sub">Processed transactions</div></div><label class="sr-only" for="recent-sort">Order by</label><select class="control control-small" id="recent-sort"><option value="recent">Chronological</option><option value="amount_desc">High value</option><option value="amount_asc">Low value</option></select></div>
+              <div class="card-body compact-body"><div class="order-list" id="recent-orders" style="max-height: 280px;"></div></div>
+            </section>
+            
+            <section class="card">
+              <div class="card-head"><div><h3 class="card-title">Top Asset Performers</h3><div class="card-sub" id="dishes-sub">Ranked by yield</div></div><label class="sr-only" for="dishes-range">Asset range</label><select class="control control-small" id="dishes-range"><option value="all">Global</option><option value="month">30D</option><option value="week">7D</option><option value="today">24H</option></select></div>
+              <div class="card-body compact-body"><div id="dish-list"></div></div>
+            </section>
+
+            <section class="card">
+              <div class="card-head"><div><h3 class="card-title">Location Nodes</h3><div class="card-sub">Highest yield areas</div></div><a class="text-link" href="/locations">View map</a></div>
+              <div class="card-body compact-body"><div id="area-list"></div></div>
+            </section>
+          </div>
+          
+          <div class="grid g2 dashboard-grid">
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Capital Inflow Mix</h3><div class="card-sub" id="payments-scope">Settled tenders</div><strong class="card-metric-value" id="pay-total">—</strong></div></div><div class="card-body compact-body"><div class="data-list" id="pay-list"></div></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Transaction Ledger</h3><div class="card-sub" id="tx-sub">Most recent settled records</div></div></div><div class="card-body compact-body"><div class="data-list" id="tx-list"></div></div></section>
+          </div>
+
+          <div class="quick-grid" id="quick-grid" aria-label="System navigation nodes"></div>
+          <div class="muted dashboard-footnote" id="foot-coverage" style="margin-top:16px;"></div>
+        </section>
+
+        <section class="view" id="view-orders" data-title="Orders">
+          <div class="view-heading"><div><div class="eyebrow">Operations</div><h2>Orders</h2><p>Search, filter and inspect recorded orders.</p></div></div>
+          <div class="grid g3 kpi-grid" id="orders-kpis"></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Order register</h3><div class="card-sub">Filters apply to the loaded transaction records.</div></div></div>
+            <div class="filter-row"><label class="sr-only" for="orders-q">Search orders</label><input class="control" id="orders-q" type="search" placeholder="Search order or customer"><label class="sr-only" for="orders-status">Order status</label><select class="control" id="orders-status"><option value="">All statuses</option></select><label class="sr-only" for="orders-channel">Order channel</label><select class="control" id="orders-channel"><option value="">All channels</option></select><label class="sr-only" for="orders-payment">Payment method</label><select class="control" id="orders-payment"><option value="">All payments</option></select><label class="sr-only" for="orders-sort">Sort orders</label><select class="control" id="orders-sort"><option value="recent">Most recent</option><option value="amount_desc">Highest value</option><option value="amount_asc">Lowest value</option></select><button class="btn btn-ghost" id="orders-clear" type="button">Clear</button></div>
+            <div class="table-wrap"><table class="table"><thead><tr><th>Order</th><th>Customer</th><th>Location</th><th>Channel</th><th>Payment</th><th class="num">Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="orders-tbody"></tbody></table></div><div class="pager" id="orders-pager"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-menu" data-title="Menu Intelligence">
+          <div class="view-heading"><div><div class="eyebrow">Intelligence node</div><h2>Menu Intelligence</h2><p>Observed sales, contribution matrix, and business classification from the analytical engine.</p></div><div class="filter-row compact-filters"><label class="sr-only" for="menu-q">Search menu items</label><input class="control" id="menu-q" type="search" placeholder="Search dishes"><label class="sr-only" for="menu-range">Menu date range</label><select class="control" id="menu-range"><option value="all">All history</option><option value="month">Last 30 days</option><option value="week">Last 7 days</option><option value="today">Selected date</option></select></div></div>
+          <div class="grid g2">
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Top menu items</h3><div class="card-sub">Ranked by realized revenue</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Rank</th><th>Item</th><th>Category</th><th class="num">Units</th><th class="num">Revenue</th><th class="num">Contribution</th></tr></thead><tbody id="dishes-tbody"></tbody></table></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Menu classifications</h3><div class="card-sub">Business classes in the analytics evidence</div></div></div><div class="card-body"><div class="legend-row" id="class-legend"></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Item</th><th class="num">Units</th><th class="num">Margin</th><th class="num">Rating</th><th>Class</th></tr></thead><tbody id="classes-tbody"></tbody></table></div></section>
+          </div>
+          <div class="grid g2 page-grid"><section class="card"><div class="card-head"><div><h3 class="card-title">Market basket pairs</h3><div class="card-sub">Observed item pair lift</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Item pair</th><th class="num">Orders</th><th class="num">Lift</th></tr></thead><tbody id="combos-tbody"></tbody></table></div></section><section class="card"><div class="card-head"><div><h3 class="card-title">Category revenue</h3><div class="card-sub">Observed category mix</div></div></div><div class="card-body"><div id="menu-cat-list"></div></div></section></div>
+        </section>
+
+        <section class="view" id="view-inventory" data-title="Wastage Intelligence">
+          <div class="view-heading"><div><div class="eyebrow">Operations intelligence</div><h2>Wastage &amp; Stock</h2><p>Recorded wastage ratios, slow-moving asset risk assessment, and stock velocity analysis.</p></div></div>
+          <div class="grid g2"><section class="card"><div class="card-head"><div><h3 class="card-title">Wastage ratio by item</h3><div class="card-sub">Highest observed ratios in the loaded analytics</div></div></div><div class="chart" id="inv-chart-1"></div></section><section class="card"><div class="card-head"><div><h3 class="card-title">Slow-moving items</h3><div class="card-sub">Observed units in the first and last 60-day windows</div></div></div><div class="chart" id="inv-chart-2"></div></section></div>
+          <div class="grid g2 page-grid"><section class="card"><div class="card-head"><div><h3 class="card-title">Wastage register</h3><div class="card-sub">Menu performance evidence</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Item</th><th class="num">Wastage</th><th class="num">Units</th><th class="num">Revenue</th><th>Class</th></tr></thead><tbody id="wastage-tbody"></tbody></table></div></section><section class="card"><div class="card-head"><div><h3 class="card-title">Slow-moving detail</h3><div class="card-sub">Loaded processed layer</div></div></div><div class="card-body" id="slow-detail"></div></section></div>
+        </section>
+
+        <section class="view" id="view-customers" data-title="Customer intelligence">
+          <div class="view-heading"><div><div class="eyebrow">Intelligence node</div><h2>Customer Intelligence</h2><p>Behavioral segmentation, RFM analysis, and churn-risk profiling from transaction history.</p></div></div>
+          <div class="grid g4 kpi-grid" id="customers-kpis"></div>
+          <div class="grid g2"><section class="card"><div class="card-head"><div><h3 class="card-title">Risk distribution</h3><div class="card-sub">Current filtered customer set</div></div></div><div class="chart" id="cust-chart-1"></div></section><section class="card"><div class="card-head"><div><h3 class="card-title">Recent customer recency</h3><div class="card-sub">Days since last recorded order</div></div></div><div class="chart" id="cust-chart-2"></div></section></div>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Customer register</h3><div class="card-sub">Filter by name or risk level</div></div></div><div class="filter-row"><label class="sr-only" for="customers-q">Search customers</label><input class="control" id="customers-q" type="search" placeholder="Search customer ID"><label class="sr-only" for="customers-risk">Risk level</label><select class="control" id="customers-risk"><option value="">All risk levels</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div><div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Last order</th><th class="num">Days since</th><th>Preferred channel</th><th class="num">Orders</th><th>Risk</th></tr></thead><tbody id="customers-tbody"></tbody></table></div><div class="pager" id="customers-pager"></div></section>
+        </section>
+
+        <section class="view" id="view-promotions" data-title="Promotions">
+          <div class="view-heading"><div><div class="eyebrow">Operations</div><h2>Promotions</h2><p>Recorded promotion performance and discount economics.</p></div><label class="sr-only" for="promos-filter">Promotion filter</label><select class="control" id="promos-filter"><option value="">All promotions</option><option value="traps">Promotion traps</option><option value="healthy">Healthy</option></select></div>
+          <div class="grid g4 kpi-grid" id="promos-kpis"></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Observed AOV lift</h3><div class="card-sub">Current promotion records</div></div></div><div class="chart" id="promo-chart"></div></section>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Promotion register</h3><div class="card-sub">Discount and incremental revenue evidence</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Promotion</th><th class="num">Discount</th><th class="num">Orders</th><th class="num">AOV lift</th><th class="num">Discount spend</th><th class="num">Incremental revenue</th><th>Classification</th></tr></thead><tbody id="promos-tbody"></tbody></table></div><div class="pager" id="promos-pager"></div></section>
+        </section>
+
+        <section class="view" id="view-payments" data-title="Payments">
+          <div class="view-heading"><div><div class="eyebrow">Operations</div><h2>Payments</h2><p>Settlement totals and payment methods from completed orders.</p></div></div>
+          <div class="grid g3 kpi-grid" id="payments-kpis"></div>
+          <div class="segmented page-grid" id="pay-range"><button type="button" data-range="week">Week</button><button type="button" data-range="month" class="active">Month</button><button type="button" data-range="year">Year</button></div>
+          <div class="grid g2"><section class="card"><div class="card-head"><div><h3 class="card-title">Payment mix</h3><div class="card-sub">Settled amount by method</div></div></div><div class="chart" id="pay-donut"></div><div class="card-body"><div class="data-list" id="pay-list-lg"></div></div></section><section class="card"><div class="card-head"><div><h3 class="card-title">Payment trend</h3><div class="card-sub">Monthly recorded settlements</div></div></div><div class="chart" id="pay-monthly"></div></section></div>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Transaction register</h3><div class="card-sub">Filter completed and cancelled payments</div></div></div><div class="filter-row"><label class="sr-only" for="tx-q">Search transactions</label><input class="control" id="tx-q" type="search" placeholder="Search order"><label class="sr-only" for="tx-method">Payment method</label><select class="control" id="tx-method"><option value="">All methods</option></select><label class="sr-only" for="tx-status">Transaction status</label><select class="control" id="tx-status"><option value="">All statuses</option><option>Paid</option><option>Cancelled</option></select></div><div class="table-wrap"><table class="table"><thead><tr><th>Type</th><th>Order</th><th class="num">Amount</th><th>Date</th><th>Time</th><th>Status</th></tr></thead><tbody id="tx-tbody"></tbody></table></div><div class="pager" id="tx-pager"></div></section>
+        </section>
+
+        <section class="view" id="view-reports" data-title="Reports">
+          <div class="view-heading"><div><div class="eyebrow">Platform</div><h2>Reports</h2><p>Data-quality, processing and model-comparison evidence.</p></div><div class="filter-row compact-filters"><label for="report-export" class="sr-only">Choose report to export</label><select class="control" id="report-export"><option value="orders">Orders</option><option value="menu">Menu performance</option><option value="customers">Customer segments</option><option value="promotions">Promotions</option><option value="market_basket">Market basket</option><option value="comparison">Model comparison</option><option value="quality">Data quality</option></select><button class="btn btn-primary" id="report-export-button" type="button">Export CSV</button></div></div>
+          <div class="report-stats" id="report-stats"></div>
+          <div class="grid g2 reports-groups" id="reports-groups">
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Revenue trend</h3><div class="card-sub">Monthly completed-order revenue</div></div></div><div class="chart report-live-chart" id="report-revenue"></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Location performance</h3><div class="card-sub">Revenue by operating area</div></div></div><div class="chart report-live-chart" id="report-locations"></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Menu business classes</h3><div class="card-sub">Current menu classification mix</div></div></div><div class="chart report-live-chart" id="report-menu-class"></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Wastage exposure</h3><div class="card-sub">Highest observed wastage ratios by item</div></div></div><div class="chart report-live-chart" id="report-wastage"></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Customer recency</h3><div class="card-sub">Profiles grouped by days since last order</div></div></div><div class="chart report-live-chart" id="report-recency"></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Promotion lift</h3><div class="card-sub">Observed average-order-value lift</div></div></div><div class="chart report-live-chart" id="report-promotions"></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Forecast vs actual</h3><div class="card-sub">Latest chronological forecast window</div></div></div><div class="chart report-live-chart" id="report-forecast"></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Peak hour demand</h3><div class="card-sub">Weekday and weekend orders by hour</div></div></div><div class="chart report-live-chart" id="report-peak"></div></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-channels" data-title="Channel Intelligence">
+          <div class="view-heading"><div><div class="eyebrow">Intelligence node</div><h2>Channel Intelligence</h2><p>Omnichannel revenue distribution, network performance, and platform efficiency.</p></div></div>
+          <div class="grid g4 kpi-grid" id="channels-kpis"></div>
+          <div class="grid g2">
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Network Distribution</h3><div class="card-sub">Revenue share across all fulfillment channels</div></div></div><div class="chart" id="channel-chart-dist"></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Channel Monthly Topography</h3><div class="card-sub">Revenue trends over the last 12 months</div></div></div><div class="chart" id="channel-chart-trend"></div></section>
+          </div>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Channel Evidence</h3><div class="card-sub">Recorded aggregated metrics per channel layer</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Channel</th><th class="num">Orders</th><th class="num">Revenue</th><th class="num">Average order</th><th class="num">Refunds</th></tr></thead><tbody id="channels-tbody"></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-locations" data-title="Locations">
+          <div class="view-heading"><div><div class="eyebrow">Network topology</div><h2>Location Nodes</h2><p>Revenue distribution, order density, and average order value by operating area.</p></div></div>
+          <div class="grid g4 kpi-grid" id="locations-kpis"></div>
+          <div class="grid g2"><section class="card"><div class="card-head"><div><h3 class="card-title">Location performance</h3><div class="card-sub">Select an area to focus the trend</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Rank</th><th>Area</th><th class="num">Orders</th><th class="num">Revenue</th><th class="num">Average order</th></tr></thead><tbody id="locations-tbody"></tbody></table></div></section><section class="card"><div class="card-head"><div><h3 class="card-title">Monthly revenue</h3><div class="card-sub" id="loc-chart-sub">All areas</div></div></div><div class="chart" id="loc-chart"></div></section></div>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Peak hours by day type</h3><div class="card-sub">Observed order counts</div></div></div><div class="chart" id="peak-chart"></div></section>
+        </section>
+
+        <section class="view" id="view-models" data-title="Models &amp; serving">
+          <div class="view-heading"><div><div class="eyebrow">Platform engineering</div><h2>Model Laboratory</h2><p>Versioned artifacts, dual-pipeline agreement metrics, and production serving latency.</p></div></div>
+          <div class="grid g4 kpi-grid" id="models-kpis"></div>
+          <section class="card page-grid scorer-card">
+            <div class="card-head"><div><h3 class="card-title">Prediction workbench</h3><div class="card-sub">Score a record with both available models. Responses include model versions and request latency.</div></div></div>
+            <div class="card-tools scorer-tools"><div class="segmented" id="scorer-task" role="tablist" aria-label="Prediction task"></div><div class="filter-row compact-filters"><button class="btn btn-ghost" id="scorer-sample" type="button">Load benchmark sample</button><button class="btn btn-primary" id="scorer-run" type="button">Run prediction</button></div></div>
+            <form id="scorer-form" class="data-form-grid scorer-form" autocomplete="off"></form>
+            <div class="card-body scorer-result" id="scorer-result" role="status" aria-live="polite" hidden></div>
+          </section>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Dual-pipeline comparison</h3><div class="card-sub">Recorded unseen-case agreement</div></div></div><div class="dual-panels" id="dual-panels"></div></section>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Ensemble serving latency</h3><div class="card-sub">Measured runtime against the five-second requirement</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Task</th><th class="num">Batch size</th><th class="num">Max time</th><th class="num">Budget</th><th>Result</th></tr></thead><tbody id="latency-tbody"></tbody></table></div></section>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Model registry</h3><div class="card-sub">Available artifact metadata and evaluation measures</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Task</th><th>Pipeline</th><th>Version</th><th>Engine</th><th>Trained</th><th>Evaluation</th><th>Artifact</th><th>Status</th></tr></thead><tbody id="models-tbody"></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-settings" data-title="Settings">
+          <div class="view-heading"><div><div class="eyebrow">Platform</div><h2>Settings</h2><p>Current data scope, runtime status and interface preferences.</p></div><button class="btn btn-primary" id="settings-refresh" type="button">Reload data layer</button></div>
+          <div class="grid g2"><section class="card"><div class="card-head"><div><h3 class="card-title">Service status</h3><div class="card-sub" id="settings-api">Checking the analytics API</div></div></div><div class="card-body"><p class="muted" id="settings-range"></p></div></section><section class="card"><div class="card-head"><div><h3 class="card-title">Interface theme</h3><div class="card-sub">Saved in this browser</div></div></div><div class="card-body"><div class="segmented" id="theme-segment"><button type="button" data-theme="dark">Dark</button><button type="button" data-theme="light">Light</button></div></div></section></div>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Data sources</h3><div class="card-sub">Source availability from the loaded project</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Dataset</th><th>Source file</th><th>Layer</th><th class="num">Rows</th><th>Status</th></tr></thead><tbody id="sources-tbody"></tbody></table></div></section>
+          <section class="card page-grid settings-date-card"><div class="card-head"><div><h3 class="card-title">Business date</h3><div class="card-sub">Default date used by the executive overview</div></div></div><div class="card-body date-controls"><label for="settings-date">Selected operating date</label><input class="control date-input" id="settings-date" type="date"></div></section>
+        </section>
+
+        <section class="view" id="view-data" data-title="Data management">
+          <div class="view-heading"><div><div class="eyebrow">Operations</div><h2>Data management</h2><p>Maintain operational restaurant records. Customer profiles in this store contain no direct personal identifiers.</p></div></div>
+          <div class="notice">Operational records are stored in the application database. Analytics continue to use the versioned pipeline artifacts shown in Data quality.</div>
+          <section class="card page-grid">
+            <div class="filter-row">
+              <label class="sr-only" for="data-resource">Data resource</label><select class="control" id="data-resource" aria-label="Data resource"></select>
+              <label class="sr-only" for="data-search">Search records</label><input class="control" id="data-search" type="search" placeholder="Search records">
+              <button class="btn btn-ghost" id="data-search-button" type="button">Search</button>
+              <button class="btn btn-primary" id="data-new" type="button">New record</button>
             </div>
+            <div class="table-wrap"><table class="table"><thead id="data-head"></thead><tbody id="data-tbody"></tbody></table></div>
+            <div class="pager"><span id="data-page-info">Loading records</span><div class="pager-btns"><button id="data-prev" type="button">Previous</button><button id="data-next" type="button">Next</button></div></div>
+          </section>
+          <section class="card page-grid" id="data-editor" hidden>
+            <div class="card-head"><div><h3 class="card-title" id="data-editor-title">New record</h3><div class="card-sub" id="data-editor-note">Changes require Administrator access.</div></div></div>
+            <form id="data-form"><div class="data-form-grid" id="data-fields"></div><div class="filter-row"><button class="btn btn-primary" id="data-save" type="submit">Save record</button><button class="btn btn-ghost" id="data-cancel" type="button">Cancel</button><span class="muted" id="data-form-error" role="alert"></span></div></form>
+          </section>
+        </section>
 
-            <!-- Live Scoring Calculator -->
-            <div class="predictor-box">
-                <h3 style="color: var(--accent-blue); margin-bottom: 0.5rem;">Interactive NFR Ensemble Model Scoring Calculator</h3>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                    Scores incoming order details against both warm models (PySpark MLlib + Scikit-Learn Python) and computes the ensemble probability under 5 seconds.
-                </p>
+        <section class="view" id="view-basket" data-title="Market Basket Intelligence">
+          <div class="view-heading"><div><div class="eyebrow">Intelligence node</div><h2>Market Basket Intelligence</h2><p>Associative item-pair analysis with observed support, confidence, and within-restaurant lift.</p></div></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Observed item associations</h3><div class="card-sub">Support, directional confidence, and within-restaurant lift from the independently generated basket analysis.</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Item pair</th><th>Location</th><th class="num">Orders together</th><th class="num">Support</th><th class="num">Confidence A→B</th><th class="num">Lift</th></tr></thead><tbody id="basket-tbody"></tbody></table></div></section>
+        </section>
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="input-amount">Order Total Amount (PKR)</label>
-                        <input type="number" id="input-amount" value="3200">
-                    </div>
-                    <div class="form-group">
-                        <label for="input-items">Total Line Items Count</label>
-                        <input type="number" id="input-items" value="5">
-                    </div>
-                    <div class="form-group">
-                        <label for="input-orders">Customer Past Orders</label>
-                        <input type="number" id="input-orders" value="14">
-                    </div>
-                    <div class="form-group">
-                        <label for="input-spend">Customer Total Spend (PKR)</label>
-                        <input type="number" id="input-spend" value="24500">
-                    </div>
-                    <div class="form-group">
-                        <label for="input-promo">Promotional Discount Applied</label>
-                        <select id="input-promo">
-                            <option value="1">Yes (Active Promotion)</option>
-                            <option value="0">No Promotion</option>
-                        </select>
-                    </div>
-                </div>
+        <section class="view" id="view-price" data-title="Price intelligence">
+          <div class="view-heading"><div><div class="eyebrow">Intelligence node</div><h2>Price Intelligence</h2><p>Historical pricing behavior, demand elasticity coefficients, and sensitivity classification.</p></div><label class="sr-only" for="price-q">Search price-sensitive items</label><input class="control" id="price-q" type="search" placeholder="Search menu items"></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Price sensitivity</h3><div class="card-sub">Classification is derived from observed historical price and order behavior.</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Item</th><th class="num">Months observed</th><th class="num">Average price</th><th class="num">Units</th><th class="num">Price elasticity</th><th>Classification</th></tr></thead><tbody id="price-tbody"></tbody></table></div></section>
+        </section>
 
-                <button class="btn-primary" id="predict-btn">Run Dual-Pipeline Scoring Demo</button>
-                <div id="result-box" class="result-box"></div>
-            </div>
-        </div>
+        <section class="view" id="view-forecast" data-title="Demand forecast">
+          <div class="view-heading"><div><div class="eyebrow">Predictive engine</div><h2>Demand Forecast</h2><p>Chronological holdout forecast with naive-baseline comparison and evaluation metrics.</p></div><label for="forecast-horizon" class="sr-only">Forecast period</label><select class="control" id="forecast-horizon"><option value="7">Next 7 recorded days</option><option value="30">Next 30 recorded days</option><option value="90" selected>Next 90 recorded days</option></select></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Forecast evaluation</h3><div class="card-sub" id="forecast-source">Source data status</div></div></div><div class="chart" id="forecast-chart"></div></section>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Forecast records</h3><div class="card-sub">Actual and predicted values where the source provides them</div></div></div><div class="table-wrap"><table class="table"><thead><tr id="forecast-head"></tr></thead><tbody id="forecast-tbody"></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-peak" data-title="Peak periods">
+          <div class="view-heading"><div><div class="eyebrow">Operations</div><h2>Peak periods</h2><p>Recorded order activity by hour and day type.</p></div></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Orders by hour</h3><div class="card-sub">Weekday and weekend activity</div></div></div><div class="chart" id="peak-view-chart"></div></section>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Peak-hour detail</h3><div class="card-sub">Aggregated source records</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Hour</th><th>Day type</th><th class="num">Orders</th><th class="num">Revenue</th></tr></thead><tbody id="peak-view-tbody"></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-anomalies" data-title="Alerts &amp; anomalies">
+          <div class="view-heading"><div><div class="eyebrow">Signal monitoring</div><h2>Alerts &amp; Anomalies</h2><p>Operational exceptions and statistical outliers from the analytical evidence layer.</p></div></div>
+          <div class="grid g4 kpi-grid" id="alerts-kpis"></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Current alert register</h3><div class="card-sub">Open issues from available analytics evidence</div></div></div><div class="alert-list" id="alerts-list"></div></section>
+        </section>
+
+        <section class="view" id="view-whatif" data-title="Simulation Engine">
+          <div class="view-heading"><div><div class="eyebrow">Strategic modeling</div><h2>Simulation Engine</h2><p>Real-time what-if simulations for price elasticity, demand shifts, and operational adjustments.</p></div></div>
+          <div class="grid g3">
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Observed Baseline</h3><div class="card-sub" id="whatif-date">Selected menu-item evidence</div></div></div><div class="card-body"><div class="large-value" id="whatif-base">—</div><div class="muted">Observed revenue</div><div class="muted" id="whatif-base-profit"></div></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Parameter Tuning</h3><div class="card-sub">Adjust variables against historical profiles</div></div></div><div class="card-body"><label for="whatif-scenario">Scenario model</label><select class="control" id="whatif-scenario"><option value="demand_change">Demand shift simulation</option><option value="price_change">Price elasticity test</option><option value="discount_change">Promotion impact</option><option value="wastage_change">Wastage mitigation</option><option value="remove_item">Menu item elimination</option></select><label for="whatif-item">Target node</label><select class="control" id="whatif-item"><option value="">Global (All items)</option></select><label class="range-row" for="whatif-range"><span>Variance</span><strong id="whatif-rate">0%</strong></label><input id="whatif-range" type="range" min="-30" max="30" value="0"><p class="muted" id="whatif-assumption"></p></div></section>
+            <section class="card"><div class="card-head"><div><h3 class="card-title">Projected Outcome</h3><div class="card-sub">Engine estimated impact</div></div></div><div class="card-body"><div class="large-value" id="whatif-result">—</div><div class="muted" id="whatif-delta">Configure scenario parameters</div><div class="muted" id="whatif-profit-result"></div></div></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-recommendations" data-title="Recommendations">
+          <div class="view-heading"><div><div class="eyebrow">Decision intelligence</div><h2>Recommendations</h2><p>Prioritized, evidence-backed action recommendations from the analytical pipeline.</p></div></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Recommendation register</h3><div class="card-sub" id="recommendations-source">Processed analytics</div></div></div><div class="table-wrap"><table class="table"><thead><tr id="recommendations-head"></tr></thead><tbody id="recommendations-tbody"></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-quality" data-title="Data quality">
+          <div class="view-heading"><div><div class="eyebrow">Platform integrity</div><h2>Data Quality &amp; Pipelines</h2><p>Pipeline telemetry, operational health, and schema validation artifacts.</p></div></div>
+          <div class="grid g3" id="quality-kpis"></div>
+          
+          <section class="card page-grid">
+            <div class="card-head"><div><h3 class="card-title">Pipeline Architecture Topology</h3><div class="card-sub">Real-time processing flow and ingestion health</div></div></div>
+            <div class="pipeline-track" id="pipeline-visual-track"></div>
+          </section>
+
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Telemetry Stream</h3><div class="card-sub">Detailed stage execution logs</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Node</th><th>Status</th><th>Diagnostics</th></tr></thead><tbody id="quality-steps"></tbody></table></div></section>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Quality Diagnostics</h3><div class="card-sub">Schema enforcement and anomaly isolation</div></div></div><div class="table-wrap"><table class="table"><thead><tr id="quality-head"></tr></thead><tbody id="quality-tbody"></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-team" data-title="Team &amp; access">
+          <div class="view-heading"><div><div class="eyebrow">Administration</div><h2>Team &amp; access</h2><p>Account roles are enforced by the API. New sign-ups start as Data Analysts.</p></div></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Workspace accounts</h3><div class="card-sub" id="team-status">Administrator access is required to manage roles.</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Name</th><th>Email</th><th>Brand</th><th>Role</th><th>Created</th><th>Update</th></tr></thead><tbody id="team-tbody"></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-billing" data-title="Usage">
+          <div class="view-heading"><div><div class="eyebrow">Administration</div><h2>Usage</h2><p>Operational usage and model-serving evidence available in this deployment.</p></div></div>
+          <div class="grid g4" id="usage-kpis"></div>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Workspace sources</h3><div class="card-sub">Loaded analytical datasets</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Dataset</th><th class="num">Rows</th><th>Status</th></tr></thead><tbody id="usage-sources"></tbody></table></div></section>
+        </section>
+      </main>
+
+      <footer class="app-foot">DineIQ Analytics <span>·</span> Intelligence Platform v1.0</footer>
     </div>
+  </div>
 
-    <footer>
-        DineIQ Analytics & Data Science Intelligence Platform — Master Repository<br>
-        Team: Mohammad Hamza Mughal (@MHamza-9111), Ali Jaan Shaikh, Eshmaal, Farooq, Zain
-    </footer>
+  <div class="modal" id="modal-order" role="dialog" aria-modal="true" aria-labelledby="order-modal-title" hidden><div class="modal-card"><div class="modal-heading"><h2 id="order-modal-title">Order details</h2><button class="icon-btn" type="button" data-close="modal-order" aria-label="Close"><svg><use href="#i-close"/></svg></button></div><div id="order-modal-body"></div></div></div>
+  <div class="modal" id="modal-info" role="dialog" aria-modal="true" aria-labelledby="info-modal-title" hidden><div class="modal-card"><div class="modal-heading"><h2 id="info-modal-title">Details</h2><button class="icon-btn" type="button" data-close="modal-info" aria-label="Close"><svg><use href="#i-close"/></svg></button></div><div id="info-modal-body"></div></div></div>
+  <div id="toast-wrap" class="toast-wrap" aria-live="polite" aria-atomic="false"></div>
 
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <!-- Command Palette (Ctrl+K) -->
+  <div class="command-palette" id="command-palette" hidden>
+    <div class="command-card">
+      <div class="command-input-wrap">
+        <svg><use href="#i-search"/></svg>
+        <input class="command-input" id="command-input" type="text" placeholder="Search DineIQ..." autocomplete="off" aria-label="Search commands and navigation">
+        <span class="command-kbd">ESC</span>
+      </div>
+      <div class="command-results" id="command-results">
+        <div class="command-group-label">Navigation</div>
+        <button class="command-item" data-nav="overview"><svg><use href="#i-grid"/></svg>Executive Dashboard</button>
+        <button class="command-item" data-nav="orders"><svg><use href="#i-receipt"/></svg>Orders</button>
+        <button class="command-item" data-nav="menu"><svg><use href="#i-menu-book"/></svg>Menu Intelligence</button>
+        <button class="command-item" data-nav="customers"><svg><use href="#i-users"/></svg>Customer Intelligence</button>
+        <button class="command-item" data-nav="basket"><svg><use href="#i-bag"/></svg>Market Basket</button>
+        <button class="command-item" data-nav="price"><svg><use href="#i-trend"/></svg>Price Intelligence</button>
+        <button class="command-item" data-nav="forecast"><svg><use href="#i-chart"/></svg>Demand Forecast</button>
+        <button class="command-item" data-nav="inventory"><svg><use href="#i-box"/></svg>Wastage &amp; Stock</button>
+        <button class="command-item" data-nav="promotions"><svg><use href="#i-tag"/></svg>Promotions</button>
+        <button class="command-item" data-nav="locations"><svg><use href="#i-pin"/></svg>Locations</button>
+        <button class="command-item" data-nav="anomalies"><svg><use href="#i-alert"/></svg>Alerts &amp; Anomalies</button>
+        <button class="command-item" data-nav="recommendations"><svg><use href="#i-spark"/></svg>Recommendations</button>
+        <button class="command-item" data-nav="whatif"><svg><use href="#i-trend"/></svg>What-If Analysis</button>
+        <button class="command-item" data-nav="models"><svg><use href="#i-cpu"/></svg>Models &amp; Serving</button>
+        <button class="command-item" data-nav="quality"><svg><use href="#i-shield"/></svg>Data Quality</button>
+        <button class="command-item" data-nav="reports"><svg><use href="#i-doc"/></svg>Reports</button>
+        <button class="command-item" data-nav="data"><svg><use href="#i-doc"/></svg>Data Management</button>
+        <button class="command-item" data-nav="settings"><svg><use href="#i-check"/></svg>Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="{{ url_for('static', filename='js/core.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/charts.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/overview.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/pages.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

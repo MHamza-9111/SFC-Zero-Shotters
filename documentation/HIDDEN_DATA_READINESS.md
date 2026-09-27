@@ -1,22 +1,21 @@
-# DineIQ Analytics — Hidden-Data Readiness Specification
+# Hidden and production dataset readiness
 
-This document details how DineIQ Analytics ensures pipeline robustness when exposed to unseen test evaluation datasets during competition grading.
+## Current protections
 
----
+- Generator, Python cleaning, processing, Spark-compatible ingestion and scoring use data frames and observed keys rather than assuming a particular primary-key sequence.
+- Cleaning and Spark ingestion produce quality reports and quarantine invalid inputs. Relationship checks cover core foreign keys and selected restaurant/item consistency rules.
+- Scoring validates task names, feature names, finite numeric values, and task-specific batch limits before invoking cached model artifacts.
+- Dashboard APIs filter and paginate supported list views; database CRUD fields and SQL resources are allowlisted.
 
-## 1. Zero Hardcoded Record Identifiers
-The system strictly enforces dynamic data loading and schema inference. Pipelines do not rely on static record counts or hardcoded primary key sequences.
+## Required validation before competition or production data
 
-## 2. Dynamic Schema Validation & Type Casting
-Both the PySpark and Python ingestion pipelines apply explicit schema casting (`spark_jobs/schemas.py`). Unexpected columns are ignored, and missing optional attributes receive null-safe default values.
+- Validate every hidden dataset's actual headers, types, enumerations, null semantics, units, time zone, and financial accounting rules against `spark_jobs/schemas.py` and `python_pipeline/` transformations. Unexpected or missing columns are not universally normalized by every stage.
+- Confirm table and feature relationships, promotion definitions, customer anonymization requirements, and the training/evaluation label definitions. Pipeline schema success alone does not validate business semantics.
+- Run the pipeline on the full 5M order-line target and record time, peak memory, disk use, quality failures, and output counts. The current evidence does not establish that scale.
+- Execute the Spark/MLlib path on a compatible Java/Spark host and check its generated engine labels and artifacts.
+- Re-evaluate classifier quality and forecast-vs-baseline results on the hidden or actual target data. Agreement on fixed unseen cases can be high because the pipelines share features and training rules.
+- Load-test the deployed WSGI server and database, then measure uptime and response latency under the target concurrency and infrastructure configuration.
 
-## 3. Strict Foreign Key Integrity & Quarantine
-Incoming records with invalid or missing foreign key references are automatically routed to quarantine tables (`processed_data/quarantine/`) rather than breaking downstream aggregations or join queries.
+## Current evidence boundary
 
-## 4. Evaluation Verification
-The pipeline has been stress-tested on 530 unseen evaluation records (`python_pipeline/dual_pipeline/`):
-- 300 unseen order-value records
-- 200 unseen churn risk records
-- 30 unseen menu classification records
-
-Zero ingestion or scoring exceptions occurred across all evaluation batches.
+The repository includes 1M-line synthetic dataset configuration and recorded pandas-engine evidence. That is not equivalent to a hidden-data test, an executed Spark job, a 5M-line benchmark, or a 99% uptime measurement. Preserve new reports with their dataset identity, code revision, engine, and run settings.

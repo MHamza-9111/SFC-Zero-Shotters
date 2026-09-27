@@ -39,6 +39,6 @@ and return the ensemble result **within five seconds**.
 
 - Hamza: Spark model artifact, ensemble integration, performance test
 - Ali Jaan: Python model artifact (ready in
-  `data_cleaning/dual_pipeline/` and the Python pipeline)
+  `python_pipeline/dual_pipeline/` and the Python pipeline)
 - Farooq / Zain: upload + prediction UI screen
 - Eshmaal: record in the development log

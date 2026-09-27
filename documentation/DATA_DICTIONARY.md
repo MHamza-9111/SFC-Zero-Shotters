@@ -4,10 +4,12 @@ Canonical schema for the DineIQ synthetic data layer.
 
 Layers:
 
-- Raw: `raw_data/` (generated, preserved, never modified)
+- Raw: `raw_data/` (generated input; cleaning does not overwrite it)
 - Processed: `processed_data/` (cleaned CSV, canonical analytical source)
 - Analytics: `processed_data/analytics/` (integrated + intelligence outputs)
-- Parquet: `parquet_data/` (reserved for the Spark pipeline)
+- Parquet: `parquet_data/` (partitioned big-data output)
+
+This dictionary describes the synthetic pipeline datasets. They may contain synthetic customer contact fields for quality testing. The application's separate operational customer table is anonymized and omits direct personal identifiers; see `database/sqlite_schema.sql`.
 
 All amounts are in PKR. Dates are `YYYY-MM-DD`.
 

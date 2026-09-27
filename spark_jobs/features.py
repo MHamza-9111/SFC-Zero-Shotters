@@ -3,12 +3,12 @@ Shared feature construction for BOTH pipelines.
 
 Single source of truth for the analytical features used by the
 Spark/MLlib models (spark_jobs/mllib_models.py) AND by the
-Python model artifacts (data_cleaning/model_artifacts.py).
+Python model artifacts (python_pipeline/model_artifacts.py).
 Sharing this module is what guarantees feature parity for the
 dual-pipeline comparison required by the SRS.
 
 All builders read the canonical cleaned CSV layer produced by
-Ali's cleaning step (processed_data/).
+Python cleaning step (processed_data/).
 """
 
 from __future__ import annotations
@@ -27,15 +27,21 @@ ORDER_FEATURES = [
     "total_orders", "total_spend",
 ]
 
+# Churn label is defined from recency at PERIOD_END.  Recency is therefore
+# deliberately excluded from the model input to prevent direct label leakage.
 CHURN_FEATURES = [
-    "recency_days", "f_log_orders", "f_log_spend", "average_order_value",
+    "f_log_orders", "f_log_spend", "average_order_value",
     "discount_dependency", "promo_dependency", "top_category_share",
-    "unique_categories",
+    "unique_categories", "total_items_purchased", "weekend_order_share",
 ]
 
+# Menu classes are defined from demand/profit/margin medians. Those target
+# defining variables must not be fed back into the classifier. These are
+# independent behavioral / customer-signal features instead.
 MENU_FEATURES = [
-    "units_sold", "revenue", "estimated_profit",
-    "profit_margin_percentage", "average_rating", "wastage_ratio",
+    "average_rating", "rating_count", "wastage_ratio",
+    "avg_unit_price", "promo_dependency", "weekend_order_share",
+    "unique_customers", "order_line_count",
 ]
 
 TASKS = {
@@ -96,10 +102,11 @@ def _completed_items(frames: dict) -> pd.DataFrame:
         frames["menu_items"][["menu_item_id", "restaurant_id", "category_id",
                               "item_name", "cost_price"]],
         on="menu_item_id", how="left")
-    items = items.merge(
-        frames["orders"][["order_id", "customer_id", "order_status",
-                          "is_completed"]],
-        on="order_id", how="left")
+    order_meta = _derived_orders(frames["orders"])[[
+        "order_id", "customer_id", "order_date", "order_status", "is_completed",
+        "is_weekend", "is_promo_order",
+    ]]
+    items = items.merge(order_meta, on="order_id", how="left")
     items["gross_revenue"] = items["quantity"] * items["unit_price"]
     items["estimated_cost"] = items["quantity"] * items["cost_price"]
     items["estimated_profit"] = (
@@ -148,11 +155,16 @@ def build_order_frame(frames: dict, day_map: dict) -> pd.DataFrame:
     comp = comp.merge(agg, on="order_id", how="left")
 
     cust = comp.groupby("customer_id").agg(
-        total_orders=("order_id", "nunique"),
-        total_spend=("total_amount", "sum")).reset_index()
+        customer_order_count=("order_id", "nunique"),
+        customer_spend=("total_amount", "sum")).reset_index()
     comp = comp.merge(cust, on="customer_id", how="left")
-    comp["total_orders"] = comp["total_orders"].fillna(0)
-    comp["total_spend"] = comp["total_spend"].fillna(0)
+    # Predict at order time: do not let the target order contribute to the
+    # customer history features. Including the current total_amount inside
+    # total_spend would make the order-value label partially visible to the
+    # model. Leave-one-order-out aggregates keep the feature causal.
+    comp["total_orders"] = (comp["customer_order_count"] - 1).clip(lower=0)
+    comp["total_spend"] = (comp["customer_spend"] - comp["total_amount"]).clip(lower=0)
+    comp = comp.drop(columns=["customer_order_count", "customer_spend"])
 
     comp["channel_code"] = pd.factorize(comp["order_channel"], sort=True)[0]
     comp["payment_code"] = pd.factorize(
@@ -174,13 +186,22 @@ def build_churn_frame(frames: dict) -> pd.DataFrame:
         last_order_date=("order_date", "max"),
         promo_orders=("is_promo_order", "sum")).reset_index()
 
+    items = _completed_items(frames)
+    customer_behavior = (items.groupby("customer_id")
+                          .agg(total_items_purchased=("quantity", "sum"))
+                          .reset_index())
+    order_behavior = items[["customer_id", "order_id", "order_date", "is_weekend"]].drop_duplicates()
+    order_behavior["order_date"] = pd.to_datetime(order_behavior["order_date"], errors="coerce")
+    weekend_share = order_behavior.groupby("customer_id")["is_weekend"].mean().rename("weekend_order_share")
     df = frames["customers"].merge(ca, on="customer_id", how="inner")
+    df = df.merge(customer_behavior, on="customer_id", how="left")
+    df = df.merge(weekend_share, on="customer_id", how="left")
     df = df.loc[df["total_orders"] > 0].copy()
     df["first_order_date"] = pd.to_datetime(df["first_order_date"],
                                             errors="coerce")
     df["last_order_date"] = pd.to_datetime(df["last_order_date"],
                                            errors="coerce")
-    min_first = PERIOD_END - pd.Timedelta(days=180)
+    min_first = PERIOD_END - pd.Timedelta(180, unit="D")
     df = df.loc[df["first_order_date"] <= min_first].copy()
 
     df["recency_days"] = (PERIOD_END - df["last_order_date"]).dt.days
@@ -191,19 +212,21 @@ def build_churn_frame(frames: dict) -> pd.DataFrame:
         frames["menu_categories"][["category_id", "category_name"]],
         on="category_id", how="left")
     cat = (items[items["customer_id"].isin(set(df["customer_id"]))]
-           .groupby(["customer_id", "category_name"])["quantity"]
+           .groupby(["customer_id", "category_id"])["quantity"]
            .sum().reset_index())
     tot = cat.groupby("customer_id")["quantity"].sum().rename("cust_qty")
     cat = cat.merge(tot, on="customer_id")
     cat["share"] = cat["quantity"] / cat["cust_qty"]
     top_share = cat.groupby("customer_id")["share"].max().rename(
         "top_category_share")
-    uniq_cat = cat.groupby("customer_id")["category_name"].nunique().rename(
+    uniq_cat = cat.groupby("customer_id")["category_id"].nunique().rename(
         "unique_categories")
     df = df.merge(top_share, on="customer_id", how="left")
     df = df.merge(uniq_cat, on="customer_id", how="left")
     df["top_category_share"] = df["top_category_share"].fillna(0)
     df["unique_categories"] = df["unique_categories"].fillna(0)
+    df["total_items_purchased"] = df["total_items_purchased"].fillna(0)
+    df["weekend_order_share"] = df["weekend_order_share"].fillna(0)
 
     df["discount_dependency"] = np.where(
         df["total_spend"] > 0,
@@ -236,20 +259,35 @@ def build_menu_frame(frames: dict) -> pd.DataFrame:
     wast["quantity_wasted"] = pd.to_numeric(wast["quantity_wasted"],
                                             errors="coerce")
     wastage_item = (wast.groupby("menu_item_id")["quantity_wasted"]
-                    .sum().reset_index().rename(
-                        columns={"quantity_wasted": "quantity_wasted"}))
+                    .sum().reset_index())
+
+    # Independent behavioral signals for ML: no units/revenue/profit/margin,
+    # because the menu class itself is deterministically defined from those
+    # target variables.
+    behavior = (items.groupby(["menu_item_id", "restaurant_id"])
+                .agg(avg_unit_price=("unit_price", "mean"),
+                     promo_dependency=("is_promo_order", "mean"),
+                     weekend_order_share=("is_weekend", "mean"),
+                     unique_customers=("customer_id", "nunique"),
+                     order_line_count=("order_id", "nunique"))
+                .reset_index())
 
     df = menu_perf.merge(rating_item, on="menu_item_id", how="left")
     df = df.merge(wastage_item, on="menu_item_id", how="left")
+    df = df.merge(behavior, on=["menu_item_id", "restaurant_id"], how="left")
     df["average_rating"] = df["average_rating"].fillna(0)
+    df["rating_count"] = df["rating_count"].fillna(0)
     df["quantity_wasted"] = df["quantity_wasted"].fillna(0)
+    for col in ["avg_unit_price", "promo_dependency", "weekend_order_share",
+                "unique_customers", "order_line_count"]:
+        df[col] = df[col].fillna(0)
     df["wastage_ratio"] = df["quantity_wasted"] / np.maximum(
         df["units_sold"] + df["quantity_wasted"], 1)
 
     u_med = df["units_sold"].median()
     p_med = df["estimated_profit"].median()
     m_med = df["profit_margin_percentage"].median()
-    # SRS Step 10 (same rule as .../run_advanced_analytics.py):
+    # SRS Step 10 (same rule as python_pipeline/analytics/run_advanced_analytics.py):
     # Profit Driver = high demand + high profit + high margin; Volume
     # Driver = any other high-demand item; Hidden Opportunity = low
     # demand + high margin; Low Performer = low demand + low margin.
@@ -269,4 +307,3 @@ def build_menu_frame(frames: dict) -> pd.DataFrame:
         default="Low Performer",
     )
     return df
-

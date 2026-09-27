@@ -1,7 +1,7 @@
 """
 Step 5 - NFR performance test: 5-second ensemble prediction.
 
-Per the instructor clarification (documentation/SRS_CLARIFICATIONS.md):
+Per the instructor clarification (SRS_CLARIFICATIONS.md):
 
   * On upload, BOTH pipelines' saved models produce the combined
     (ensemble) prediction.
@@ -12,8 +12,8 @@ Per the instructor clarification (documentation/SRS_CLARIFICATIONS.md):
 
 This step:
   1. loads the latest pipeline models from models/
-  2. loads the Python models from models/
-     (produced by data_cleaning/model_artifacts.py)
+  2. loads the Python models from models/python/
+     (produced by python_pipeline/model_artifacts.py)
   3. times a 100-record batch end-to-end:
        python predict -> pipeline predict -> combine (probability
        average) -> ensemble label
@@ -52,7 +52,7 @@ def _load_python_model(models_root: Path, task: str):
     if not vs:
         raise FileNotFoundError(
             f"Python model artifact missing: {base} "
-            f"(run data_cleaning/model_artifacts.py)")
+            f"(run python_pipeline/model_artifacts.py)")
     vdir = vs[-1]
     meta = json.loads((vdir / "metadata.json").read_text())
     model = joblib.load(vdir / "model.joblib")
@@ -71,7 +71,6 @@ def _churn_batch(cases_dir: Path, n: int) -> pd.DataFrame:
 
 def _churn_features(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame({
-        "recency_days": df["recency_days"].astype(float),
         "f_log_orders": np.log1p(df["total_orders"].astype(float)),
         "f_log_spend": np.log1p(df["total_spend"].astype(float)),
         "average_order_value": df["average_order_value"].astype(float),
@@ -79,10 +78,27 @@ def _churn_features(df: pd.DataFrame) -> pd.DataFrame:
         "promo_dependency": df["promo_dependency"].astype(float),
         "top_category_share": df["top_category_share"].astype(float),
         "unique_categories": df["unique_categories"].astype(float),
+        "total_items_purchased": df["total_items_purchased"].astype(float),
+        "weekend_order_share": df["weekend_order_share"].astype(float),
     }).fillna(0)
 
 
-def measure_ensemble(pipeline_models_dir: Path, python_models_dir: Path,
+def _predict_pipeline(engine, model, frame: pd.DataFrame):
+    """Return Spark/sklearn positive-class probabilities for the warm batch."""
+    if engine.kind != "spark":
+        return np.asarray(model.predict_proba(frame), dtype=float)[:, 1]
+    spark_frame = engine.spark.createDataFrame(frame.astype(float))
+    if hasattr(model, "stages"):
+        scored = model.transform(spark_frame)
+    else:
+        from pyspark.ml.feature import VectorAssembler
+        assembled = VectorAssembler(inputCols=list(frame.columns), outputCol="features").transform(spark_frame)
+        scored = model.transform(assembled)
+    rows = scored.select("probability").collect()
+    return np.asarray([float(r["probability"][1]) for r in rows], dtype=float)
+
+
+def measure_ensemble(engine, pipeline_models_dir: Path, python_models_dir: Path,
                      cases_dir: Path, task: str = "high_value_order",
                      batch_size: int = BATCH_SIZE) -> dict:
     """
@@ -108,9 +124,9 @@ def measure_ensemble(pipeline_models_dir: Path, python_models_dir: Path,
 
     def once():
         t0 = time.perf_counter()
-        py_proba = py_model.predict_proba(Xp)[:, 1]
+        py_proba = np.asarray(py_model.predict_proba(Xp), dtype=float)[:, 1]
         t1 = time.perf_counter()
-        pl_proba = pl_model.predict_proba(Xp)[:, 1]
+        pl_proba = _predict_pipeline(engine, pl_model, Xp)
         t2 = time.perf_counter()
         ens_proba = (py_proba + pl_proba) / 2.0
         ens_label = (ens_proba >= 0.5).astype(int)
@@ -167,7 +183,7 @@ def run(engine, pipeline_models_dir: Path, python_models_dir: Path,
     results = {}
     for task, batch in (("high_value_order", BATCH_SIZE),
                         ("customer_churn", 200)):
-        res = measure_ensemble(pipeline_models_dir, python_models_dir,
+        res = measure_ensemble(engine, pipeline_models_dir, python_models_dir,
                                cases_dir, task=task, batch_size=batch)
         results[task] = res
         res["sample"].to_csv(out_dir / f"latency_sample_{task}.csv",

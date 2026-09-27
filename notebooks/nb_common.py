@@ -5,7 +5,7 @@ Two run modes:
 
   MODE = "quick"  (default)
       Medium-scale data (~20k orders / 200k lines) generated into
-      notebook/outputs/quick/. Fast (~30 s per notebook), and it
+      notebooks/outputs/quick/. Fast (~30 s per notebook), and it
       never touches the repository's canonical data directories.
 
   MODE = "full"
@@ -13,7 +13,7 @@ Two run modes:
       repository directories:
         raw_data -> processed_data
         -> processed_data/analytics
-        -> data_cleaning/dual_pipeline
+        -> python_pipeline/dual_pipeline
       Same outputs as run_pipeline.py.
 
 Each notebook is self-contained: it runs every pipeline step it
@@ -37,7 +37,7 @@ for _p in (BASE / "data_generator",
         sys.path.insert(0, _s)
 
 
-# Medium scale used by quick mode (matches tests/conftest.py).
+# Medium scale used by quick mode (matches tests/python/conftest.py).
 QUICK_CONFIG = {
     "seed": 42,
     "scale": {
@@ -75,14 +75,14 @@ def setup_paths(mode: str = "quick") -> dict:
             "mode": "full",
             "raw": BASE / "raw_data",
             "processed": BASE / "processed_data",
-            "reports": BASE / "python_pipeline" / "cleaning",
-            "quarantine": BASE / "python_pipeline" / "cleaning" / "quarantine",
+            "reports": BASE / "reports",
+            "quarantine": BASE / "reports" / "quarantine",
             "analytics": BASE / "processed_data" / "analytics",
-            "dual": BASE / "python_pipeline" / "cleaning" / "dual_pipeline",
+            "dual": BASE / "python_pipeline" / "dual_pipeline",
             "config": BASE / "config" / "data_generation_config.yaml",
         }
 
-    root = BASE / "notebook" / "outputs" / "quick"
+    root = BASE / "notebooks" / "outputs" / "quick"
     return {
         "mode": "quick",
         "raw": root / "raw",

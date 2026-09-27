@@ -1,29 +1,7 @@
-# DineIQ Database Schema & Relational Integration
+# DineIQ database schemas
 
-This directory contains the relational database DDL schema and setup instructions for DineIQ Analytics.
+`sqlite_schema.sql` is the runtime schema used by `DataManagementService`. The app initializes it in `runtime/dineiq.sqlite3` on first data request. Set `DINEIQ_DATA_DB` to a persistent path before starting the service. The database contains locations, restaurants, menu categories and items, pricing history, anonymized customers, promotions, orders, order lines, ratings, inventory, and wastage records.
 
-## Relational Design Specs
+The customers table contains no direct personal identifiers. User accounts are stored separately in the authentication database (`DINEIQ_AUTH_DB`) with salted password hashes. Local runtime databases and session keys are excluded from source control.
 
-The relational model implements all 10 core entities defined in the SRS:
-- `locations`: Physical geographic zones
-- `restaurants`: Individual branch locations
-- `menu_categories`: Dish classifications
-- `menu_items`: Dish catalog with base pricing and cost
-- `customers`: Registered user accounts
-- `promotions`: Time-bound discount campaigns
-- `orders`: Master transaction records
-- `order_items`: Line-level order details
-- `ratings`: Customer review scores
-- `wastage`: Inventory wastage logs
-
-## Setup Instructions
-
-To initialize PostgreSQL or SQLite database with this schema:
-
-```bash
-# SQLite initialization
-sqlite3 dineiq.db < database/schema.sql
-
-# PostgreSQL initialization
-psql -U postgres -d dineiq -f database/schema.sql
-```
+`schema.sql` is the relational DDL companion for deployments that map the same model to another SQL database. Confirm data types and identity syntax for the chosen database before applying it. The Flask service itself currently uses SQLite and does not connect to an external database.

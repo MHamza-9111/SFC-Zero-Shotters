@@ -1,0 +1,3 @@
+model,mae,rmse,mape
+linear_regression (day-of-week + trend + moving averages),180918.09813245913,224141.4993363618,6.733926731438358
+naive_baseline (previous day),317352.06855555554,419192.14053960325,11.94795078354618

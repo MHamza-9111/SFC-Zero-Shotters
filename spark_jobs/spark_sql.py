@@ -8,7 +8,7 @@ aggregations are computed with pandas merge/groupby so the identical
 evidence files are produced, labelled with the engine used.
 
 Outputs (one CSV each; full copies under <reports>/spark_sql/,
-capped evidence copies under reports/spark_sql/):
+capped evidence copies under reports/spark_execution/):
   orders_enriched        - order-level join: order, restaurant, location,
                            customer, promotion
   order_item_revenue     - completed-order revenue lines with category
@@ -26,6 +26,8 @@ capped evidence copies under reports/spark_sql/):
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 from collections import Counter
 from pathlib import Path
 
@@ -33,6 +35,21 @@ import numpy as np
 import pandas as pd
 
 from .schemas import ANALYSIS_END
+
+
+def _write_csv_atomic(df: pd.DataFrame, path: Path) -> None:
+    """Write a complete CSV beside its destination, then replace atomically."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.",
+                                          suffix=".tmp", dir=path.parent)
+    os.close(fd)
+    temporary_path = Path(temporary_name)
+    try:
+        df.to_csv(temporary_path, index=False)
+        os.replace(temporary_path, path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
 
 PERIOD_END = pd.Timestamp(ANALYSIS_END)
 
@@ -494,11 +511,11 @@ def run(engine, data: dict, reports_dir: Path, evidence_dir: Path) -> pd.DataFra
     summary = []
     for name, df in frames.items():
         full_path = out_dir / f"{name}.csv"
-        df.to_csv(full_path, index=False)
+        _write_csv_atomic(df, full_path)
         cap = EVIDENCE_ROW_CAP.get(name)
         ev_df = df.head(cap) if cap else df
         ev_path = ev_dir / f"{name}.csv"
-        ev_df.to_csv(ev_path, index=False)
+        _write_csv_atomic(ev_df, ev_path)
         summary.append({"output": name, "rows": len(df),
                         "evidence_rows": len(ev_df),
                         "file": str(full_path),
@@ -506,8 +523,8 @@ def run(engine, data: dict, reports_dir: Path, evidence_dir: Path) -> pd.DataFra
         print(f"  {name}: {len(df):,} rows (evidence: {len(ev_df):,})")
 
     summary_df = pd.DataFrame(summary)
-    summary_df.to_csv(out_dir / "summary.csv", index=False)
-    summary_df.to_csv(ev_dir / "summary.csv", index=False)
+    _write_csv_atomic(summary_df, out_dir / "summary.csv")
+    _write_csv_atomic(summary_df, ev_dir / "summary.csv")
     (out_dir / "engine.json").write_text(json.dumps(engine.label(), indent=2))
     (ev_dir / "engine.json").write_text(json.dumps(engine.label(), indent=2))
     return summary_df

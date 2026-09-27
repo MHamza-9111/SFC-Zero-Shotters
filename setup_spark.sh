@@ -18,7 +18,7 @@
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
-BASE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BASE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$BASE"
 
 echo "==> [1/3] Python environment"
@@ -47,8 +47,8 @@ echo "==> [3/3] Spark smoke test"
 from pathlib import Path
 import sys
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from Main.spark_pipeline.engines import get_engine
+sys.path.insert(0, str(Path.cwd()))
+from spark_jobs.engines import get_engine
 
 engine = get_engine(prefer="spark")
 df = engine.spark.range(1000)

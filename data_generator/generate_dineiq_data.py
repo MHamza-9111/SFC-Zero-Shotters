@@ -147,7 +147,7 @@ def load_config(path: Path = CONFIG_PATH) -> dict:
         "output": {
             "raw_dir": "raw_data",
             "processed_dir": "processed_data",
-            "parquet_dir": "spark_jobs/parquet_data",
+            "parquet_dir": "parquet_data",
         },
     }
 

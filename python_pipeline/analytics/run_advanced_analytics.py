@@ -10,6 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
 
 # ============================================================
 # DineIQ Analytics - Advanced Analytics & Intelligence Layer
@@ -46,6 +47,7 @@ from sklearn.preprocessing import StandardScaler
 BASE = Path(__file__).resolve().parents[2]
 RUN_TIME = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 RANDOM_STATE = 42
+from spark_jobs.features import build_churn_frame, load_base_frames
 
 
 def save(output_dir: Path, df: pd.DataFrame, filename: str) -> Path:
@@ -173,7 +175,7 @@ def rfm_segmentation(customers, customer_analytics, cutoff):
 # 2. Menu business classes
 # ============================================================
 
-def menu_business_classes(menu_perf, rating_item, wastage_item):
+def menu_business_classes(menu_perf, rating_item, wastage_item, items_completed=None):
     print("\n[2/14] Menu business classes (Profit/Volume Driver, Hidden Opportunity, Low Performer)...")
 
     df = menu_perf.merge(
@@ -187,7 +189,33 @@ def menu_business_classes(menu_perf, rating_item, wastage_item):
         how="left",
     )
     df["average_rating"] = df["average_rating"].fillna(0)
+    df["rating_count"] = df["rating_count"].fillna(0)
     df["quantity_wasted"] = df["quantity_wasted"].fillna(0)
+
+    # Independent model inputs: these are operational/customer signals,
+    # not the units/revenue/profit/margin values that define the target class.
+    if items_completed is not None and not items_completed.empty:
+        model_items = items_completed.copy()
+        model_items["order_date"] = pd.to_datetime(model_items["order_date"], errors="coerce")
+        model_items["is_weekend"] = (model_items["order_date"].dt.dayofweek >= 5).astype(int)
+        behavior = (model_items.groupby(["menu_item_id", "restaurant_id"])
+                    .agg(avg_unit_price=("unit_price", "mean"),
+                         promo_dependency=("is_promo_order", "mean"),
+                         weekend_order_share=("is_weekend", "mean"),
+                         unique_customers=("customer_id", "nunique"),
+                         order_line_count=("order_id", "nunique"))
+                    .reset_index())
+        df = df.merge(behavior, on=["menu_item_id", "restaurant_id"], how="left")
+    else:
+        df["avg_unit_price"] = 0
+        df["promo_dependency"] = 0
+        df["weekend_order_share"] = 0
+        df["unique_customers"] = 0
+        df["order_line_count"] = 0
+    for col in ["avg_unit_price", "promo_dependency", "weekend_order_share",
+                "unique_customers", "order_line_count"]:
+        df[col] = df[col].fillna(0)
+
     df["wastage_ratio"] = df["quantity_wasted"] / np.maximum(
         df["units_sold"] + df["quantity_wasted"], 1
     )
@@ -271,8 +299,11 @@ def order_value_classification(orders_completed, items_completed,
         on="customer_id",
         how="left",
     )
-    df["total_orders"] = df["total_orders"].fillna(0)
-    df["total_spend"] = df["total_spend"].fillna(0)
+    # Leave-one-order-out customer history. The current order is the label
+    # source, so its value must not be included in the customer's history
+    # features used to classify that same order.
+    df["total_orders"] = (df["total_orders"].fillna(0) - 1).clip(lower=0)
+    df["total_spend"] = (df["total_spend"].fillna(0) - df["total_amount"]).clip(lower=0)
 
     df["channel_code"] = df["order_channel"].astype("category").cat.codes
     df["payment_code"] = df["payment_method"].fillna("Unknown").astype("category").cat.codes
@@ -708,8 +739,8 @@ def promotion_effectiveness(promotions, orders_completed, start_date, end_date):
 # 9. Anomaly detection
 # ============================================================
 
-def anomaly_detection(orders_completed, ratings_enriched):
-    print("\n[9/14] Anomaly detection (sales, order totals, ratings)...")
+def anomaly_detection(orders_completed, ratings_enriched, items_completed=None):
+    print("\n[9/14] Anomaly detection (sales, order totals, rating patterns)...")
 
     rows = []
 
@@ -750,7 +781,9 @@ def anomaly_detection(orders_completed, ratings_enriched):
             "note": f"Order total above Q3 + 3*IQR ({upper:.2f})",
         })
 
-    # Rating anomalies per item-month.
+    # Rating anomalies per item-month. The SRS calls for distinct patterns:
+    # sudden shifts, excessive identical ratings, short-period rating bursts,
+    # and rating volume inconsistent with purchases.
     ratings_enriched = ratings_enriched.copy()
     ratings_enriched["review_date"] = pd.to_datetime(
         ratings_enriched["review_date"], errors="coerce"
@@ -758,25 +791,86 @@ def anomaly_detection(orders_completed, ratings_enriched):
     ratings_enriched["month"] = ratings_enriched["review_date"].dt.to_period("M").astype(str)
     item_month = ratings_enriched.groupby(
         ["menu_item_id", "month"]
-    ).agg(avg_rating=("rating", "mean"), rating_count=("rating_id", "count")).reset_index()
+    ).agg(
+        avg_rating=("rating", "mean"),
+        rating_count=("rating_id", "count"),
+        distinct_ratings=("rating", "nunique"),
+        item_name=("item_name", "first"),
+    ).reset_index()
     item_month = item_month[item_month["rating_count"] >= 10]
 
     item_stats = ratings_enriched.groupby("menu_item_id").agg(
         mu=("rating", "mean"), sigma=("rating", "std")
     )
+    burst_thresholds = {}
+    for item_id, grp in item_month.groupby("menu_item_id"):
+        q1 = grp["rating_count"].quantile(0.25)
+        q3 = grp["rating_count"].quantile(0.75)
+        burst_thresholds[item_id] = q3 + 3 * (q3 - q1)
+
+    purchases = None
+    if items_completed is not None and not items_completed.empty:
+        purchase_frame = items_completed.copy()
+        purchase_frame["order_date"] = pd.to_datetime(purchase_frame["order_date"], errors="coerce")
+        purchase_frame["month"] = purchase_frame["order_date"].dt.to_period("M").astype(str)
+        purchases = purchase_frame.groupby(["menu_item_id", "month"]).agg(
+            purchase_orders=("order_id", "nunique"), purchase_units=("quantity", "sum")
+        ).reset_index()
+        item_month = item_month.merge(purchases, on=["menu_item_id", "month"], how="left")
+        item_month[["purchase_orders", "purchase_units"]] = item_month[["purchase_orders", "purchase_units"]].fillna(0)
+
+    rating_values = (ratings_enriched.groupby(["menu_item_id", "month", "rating"])
+                     .size().reset_index(name="n"))
+    top_rating_share = (rating_values.groupby(["menu_item_id", "month"])
+                        ["n"].max() / item_month.set_index(["menu_item_id", "month"])["rating_count"])
+    top_rating_share = top_rating_share.rename("top_rating_share").reset_index()
+    item_month = item_month.merge(top_rating_share, on=["menu_item_id", "month"], how="left")
+
     for r in item_month.itertuples():
+        entity = f"menu_item_{r.menu_item_id}"
         stats = item_stats.loc[r.menu_item_id]
         if pd.notna(stats.sigma) and stats.sigma > 0:
             z = (r.avg_rating - stats.mu) / stats.sigma
             if abs(z) > 2:
+                direction = "spike" if z > 0 else "drop"
                 rows.append({
-                    "anomaly_type": "rating_shift",
-                    "entity": f"menu_item_{r.menu_item_id}",
+                    "anomaly_type": f"rating_{direction}",
+                    "entity": entity,
                     "period": r.month,
                     "value": round(r.avg_rating, 2),
                     "z_score": round(float(z), 2),
-                    "note": "Monthly average rating shifted more than 2 std from item baseline",
+                    "note": f"{r.item_name}: monthly average rating shifted more than 2 std from item baseline",
                 })
+
+        if float(r.top_rating_share or 0) >= 0.90:
+            rows.append({
+                "anomaly_type": "rating_identical_cluster",
+                "entity": entity,
+                "period": r.month,
+                "value": round(float(r.top_rating_share), 3),
+                "z_score": "",
+                "note": f"{r.item_name}: at least 90% of monthly ratings share one score",
+            })
+
+        if r.rating_count > burst_thresholds.get(r.menu_item_id, float("inf")):
+            rows.append({
+                "anomaly_type": "rating_volume_burst",
+                "entity": entity,
+                "period": r.month,
+                "value": int(r.rating_count),
+                "z_score": "",
+                "note": f"{r.item_name}: rating volume exceeds item-level Q3 + 3*IQR threshold",
+            })
+
+        if purchases is not None and r.purchase_orders > 0 and r.rating_count > (r.purchase_orders * 1.05):
+            rows.append({
+                "anomaly_type": "rating_purchase_mismatch",
+                "entity": entity,
+                "period": r.month,
+                "value": round(float(r.rating_count / r.purchase_orders), 2),
+                "z_score": "",
+                "note": f"{r.item_name}: more rating events than completed purchase orders in the same month",
+            })
 
     return pd.DataFrame(rows)
 
@@ -884,7 +978,7 @@ def location_channel_intelligence(orders_completed, restaurants, locations):
 # ============================================================
 
 def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
-               min_window_days=180):
+               min_window_days=180, shared_model_frame=None):
     print("\n[12/14] Churn risk modelling (logistic regression)...")
 
     df = customer_analytics.copy()
@@ -905,7 +999,7 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
         df[["customer_id"]], on="customer_id", how="inner"
     ) if "customer_id" not in items_completed.columns else items_completed
     cat = (
-        item_cat.groupby(["customer_id", "category_name"])["quantity"]
+        item_cat.groupby(["customer_id", "category_id"])["quantity"]
         .sum()
         .reset_index()
     )
@@ -914,12 +1008,26 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
     cat["share"] = cat["quantity"] / cat["cust_qty"]
 
     top_share = cat.groupby("customer_id")["share"].max().rename("top_category_share")
-    uniq_cat = cat.groupby("customer_id")["category_name"].nunique().rename("unique_categories")
+    uniq_cat = cat.groupby("customer_id")["category_id"].nunique().rename("unique_categories")
     df = df.merge(top_share, on="customer_id", how="left")
     df = df.merge(uniq_cat, on="customer_id", how="left")
 
     df["top_category_share"] = df["top_category_share"].fillna(0)
     df["unique_categories"] = df["unique_categories"].fillna(0)
+
+    # One honest feature-engineering attempt after leakage removal: add
+    # non-target-defining purchase volume and weekend-habit signals.
+    order_behavior = items_completed[["customer_id", "order_id", "order_date"]].drop_duplicates().copy()
+    order_behavior["order_date"] = pd.to_datetime(order_behavior["order_date"], errors="coerce")
+    weekend_share = (order_behavior.assign(
+        is_weekend=(order_behavior["order_date"].dt.dayofweek >= 5).astype(int)
+    ).groupby("customer_id")["is_weekend"].mean().rename("weekend_order_share"))
+    # customer_analytics already carries total_items_purchased from the
+    # completed-order customer aggregation; only the new weekend-habit
+    # feature needs to be joined here.
+    df = df.merge(weekend_share, on="customer_id", how="left")
+    df["total_items_purchased"] = df["total_items_purchased"].fillna(0)
+    df["weekend_order_share"] = df["weekend_order_share"].fillna(0)
     df["discount_dependency"] = np.where(
         df["total_spend"] > 0,
         df["total_discount_received"] / df["total_spend"],
@@ -929,8 +1037,10 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
         df["total_orders"] > 0, df["promo_orders"] / df["total_orders"], 0
     )
 
+    # recency_days defines the churn label and is deliberately NOT a model
+    # feature. The remaining behavioral features are computed from customer
+    # history and are not deterministic functions of the label.
     features = [
-        "recency_days",
         "f_log_orders",
         "f_log_spend",
         "average_order_value",
@@ -938,22 +1048,29 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
         "promo_dependency",
         "top_category_share",
         "unique_categories",
+        "total_items_purchased",
+        "weekend_order_share",
     ]
 
     df["f_log_orders"] = np.log1p(df["total_orders"])
     df["f_log_spend"] = np.log1p(df["total_spend"])
 
-    X = df[features].fillna(0)
-    y = df["churned"]
+    # The shared model frame is the single feature contract used by the
+    # Python artifact path and the Spark path. The advanced analytics frame
+    # above remains responsible for the dashboard-facing risk output.
+    model_df = (shared_model_frame.copy()
+                if shared_model_frame is not None else df.copy())
+    X = model_df[features].fillna(0)
+    y = model_df["churned"]
 
     X_train, X_test, y_train, y_test, idx_train, idx_test = train_test_split(
-        X, y, df.index,
+        X, y, model_df.index,
         test_size=0.2,
         random_state=RANDOM_STATE,
         stratify=y,
     )
 
-    model = LogisticRegression(max_iter=2000, random_state=RANDOM_STATE)
+    model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000, random_state=RANDOM_STATE))
     model.fit(X_train, y_train)
 
     test_pred = model.predict(X_test)
@@ -968,8 +1085,18 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
         {"metric": "churn_rate", "value": round(float(y.mean()), 4)},
         {"metric": "definition", "value": "No completed order in the final 60 days of the analysis window"},
         {"metric": "observation_window", "value": f"Customers with first order on or before {min_first.date()}"},
-        {"metric": "model", "value": "LogisticRegression (sklearn)"},
+        {"metric": "model", "value": "StandardScaler + LogisticRegression (sklearn)"},
+        {"metric": "production_fit", "value": "All eligible customers except 200 committed dual-pipeline cases"},
     ])
+
+    # The 20% split above is used only to report honest holdout metrics.
+    # For the committed 200-case comparison set, refit a production model on
+    # every other eligible customer. This makes the saved Python artifact and
+    # the Spark-side model train on the same non-case population.
+    case_indices = np.asarray(idx_test)[:200]
+    production_train = model_df.loc[~model_df.index.isin(set(case_indices))].copy()
+    model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000, random_state=RANDOM_STATE))
+    model.fit(production_train[features].fillna(0), production_train["churned"])
 
     # Score every customer with orders.
     all_customers = customer_analytics.copy()
@@ -995,6 +1122,9 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
     scored = scored.merge(uniq_cat_all, on="customer_id", how="left")
     scored["top_category_share"] = scored["top_category_share"].fillna(0)
     scored["unique_categories"] = scored["unique_categories"].fillna(0)
+    scored = scored.merge(weekend_share, on="customer_id", how="left")
+    scored["total_items_purchased"] = scored["total_items_purchased"].fillna(0)
+    scored["weekend_order_share"] = scored["weekend_order_share"].fillna(0)
     scored["discount_dependency"] = np.where(
         scored["total_spend"] > 0,
         scored["total_discount_received"] / scored["total_spend"], 0,
@@ -1023,23 +1153,28 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
         "average_order_value", "customer_value_segment",
     ]].sort_values("churn_probability", ascending=False).reset_index(drop=True)
 
-    # Unseen test cases for the dual-pipeline comparison.
-    # Align predictions with the (shuffled) test split by index.
-    pred_series = pd.Series(np.asarray(test_pred), index=X_test.index)
-    prob_series = pd.Series(np.asarray(test_prob), index=X_test.index)
-
-    test_cases = df.loc[idx_test, [
+    # Unseen test cases for the dual-pipeline comparison. These are scored
+    # with the production model refit on all non-case rows, while the metrics
+    # above remain from the independent holdout split.
+    test_cases = model_df.loc[case_indices, [
         "customer_id", "recency_days", "total_orders", "total_spend",
         "average_order_value", "discount_dependency", "promo_dependency",
-        "top_category_share", "unique_categories", "churned",
+        "top_category_share", "unique_categories", "total_items_purchased",
+        "weekend_order_share", "churned",
     ]].head(200).copy()
     test_cases = test_cases.rename(columns={"churned": "actual_churn"})
 
+    production_case_X = test_cases.copy()
+    production_case_X["f_log_orders"] = np.log1p(production_case_X["total_orders"].astype(float))
+    production_case_X["f_log_spend"] = np.log1p(production_case_X["total_spend"].astype(float))
+    production_case_X = production_case_X[features].fillna(0)
+    production_case_pred = model.predict(production_case_X)
+    production_case_prob = model.predict_proba(production_case_X)[:, 1]
     test_predictions = pd.DataFrame({
         "customer_id": test_cases["customer_id"].to_numpy(),
         "actual_churn": test_cases["actual_churn"].to_numpy(),
-        "python_predicted_churn": pred_series.loc[test_cases.index].to_numpy(),
-        "python_churn_probability": prob_series.loc[test_cases.index].to_numpy(),
+        "python_predicted_churn": np.asarray(production_case_pred),
+        "python_churn_probability": np.asarray(production_case_prob),
     })
 
     return out, metrics, test_cases, test_predictions
@@ -1343,12 +1478,13 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
     # ------------------------------------------------------------
     # 2. Menu business classes + dual-pipeline comparison set
     # ------------------------------------------------------------
-    menu_classes = menu_business_classes(menu_perf, rating_item, wastage_item)
+    menu_classes = menu_business_classes(menu_perf, rating_item, wastage_item, items_completed)
     save(output_dir, menu_classes, "menu_business_classes.csv")
 
     feature_cols = [
-        "units_sold", "revenue", "estimated_profit",
-        "profit_margin_percentage", "average_rating", "wastage_ratio",
+        "average_rating", "rating_count", "wastage_ratio",
+        "avg_unit_price", "promo_dependency", "weekend_order_share",
+        "unique_customers", "order_line_count",
     ]
 
     # 20% holdout (150 item/restaurant cells -> 30 unseen cases).
@@ -1460,8 +1596,10 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
     # ------------------------------------------------------------
     # 12. Churn risk
     # ------------------------------------------------------------
+    shared_churn_frame = build_churn_frame(load_base_frames(processed_dir))
     churn, churn_metrics, churn_cases, churn_preds = churn_risk(
-        customer_analytics, order_items, restaurants, cutoff
+        customer_analytics, order_items, restaurants, cutoff,
+        shared_model_frame=shared_churn_frame,
     )
     save(output_dir, churn, "churn_risk.csv")
     save(output_dir, churn_metrics, "churn_model_metrics.csv")

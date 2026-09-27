@@ -24,8 +24,6 @@ time:
 
 output:
   raw_dir: "raw_data"
-  # Canonical cleaned CSV layer, owned by Ali's Python pipeline.
-  # Hamza's Spark pipeline consumes this layer and writes Parquet
-  # to parquet_dir.
+  # Canonical cleaned CSV layer consumed by both analytics pipelines.
   processed_dir: "processed_data"
-  parquet_dir: "spark_jobs/parquet_data"
+  parquet_dir: "parquet_data"

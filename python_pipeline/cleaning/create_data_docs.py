@@ -83,9 +83,9 @@ Runs the full pipeline in order (generation is optional with
 `--skip-generation`).
 
 ## Tests
-Directory: `tests/`
+Directory: `tests/python/`
 
-Run with: `python -m pytest tests -q`
+Run with: `python -m pytest tests/python -q`
 
 The test suite generates a medium-scale dataset in a temp directory and
 validates the generator invariants, cleaning PK/FK/quarantine behaviour,
@@ -93,7 +93,7 @@ processing outputs (including completed-orders-only revenue), advanced
 analytics outputs, and the dual-pipeline comparison sets.
 
 ## Dual-Pipeline Comparison Sets
-Directory: `data_cleaning/dual_pipeline/`
+Directory: `python_pipeline/dual_pipeline/`
 
 The Python side of the SRS dual-pipeline comparison: unseen cases plus
 independent Python predictions for the order-value classification (300
@@ -213,7 +213,7 @@ processing workflow.
 
 ## Tests
 
-`python -m pytest tests -q`
+`python -m pytest tests/python -q`
 """
 }
 

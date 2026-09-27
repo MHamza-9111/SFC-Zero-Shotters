@@ -1,0 +1,151 @@
+menu_item_id,restaurant_id,category_id,item_name,base_price,cost_price,is_available,launch_date,item_status,category_name,restaurant_name,location_id,restaurant_type,city_area,estimated_unit_profit,estimated_margin_percentage
+1,1,1,Menu Item 001,923,428.12,1,2025-01-01,Active,Burgers,Restaurant 001,1,Casual Dining,North-1,494.88,53.61646803900325
+2,2,2,Menu Item 002,1364,822.3,1,2025-01-01,Active,Pizza,Restaurant 002,2,Casual Dining,South-2,541.7,39.714076246334315
+3,3,3,Menu Item 003,382,225.96,1,2025-01-01,Seasonal,Biryani,Restaurant 003,3,Fast Food,East-3,156.04,40.84816753926702
+4,4,4,Menu Item 004,367,151.68,1,2025-01-01,Active,Rice,Restaurant 004,4,Cafe,West-4,215.32,58.67029972752044
+5,5,5,Menu Item 005,1622,760.21,1,2025-01-01,Seasonal,BBQ,Restaurant 005,5,Casual Dining,Central-5,861.79,53.13131935881628
+6,6,6,Menu Item 006,771,302.15,1,2025-01-01,Active,Pasta,Restaurant 006,6,Fast Food,Garden-6,468.85,60.810635538262005
+7,7,7,Menu Item 007,998,477.57,1,2025-01-01,Seasonal,Sandwiches,Restaurant 007,7,Casual Dining,Clifton-7,520.4300000000001,52.14729458917836
+8,8,8,Menu Item 008,474,307.72,1,2025-01-01,Active,Desserts,Restaurant 008,8,Family Restaurant,Gulshan-8,166.27999999999997,35.0801687763713
+9,9,9,Menu Item 009,372,140.35,1,2025-01-01,Active,Beverages,Restaurant 009,9,Cafe,Defence-9,231.65,62.27150537634408
+10,10,10,Menu Item 010,362,143.3,1,2025-01-01,Active,Salads,Restaurant 010,10,Family Restaurant,Korangi-10,218.7,60.414364640883974
+11,11,1,Menu Item 011,1146,546.24,1,2025-01-01,Active,Burgers,Restaurant 011,11,Cafe,North-11,599.76,52.33507853403141
+12,12,2,Menu Item 012,1481,783.1,1,2025-01-01,Seasonal,Pizza,Restaurant 012,12,Fast Food,South-12,697.9,47.12356515867657
+13,13,3,Menu Item 013,607,389.28,1,2025-01-01,Active,Biryani,Restaurant 013,13,Cafe,East-13,217.72000000000003,35.8682042833608
+14,14,4,Menu Item 014,417,231.23,1,2025-01-01,Active,Rice,Restaurant 014,14,Cafe,West-14,185.77,44.549160671462836
+15,15,5,Menu Item 015,1296,496.97,1,2025-01-01,Seasonal,BBQ,Restaurant 015,15,Fast Food,Central-15,799.03,61.653549382716044
+16,16,6,Menu Item 016,964,338.34,1,2025-01-01,Active,Pasta,Restaurant 016,16,Cafe,Garden-16,625.6600000000001,64.90248962655602
+17,17,7,Menu Item 017,582,292.34,1,2025-01-01,Active,Sandwiches,Restaurant 017,17,Casual Dining,Clifton-17,289.66,49.769759450171826
+18,18,8,Menu Item 018,555,334.39,1,2025-01-01,Active,Desserts,Restaurant 018,18,Fast Food,Gulshan-18,220.61,39.74954954954955
+19,19,9,Menu Item 019,311,179.99,1,2025-01-01,Active,Beverages,Restaurant 019,19,Fast Food,Defence-19,131.01,42.12540192926045
+20,20,10,Menu Item 020,581,288.51,1,2025-01-01,Active,Salads,Restaurant 020,20,Fast Food,Korangi-20,292.49,50.34251290877797
+21,1,1,Menu Item 021,764,322.28,1,2025-01-01,Active,Burgers,Restaurant 001,1,Casual Dining,North-1,441.72,57.81675392670157
+22,2,2,Menu Item 022,861,323.47,1,2025-01-01,Seasonal,Pizza,Restaurant 002,2,Casual Dining,South-2,537.53,62.43089430894309
+23,3,3,Menu Item 023,420,270.23,1,2025-01-01,Active,Biryani,Restaurant 003,3,Fast Food,East-3,149.76999999999998,35.659523809523805
+24,4,4,Menu Item 024,786,498.37,1,2025-01-01,Active,Rice,Restaurant 004,4,Cafe,West-4,287.63,36.594147582697204
+25,5,5,Menu Item 025,1680,1027.71,1,2025-01-01,Seasonal,BBQ,Restaurant 005,5,Casual Dining,Central-5,652.29,38.82678571428571
+26,6,6,Menu Item 026,1052,606.56,1,2025-01-01,Active,Pasta,Restaurant 006,6,Fast Food,Garden-6,445.44000000000005,42.34220532319392
+27,7,7,Menu Item 027,719,337.71,1,2025-01-01,Active,Sandwiches,Restaurant 007,7,Casual Dining,Clifton-7,381.29,53.03059805285118
+28,8,8,Menu Item 028,779,378.16,1,2025-01-01,Active,Desserts,Restaurant 008,8,Family Restaurant,Gulshan-8,400.84,51.45571245186136
+29,9,9,Menu Item 029,152,68.62,1,2025-01-01,Active,Beverages,Restaurant 009,9,Cafe,Defence-9,83.38,54.855263157894726
+30,10,10,Menu Item 030,475,167.27,1,2025-01-01,Active,Salads,Restaurant 010,10,Family Restaurant,Korangi-10,307.73,64.78526315789475
+31,11,1,Menu Item 031,519,322.62,1,2025-01-01,Active,Burgers,Restaurant 011,11,Cafe,North-11,196.38,37.83815028901734
+32,12,2,Menu Item 032,1752,738.3,1,2025-01-01,Seasonal,Pizza,Restaurant 012,12,Fast Food,South-12,1013.7,57.859589041095894
+33,13,3,Menu Item 033,902,351.5,1,2025-01-01,Seasonal,Biryani,Restaurant 013,13,Cafe,East-13,550.5,61.031042128603104
+34,14,4,Menu Item 034,784,464.32,1,2025-01-01,Active,Rice,Restaurant 014,14,Cafe,West-14,319.68,40.775510204081634
+35,15,5,Menu Item 035,798,437.06,1,2025-01-01,Active,BBQ,Restaurant 015,15,Fast Food,Central-15,360.94,45.230576441102755
+36,16,6,Menu Item 036,920,450.9,1,2025-01-01,Active,Pasta,Restaurant 016,16,Cafe,Garden-16,469.1,50.989130434782616
+37,17,7,Menu Item 037,1069,689.77,1,2025-01-01,Active,Sandwiches,Restaurant 017,17,Casual Dining,Clifton-17,379.23,35.47521047708139
+38,18,8,Menu Item 038,662,376.32,1,2025-01-01,Active,Desserts,Restaurant 018,18,Fast Food,Gulshan-18,285.68,43.15407854984895
+39,19,9,Menu Item 039,218,88.74,1,2025-01-01,Seasonal,Beverages,Restaurant 019,19,Fast Food,Defence-19,129.26,59.29357798165137
+40,20,10,Menu Item 040,682,276.24,1,2025-01-01,Seasonal,Salads,Restaurant 020,20,Fast Food,Korangi-20,405.76,59.49560117302053
+41,1,1,Menu Item 041,527,254.51,1,2025-01-01,Active,Burgers,Restaurant 001,1,Casual Dining,North-1,272.49,51.70588235294118
+42,2,2,Menu Item 042,730,467.71,1,2025-01-01,Active,Pizza,Restaurant 002,2,Casual Dining,South-2,262.29,35.93013698630138
+43,3,3,Menu Item 043,766,379.7,1,2025-01-01,Active,Biryani,Restaurant 003,3,Fast Food,East-3,386.3,50.4308093994778
+44,4,4,Menu Item 044,710,440.72,1,2025-01-01,Active,Rice,Restaurant 004,4,Cafe,West-4,269.28,37.92676056338028
+45,5,5,Menu Item 045,604,389.94,1,2025-01-01,Active,BBQ,Restaurant 005,5,Casual Dining,Central-5,214.06,35.44039735099338
+46,6,6,Menu Item 046,1303,633.91,1,2025-01-01,Seasonal,Pasta,Restaurant 006,6,Fast Food,Garden-6,669.09,51.349961627014586
+47,7,7,Menu Item 047,969,531.56,1,2025-01-01,Seasonal,Sandwiches,Restaurant 007,7,Casual Dining,Clifton-7,437.44000000000005,45.143446852425186
+48,8,8,Menu Item 048,444,194.92,1,2025-01-01,Active,Desserts,Restaurant 008,8,Family Restaurant,Gulshan-8,249.08,56.09909909909911
+49,9,9,Menu Item 049,496,254.28,1,2025-01-01,Active,Beverages,Restaurant 009,9,Cafe,Defence-9,241.72,48.733870967741936
+50,10,10,Menu Item 050,301,158.1,1,2025-01-01,Active,Salads,Restaurant 010,10,Family Restaurant,Korangi-10,142.9,47.475083056478404
+51,11,1,Menu Item 051,970,362.81,1,2025-01-01,Active,Burgers,Restaurant 011,11,Cafe,North-11,607.19,62.59690721649485
+52,12,2,Menu Item 052,839,463.6,1,2025-01-01,Active,Pizza,Restaurant 012,12,Fast Food,South-12,375.4,44.74374255065554
+53,13,3,Menu Item 053,472,298.53,1,2025-01-01,Active,Biryani,Restaurant 013,13,Cafe,East-13,173.47000000000003,36.75211864406781
+54,14,4,Menu Item 054,340,182.18,1,2025-01-01,Seasonal,Rice,Restaurant 014,14,Cafe,West-14,157.82,46.41764705882353
+55,15,5,Menu Item 055,1795,932.62,1,2025-01-01,Active,BBQ,Restaurant 015,15,Fast Food,Central-15,862.38,48.04345403899721
+56,16,6,Menu Item 056,709,390.6,1,2025-01-01,Active,Pasta,Restaurant 016,16,Cafe,Garden-16,318.4,44.908321579689705
+57,17,7,Menu Item 057,671,314.52,1,2025-01-01,Active,Sandwiches,Restaurant 017,17,Casual Dining,Clifton-17,356.48,53.12667660208644
+58,18,8,Menu Item 058,573,360.25,1,2025-01-01,Active,Desserts,Restaurant 018,18,Fast Food,Gulshan-18,212.75,37.12914485165794
+59,19,9,Menu Item 059,354,189.87,1,2025-01-01,Active,Beverages,Restaurant 019,19,Fast Food,Defence-19,164.13,46.36440677966102
+60,20,10,Menu Item 060,800,331.16,1,2025-01-01,Active,Salads,Restaurant 020,20,Fast Food,Korangi-20,468.84,58.605
+61,1,1,Menu Item 061,807,495.71,1,2025-01-01,Active,Burgers,Restaurant 001,1,Casual Dining,North-1,311.29,38.57372986369269
+62,2,2,Menu Item 062,1283,509.77,1,2025-01-01,Active,Pizza,Restaurant 002,2,Casual Dining,South-2,773.23,60.26734216679657
+63,3,3,Menu Item 063,891,313.94,1,2025-01-01,Active,Biryani,Restaurant 003,3,Fast Food,East-3,577.06,64.76543209876543
+64,4,4,Menu Item 064,406,256.46,1,2025-01-01,Active,Rice,Restaurant 004,4,Cafe,West-4,149.54000000000002,36.83251231527095
+65,5,5,Menu Item 065,836,515.74,1,2025-01-01,Active,BBQ,Restaurant 005,5,Casual Dining,Central-5,320.26,38.30861244019139
+66,6,6,Menu Item 066,788,418.78,1,2025-01-01,Active,Pasta,Restaurant 006,6,Fast Food,Garden-6,369.22,46.85532994923858
+67,7,7,Menu Item 067,1049,635.56,1,2025-01-01,Seasonal,Sandwiches,Restaurant 007,7,Casual Dining,Clifton-7,413.44000000000005,39.41277407054338
+68,8,8,Menu Item 068,302,114.06,1,2025-01-01,Seasonal,Desserts,Restaurant 008,8,Family Restaurant,Gulshan-8,187.94,62.2317880794702
+69,9,9,Menu Item 069,261,94.8,1,2025-01-01,Active,Beverages,Restaurant 009,9,Cafe,Defence-9,166.2,63.678160919540225
+70,10,10,Menu Item 070,383,207.25,1,2025-01-01,Active,Salads,Restaurant 010,10,Family Restaurant,Korangi-10,175.75,45.887728459530024
+71,11,1,Menu Item 071,902,464.98,1,2025-01-01,Seasonal,Burgers,Restaurant 011,11,Cafe,North-11,437.02,48.450110864745014
+72,12,2,Menu Item 072,719,275.78,1,2025-01-01,Active,Pizza,Restaurant 012,12,Fast Food,South-12,443.22,61.64394993045897
+73,13,3,Menu Item 073,386,231.75,1,2025-01-01,Active,Biryani,Restaurant 013,13,Cafe,East-13,154.25,39.961139896373055
+74,14,4,Menu Item 074,430,155.9,1,2025-01-01,Active,Rice,Restaurant 014,14,Cafe,West-14,274.1,63.74418604651163
+75,15,5,Menu Item 075,681,422.0,1,2025-01-01,Active,BBQ,Restaurant 015,15,Fast Food,Central-15,259.0,38.032305433186494
+76,16,6,Menu Item 076,755,415.31,1,2025-01-01,Active,Pasta,Restaurant 016,16,Cafe,Garden-16,339.69,44.99205298013245
+77,17,7,Menu Item 077,973,598.63,1,2025-01-01,Seasonal,Sandwiches,Restaurant 017,17,Casual Dining,Clifton-17,374.37,38.47584789311408
+78,18,8,Menu Item 078,408,256.11,1,2025-01-01,Active,Desserts,Restaurant 018,18,Fast Food,Gulshan-18,151.89,37.22794117647059
+79,19,9,Menu Item 079,203,130.5,1,2025-01-01,Active,Beverages,Restaurant 019,19,Fast Food,Defence-19,72.5,35.714285714285715
+80,20,10,Menu Item 080,275,111.05,1,2025-01-01,Active,Salads,Restaurant 020,20,Fast Food,Korangi-20,163.95,59.61818181818182
+81,1,1,Menu Item 081,871,514.47,1,2025-01-01,Active,Burgers,Restaurant 001,1,Casual Dining,North-1,356.53,40.93340987370838
+82,2,2,Menu Item 082,1026,601.45,1,2025-01-01,Active,Pizza,Restaurant 002,2,Casual Dining,South-2,424.54999999999995,41.37914230019493
+83,3,3,Menu Item 083,389,236.35,1,2025-01-01,Active,Biryani,Restaurant 003,3,Fast Food,East-3,152.65,39.24164524421594
+84,4,4,Menu Item 084,771,350.73,1,2025-01-01,Active,Rice,Restaurant 004,4,Cafe,West-4,420.27,54.50972762645914
+85,5,5,Menu Item 085,648,355.11,1,2025-01-01,Seasonal,BBQ,Restaurant 005,5,Casual Dining,Central-5,292.89,45.19907407407407
+86,6,6,Menu Item 086,785,478.31,1,2025-01-01,Active,Pasta,Restaurant 006,6,Fast Food,Garden-6,306.69,39.068789808917195
+87,7,7,Menu Item 087,1056,530.98,1,2025-01-01,Active,Sandwiches,Restaurant 007,7,Casual Dining,Clifton-7,525.02,49.717803030303024
+88,8,8,Menu Item 088,368,225.63,1,2025-01-01,Active,Desserts,Restaurant 008,8,Family Restaurant,Gulshan-8,142.37,38.6875
+89,9,9,Menu Item 089,417,266.36,1,2025-01-01,Active,Beverages,Restaurant 009,9,Cafe,Defence-9,150.64,36.12470023980815
+90,10,10,Menu Item 090,361,190.96,1,2025-01-01,Active,Salads,Restaurant 010,10,Family Restaurant,Korangi-10,170.04,47.10249307479224
+91,11,1,Menu Item 091,771,370.79,1,2025-01-01,Active,Burgers,Restaurant 011,11,Cafe,North-11,400.21,51.907911802853434
+92,12,2,Menu Item 092,1089,464.37,1,2025-01-01,Seasonal,Pizza,Restaurant 012,12,Fast Food,South-12,624.63,57.35812672176308
+93,13,3,Menu Item 093,882,553.61,1,2025-01-01,Active,Biryani,Restaurant 013,13,Cafe,East-13,328.39,37.23242630385488
+94,14,4,Menu Item 094,741,274.91,1,2025-01-01,Active,Rice,Restaurant 014,14,Cafe,West-14,466.09,62.90013495276653
+95,15,5,Menu Item 095,1242,681.88,1,2025-01-01,Active,BBQ,Restaurant 015,15,Fast Food,Central-15,560.12,45.09822866344606
+96,16,6,Menu Item 096,807,405.22,1,2025-01-01,Seasonal,Pasta,Restaurant 016,16,Cafe,Garden-16,401.78,49.78686493184634
+97,17,7,Menu Item 097,812,454.04,1,2025-01-01,Active,Sandwiches,Restaurant 017,17,Casual Dining,Clifton-17,357.96,44.083743842364534
+98,18,8,Menu Item 098,680,373.65,1,2025-01-01,Seasonal,Desserts,Restaurant 018,18,Fast Food,Gulshan-18,306.35,45.0514705882353
+99,19,9,Menu Item 099,209,111.74,1,2025-01-01,Active,Beverages,Restaurant 019,19,Fast Food,Defence-19,97.26,46.535885167464116
+100,20,10,Menu Item 100,811,486.7,1,2025-01-01,Active,Salads,Restaurant 020,20,Fast Food,Korangi-20,324.3,39.987669543773116
+101,1,1,Menu Item 101,665,318.51,1,2025-01-01,Active,Burgers,Restaurant 001,1,Casual Dining,North-1,346.49,52.103759398496244
+102,2,2,Menu Item 102,1604,774.17,1,2025-01-01,Active,Pizza,Restaurant 002,2,Casual Dining,South-2,829.83,51.7350374064838
+103,3,3,Menu Item 103,834,490.49,1,2025-01-01,Active,Biryani,Restaurant 003,3,Fast Food,East-3,343.51,41.18824940047961
+104,4,4,Menu Item 104,386,167.96,1,2025-01-01,Active,Rice,Restaurant 004,4,Cafe,West-4,218.04,56.48704663212435
+105,5,5,Menu Item 105,1081,596.54,1,2025-01-01,Active,BBQ,Restaurant 005,5,Casual Dining,Central-5,484.46000000000004,44.8159111933395
+106,6,6,Menu Item 106,703,277.13,1,2025-01-01,Active,Pasta,Restaurant 006,6,Fast Food,Garden-6,425.87,60.578947368421055
+107,7,7,Menu Item 107,886,472.58,1,2025-01-01,Active,Sandwiches,Restaurant 007,7,Casual Dining,Clifton-7,413.42,46.661399548532735
+108,8,8,Menu Item 108,674,415.08,1,2025-01-01,Active,Desserts,Restaurant 008,8,Family Restaurant,Gulshan-8,258.92,38.41543026706232
+109,9,9,Menu Item 109,476,221.43,1,2025-01-01,Seasonal,Beverages,Restaurant 009,9,Cafe,Defence-9,254.57,53.481092436974784
+110,10,10,Menu Item 110,401,219.27,1,2025-01-01,Active,Salads,Restaurant 010,10,Family Restaurant,Korangi-10,181.73,45.31920199501246
+111,11,1,Menu Item 111,559,326.19,1,2025-01-01,Active,Burgers,Restaurant 011,11,Cafe,North-11,232.81,41.64758497316637
+112,12,2,Menu Item 112,1760,861.28,1,2025-01-01,Active,Pizza,Restaurant 012,12,Fast Food,South-12,898.72,51.06363636363637
+113,13,3,Menu Item 113,474,230.81,1,2025-01-01,Seasonal,Biryani,Restaurant 013,13,Cafe,East-13,243.19,51.30590717299578
+114,14,4,Menu Item 114,843,544.89,1,2025-01-01,Active,Rice,Restaurant 014,14,Cafe,West-14,298.11,35.36298932384342
+115,15,5,Menu Item 115,1506,803.9,1,2025-01-01,Seasonal,BBQ,Restaurant 015,15,Fast Food,Central-15,702.1,46.62018592297477
+116,16,6,Menu Item 116,1061,513.28,1,2025-01-01,Active,Pasta,Restaurant 016,16,Cafe,Garden-16,547.72,51.622997172478804
+117,17,7,Menu Item 117,886,429.73,1,2025-01-01,Active,Sandwiches,Restaurant 017,17,Casual Dining,Clifton-17,456.27,51.49774266365689
+118,18,8,Menu Item 118,533,309.0,1,2025-01-01,Seasonal,Desserts,Restaurant 018,18,Fast Food,Gulshan-18,224.0,42.026266416510325
+119,19,9,Menu Item 119,242,104.64,1,2025-01-01,Active,Beverages,Restaurant 019,19,Fast Food,Defence-19,137.36,56.760330578512395
+120,20,10,Menu Item 120,542,227.83,1,2025-01-01,Active,Salads,Restaurant 020,20,Fast Food,Korangi-20,314.16999999999996,57.96494464944648
+121,1,1,Menu Item 121,1003,375.3,1,2025-01-01,Active,Burgers,Restaurant 001,1,Casual Dining,North-1,627.7,62.582253240279165
+122,2,2,Menu Item 122,1484,828.35,1,2025-01-01,Active,Pizza,Restaurant 002,2,Casual Dining,South-2,655.65,44.18126684636118
+123,3,3,Menu Item 123,774,365.54,1,2025-01-01,Seasonal,Biryani,Restaurant 003,3,Fast Food,East-3,408.46,52.77260981912144
+124,4,4,Menu Item 124,363,149.57,1,2025-01-01,Seasonal,Rice,Restaurant 004,4,Cafe,West-4,213.43,58.7961432506887
+125,5,5,Menu Item 125,1796,1138.34,1,2025-01-01,Active,BBQ,Restaurant 005,5,Casual Dining,Central-5,657.6600000000001,36.61804008908686
+126,6,6,Menu Item 126,1283,670.63,1,2025-01-01,Seasonal,Pasta,Restaurant 006,6,Fast Food,Garden-6,612.37,47.72954014029619
+127,7,7,Menu Item 127,760,334.08,1,2025-01-01,Seasonal,Sandwiches,Restaurant 007,7,Casual Dining,Clifton-7,425.92,56.04210526315789
+128,8,8,Menu Item 128,679,347.29,1,2025-01-01,Active,Desserts,Restaurant 008,8,Family Restaurant,Gulshan-8,331.71,48.85272459499264
+129,9,9,Menu Item 129,232,100.2,1,2025-01-01,Seasonal,Beverages,Restaurant 009,9,Cafe,Defence-9,131.8,56.81034482758621
+130,10,10,Menu Item 130,648,292.14,1,2025-01-01,Seasonal,Salads,Restaurant 010,10,Family Restaurant,Korangi-10,355.86,54.91666666666667
+131,11,1,Menu Item 131,619,372.73,1,2025-01-01,Active,Burgers,Restaurant 011,11,Cafe,North-11,246.26999999999998,39.785137318255245
+132,12,2,Menu Item 132,1793,642.06,1,2025-01-01,Seasonal,Pizza,Restaurant 012,12,Fast Food,South-12,1150.94,64.19074177356386
+133,13,3,Menu Item 133,927,508.83,1,2025-01-01,Active,Biryani,Restaurant 013,13,Cafe,East-13,418.17,45.11003236245955
+134,14,4,Menu Item 134,738,288.34,1,2025-01-01,Seasonal,Rice,Restaurant 014,14,Cafe,West-14,449.66,60.929539295392956
+135,15,5,Menu Item 135,702,300.49,1,2025-01-01,Active,BBQ,Restaurant 015,15,Fast Food,Central-15,401.51,57.19515669515669
+136,16,6,Menu Item 136,965,432.37,1,2025-01-01,Seasonal,Pasta,Restaurant 016,16,Cafe,Garden-16,532.63,55.19481865284974
+137,17,7,Menu Item 137,831,353.74,1,2025-01-01,Active,Sandwiches,Restaurant 017,17,Casual Dining,Clifton-17,477.26,57.43200962695547
+138,18,8,Menu Item 138,269,154.6,1,2025-01-01,Active,Desserts,Restaurant 018,18,Fast Food,Gulshan-18,114.4,42.5278810408922
+139,19,9,Menu Item 139,234,127.54,1,2025-01-01,Active,Beverages,Restaurant 019,19,Fast Food,Defence-19,106.46,45.495726495726494
+140,20,10,Menu Item 140,281,178.4,1,2025-01-01,Active,Salads,Restaurant 020,20,Fast Food,Korangi-20,102.6,36.51245551601423
+141,1,1,Menu Item 141,470,252.11,1,2025-01-01,Active,Burgers,Restaurant 001,1,Casual Dining,North-1,217.89,46.3595744680851
+142,2,2,Menu Item 142,1669,919.35,1,2025-01-01,Active,Pizza,Restaurant 002,2,Casual Dining,South-2,749.65,44.916117435590174
+143,3,3,Menu Item 143,612,355.0,1,2025-01-01,Active,Biryani,Restaurant 003,3,Fast Food,East-3,257.0,41.993464052287585
+144,4,4,Menu Item 144,417,243.25,1,2025-01-01,Active,Rice,Restaurant 004,4,Cafe,West-4,173.75,41.66666666666667
+145,5,5,Menu Item 145,821,429.88,1,2025-01-01,Active,BBQ,Restaurant 005,5,Casual Dining,Central-5,391.12,47.639464068209506
+146,6,6,Menu Item 146,1193,742.53,1,2025-01-01,Seasonal,Pasta,Restaurant 006,6,Fast Food,Garden-6,450.47,37.75943000838223
+147,7,7,Menu Item 147,603,224.8,1,2025-01-01,Active,Sandwiches,Restaurant 007,7,Casual Dining,Clifton-7,378.2,62.71973466003317
+148,8,8,Menu Item 148,558,337.64,1,2025-01-01,Active,Desserts,Restaurant 008,8,Family Restaurant,Gulshan-8,220.36,39.4910394265233
+149,9,9,Menu Item 149,409,239.18,1,2025-01-01,Active,Beverages,Restaurant 009,9,Cafe,Defence-9,169.82,41.520782396088016
+150,10,10,Menu Item 150,688,377.34,1,2025-01-01,Active,Salads,Restaurant 010,10,Family Restaurant,Korangi-10,310.66,45.15406976744186

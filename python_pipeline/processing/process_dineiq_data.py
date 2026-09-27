@@ -1,5 +1,7 @@
 from pathlib import Path
 from datetime import datetime
+import os
+import tempfile
 
 import pandas as pd
 import numpy as np
@@ -43,7 +45,16 @@ def read_csv(base_dir: Path, name: str) -> pd.DataFrame:
 
 def save(output_dir: Path, df: pd.DataFrame, filename: str) -> Path:
     path = Path(output_dir) / filename
-    df.to_csv(path, index=False)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.",
+                                          suffix=".tmp", dir=path.parent)
+    os.close(fd)
+    temporary_path = Path(temporary_name)
+    try:
+        df.to_csv(temporary_path, index=False)
+        os.replace(temporary_path, path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
     print(f"  Saved: {filename} ({len(df):,} rows)")
     return path
 
@@ -716,7 +727,17 @@ def main(
 
     processing_summary = pd.DataFrame(summary)
     processing_summary["processing_run"] = RUN_TIME
-    processing_summary.to_csv(reports_dir / "processing_summary.csv", index=False)
+    summary_path = reports_dir / "processing_summary.csv"
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary_name = tempfile.mkstemp(prefix=f".{summary_path.name}.",
+                                          suffix=".tmp", dir=summary_path.parent)
+    os.close(fd)
+    temporary_path = Path(temporary_name)
+    try:
+        processing_summary.to_csv(temporary_path, index=False)
+        os.replace(temporary_path, summary_path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
 
     print()
     print("=" * 75)

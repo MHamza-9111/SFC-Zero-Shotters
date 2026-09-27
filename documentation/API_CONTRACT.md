@@ -1,188 +1,83 @@
-# DineIQ Analytics - Model Serving API Contract
+# DineIQ API contract
 
-Owners: **Hamza** (this contract + model artifacts + ensemble service)
-Consumers: **Farooq / Zain** (web application)
+The Flask API is mounted at `/api/v1`. Responses are JSON except CSV exports. Dashboard charts are rendered as responsive inline SVG from these live JSON endpoints; the browser does not embed raster chart files. Protected requests use the signed-in browser session. The default app configuration requires authentication; `/api/v1/status`, `/api/v1/auth/signup`, `/api/v1/auth/login`, and `/api/v1/auth/me` are the public/session bootstrap endpoints. Mutating requests require the session CSRF token in `X-CSRF-Token`; the browser client obtains it from `GET /api/v1/auth/csrf`.
 
-This contract defines what the Big Data pipeline exposes to the web
-application for the "upload and predict" flow and the model-management
-UI requirements. It is written against the implemented pipeline, so
-every endpoint maps to code that exists (or a thin service wrapper
-around it, listed as *to wrap*).
+Authorization failures use `{"error": "…", "message": "…"}`. Unsupported API methods, missing routes, oversized request bodies, validation errors, missing model artifacts, and conflicts return the corresponding 4xx/5xx status rather than a success-shaped payload.
 
-## 1. Ensemble prediction (the 5-second NFR flow)
+## Authentication and access
 
-**SLO:** a request with up to 100 order records returns the combined
-prediction from **both** pipelines' models in **< 5 000 ms** end-to-end
-(measured full-scale: ~90 ms for 100 records; see
-`reports/latency/ensemble_latency_report.csv`).
+| Method and path | Access | Purpose |
+|---|---|---|
+| `POST /auth/signup` | Public | Create a Data Analyst account; accepts first/last name, email, password (12+ characters), and brand. Public signup cannot select a role. |
+| `POST /auth/login` | Public | Start an authenticated session. |
+| `POST /auth/logout` | Signed in + CSRF | End the session. |
+| `GET /auth/me` | Public | Return the signed-in user or 401. |
+| `GET /auth/csrf` | Signed in | Return the session CSRF token. |
+| `GET /auth/users` | Administrator | List workspace accounts. |
+| `PATCH /auth/users/{email}/role` | Administrator + CSRF | Change a role. The final Administrator cannot be demoted. |
+| `GET /audit?limit=100` | Administrator | Read the latest account, prediction, export, data-change, and reload events (maximum 500). |
 
-Models are **loaded once at service start** from versioned artifacts
-(never retrained at request time), keeping the process warm:
+Roles are `Data Analyst`, `Restaurant Manager`, `Regional Manager`, and `Administrator`. All signed-in roles can read dashboard and operational data. Data mutations, user administration, audit access, and pipeline reload require Administrator privileges.
 
-| Pipeline | Artifact loaded at startup |
-| --- | --- |
-| Big Data (this workspace) | `models/high_value_order/v<n>/` (latest) |
-| Python | `models/high_value_order/v<n>/` (latest) |
+The initial Administrator is optional and bootstrapped only when `DINEIQ_BOOTSTRAP_ADMIN_EMAIL` and a `DINEIQ_BOOTSTRAP_ADMIN_PASSWORD` of at least 12 characters are set and no Administrator already exists.
 
-### `POST /api/v1/predict/order-value`
+## Dashboard and platform reads
 
-Request (JSON):
+| Method and path | Purpose |
+|---|---|
+| `GET /status`, `GET /pipeline/status`, `GET /models`, `GET /predict/tasks` | Read readiness, pipeline evidence, model metadata, and supported scoring tasks. |
+| `GET /dashboard/meta`, `/overview`, `/revenue-series`, `/orders`, `/orders/{id}`, `/dishes`, `/menu-intelligence`, `/inventory`, `/customers`, `/promotions`, `/payments`, `/transactions`, `/locations`, `/peak-hours`, `/alerts`, `/search`, `/recommendations`, `/reports` | Dashboard data and analytics. Date, location, range, search, page, limit, and task filters are accepted where applicable by the route. |
+| `GET /dashboard/market-basket`, `/pricing`, `/forecast`, `/anomalies`, `/scenarios` | Dedicated SRS analytical evidence. Forecast supports a bounded `horizon`; pricing supports `q`. |
+| `POST /dashboard/what-if` | Calculate an evidence-based scenario estimate. Body accepts scenario, change percentage, optional menu item, and optional wastage amount. The response includes baseline, estimate, impact, and assumptions. |
+| `GET /dashboard/export?dataset=orders` | Download an allowlisted dataset as CSV. Exports are audited. |
+| `POST /dashboard/reload` | Reload pipeline artifacts; Administrator only. |
+| `GET /analytics/menu-classes`, `/analytics/recommendations` | Legacy JSON analytics views. Static chart image serving has been removed; use `/dashboard/reports` and the JSON analytics endpoints for live charts. |
 
-```json
-{
-  "records": [
-    {
-      "order_id": 1001,
-      "customer_id": 42,
-      "order_hour": 18,
-      "day_of_week_code": 2,
-      "order_month": 7,
-      "is_weekend": false,
-      "is_promo_order": true,
-      "channel_code": 1,
-      "payment_code": 2,
-      "basket_size": 4,
-      "basket_quantity": 6,
-      "avg_unit_price": 1520.5,
-      "discount_rate_percentage": 3.1,
-      "total_orders": 12,
-      "total_spend": 54000.0
-    }
-  ]
-}
-```
+Analytics are read from the pipeline's processed CSV and evidence artifacts. The separate operational SQLite store is not currently wired to recompute or replace those analytical snapshots after CRUD changes.
 
-* `records` must contain 1..100 rows with exactly the 13 order features
-  (identical names/semantics to
-  `data_cleaning/dual_pipeline/order_value_unseen_cases.csv` -
-  that file is the reference for value ranges and coding).
-* `order_id` / `customer_id` are for audit correlation only; the models
-  do not consume them.
+## Model scoring
 
-Response `200` (JSON):
+`POST /predict/order-value`, `POST /predict/churn`, and `POST /predict/ensemble` accept a JSON object containing a non-empty `records` array. The task registry from `GET /predict/tasks` is the source of truth for each task's required feature names, label, and batch limit. Request-time model training is not performed. Artifacts are loaded and cached when the Flask app starts; unavailable required artifacts return `503 MODELS_UNAVAILABLE`.
+
+The scorer returns task/model versions, engine metadata, measured request latency, per-record predictions, and available model probabilities. When both independent models are available, binary positive-class probabilities and aligned multiclass probabilities are averaged. A degraded single-model response is marked with the participating model; required dual-model tasks return an unavailable error when either side is missing.
+
+Example request:
 
 ```json
 {
-  "ensemble_version": {"big_data": 1, "python": 1},
-  "engine": {"big_data": "pandas", "python": "python"},
-  "latency_ms": 84.2,
-  "results": [
-    {
-      "order_id": 1001,
-      "high_value_predicted": 1,
-      "probability_big_data": 0.91,
-      "probability_python": 0.97,
-      "probability_ensemble": 0.94,
-      "decision_rule": "probability average, threshold 0.5"
-    }
-  ]
+  "task": "high_value_order",
+  "records": [{
+    "order_hour": 18,
+    "day_of_week_code": 2,
+    "order_month": 7,
+    "is_weekend": 0,
+    "is_promo_order": 1,
+    "channel_code": 1,
+    "payment_code": 2,
+    "basket_size": 4,
+    "basket_quantity": 6,
+    "avg_unit_price": 1520.5,
+    "discount_rate_percentage": 3.1,
+    "total_orders": 12,
+    "total_spend": 54000.0
+  }]
 }
 ```
 
-Combination rule (fixed, documented in
-`spark_jobs/ensemble_latency.py`):
-`probability_ensemble = (p_big_data + p_python) / 2`,
-`high_value_predicted = 1 if probability_ensemble >= 0.5 else 0`.
+Common scoring errors include `INVALID_RECORDS`, `BATCH_TOO_LARGE`, `MODELS_UNAVAILABLE`, and `INTERNAL_ERROR`. Numeric inputs must be finite and the batch size must fit the selected task limit.
 
-Errors:
+## Operational data CRUD
 
-| HTTP | Meaning |
-| --- | --- |
-| 400 | missing/unknown feature, > 100 records, non-numeric value |
-| 503 | model artifacts missing or failed to load at startup |
+`GET /admin/data/resources` returns each resource's fields and validation metadata. The supported resources are `locations`, `restaurants`, `menu_categories`, `menu_items`, `pricing_history`, `customers`, `promotions`, `orders`, `order_items`, `ratings`, `inventory`, and `wastage`.
 
-### `POST /api/v1/predict/churn` (secondary)
+| Method and path | Purpose |
+|---|---|
+| `GET /admin/data/{resource}?page=1&page_size=25&q=…` | Paginated records (page size 1–100). Search is limited to the configured resource fields. |
+| `GET /admin/data/{resource}/{record_id}` | Read one record. |
+| `POST /admin/data/{resource}` | Create a validated record (Administrator + CSRF). |
+| `PATCH /admin/data/{resource}/{record_id}` | Update supplied fields (Administrator + CSRF). |
+| `DELETE /admin/data/{resource}/{record_id}` | Delete a record if no protected foreign-key relationship prevents it (Administrator + CSRF). |
 
-Same shape for customer records (8 churn features, see
-`churn_unseen_cases.csv` columns). Batch up to 200; measured ~2 ms.
-Response mirrors the order-value shape (`churn_predicted`,
-`probability_*`, `ensemble_version`).
+Foreign keys, uniqueness, allowed order states, non-negative values, date ranges, and rating bounds are checked in SQLite. The customer resource contains only pseudonymous operational attributes. Failed validation returns `400 INVALID_RECORD`; unknown resources/records return `404 NOT_FOUND`; key or relationship conflicts return `409 CONFLICT`.
 
-## 2. Model versioning UI (SRS requirement)
-
-### `GET /api/v1/models`
-
-```json
-{
-  "models": [
-    {
-      "task": "high_value_order",
-      "pipeline": "big_data",
-      "version": 1,
-      "artifact": "models/high_value_order/v1/",
-      "trained_at": "2026-09-24 15:00:00",
-      "engine": "pandas",
-      "metrics": {"eval_accuracy": 0.9858, "eval_f1": 0.9284, "eval_roc_auc": 0.9975},
-      "features": ["order_hour", "day_of_week_code", "..."],
-      "status": "active"
-    },
-    { "task": "high_value_order", "pipeline": "python", "version": 1, "status": "active", "...": "..." }
-  ]
-}
-```
-
-Source: read `metadata.json` from each `v<n>/` directory under
-`models/` and `models/` (both use the same layout:
-`model.joblib` + `metadata.json` with `task`, `version`, `engine`,
-`trained_at`, `features`, `metrics`).
-
-The "active" version is the highest `v<n>` per (task, pipeline) - the
-same rule the ensemble loader uses, so the UI always shows what is
-actually serving.
-
-## 3. Audit and job status (SRS requirements)
-
-* **Audit:** the web app must log, per prediction request: timestamp,
-  user role, record count, model versions used (from
-  `ensemble_version`), and measured `latency_ms`. These fields exist in
-  the response precisely so the audit row is one JSON capture.
-* **Pipeline job status:** a `GET /api/v1/pipeline/status` endpoint
-  (to wrap) should report the last `run_all.py` outcome. The pipeline
-  writes one line per step to stdout and evidence files under
-  `reports/`; the service can tail the run log or check
-  `reports/latency/ensemble_latency_report.csv`
-  (columns `pass`, `total_ms_max`, `nfr_limit_ms`) to answer
-  "is the ensemble healthy?".
-* **Error handling:** all endpoints return the JSON error envelope
-  `{"error": "<code>", "message": "<human readable>"}`; codes:
-  `INVALID_RECORDS`, `BATCH_TOO_LARGE`, `MODELS_UNAVAILABLE`,
-  `INTERNAL_ERROR`.
-
-## 4. Dashboards (data contracts)
-
-Dashboard charts read committed/refreshed evidence, not live models:
-
-| Dashboard widget | Source file | Key columns |
-| --- | --- | --- |
-| Category revenue share | `reports/spark_sql/category_revenue_share.csv` | `category_name`, `revenue`, `share` |
-| Peak hours | `reports/spark_sql/peak_hours.csv` | `hour`, `day_type`, `orders` |
-| Top item combos (lift) | `reports/spark_sql/top_item_combos.csv` | `item_a_name`, `item_b_name`, `restaurant_id`, `orders_with_combo`, `lift` (within-restaurant; `chain_lift` column kept for transparency) |
-| Promo traps | `reports/spark_sql/promo_effectiveness.csv` | `promotion_name`, `aov_lift_percentage`, `promotion_trap` |
-| Location ranking | `reports/spark_sql/location_ranking.csv` | `city_area`, `revenue`, `avg_order_value` |
-| Churn candidates | `reports/spark_sql/churn_candidates.csv` | `customer_id`, `days_since`, `total_orders` |
-| Dual-pipeline agreement | `reports/dual_pipeline/dual_pipeline_summary.csv` | `task`, `agreement_percentage` |
-| NFR health | `reports/latency/ensemble_latency_report.csv` | `pass`, `total_ms_max` |
-
-## 5. Reference implementation (thin service)
-
-The ensemble computation to wrap (already implemented and tested):
-
-```python
-from Main.spark_pipeline.ensemble_latency import measure_ensemble
-from Main.spark_pipeline.features import ORDER_FEATURES
-```
-
-`measure_ensemble(pipeline_models_dir, python_models_dir, cases_dir)`
-implements exactly the contract in section 1 (load both versioned
-models, warm, time the combined 100-record batch). A Flask/FastAPI
-service around it plus the metadata readers of section 2 is the entire
-server-side surface for the UI.
-
-## 6. Non-goals (for the web team)
-
-* Retrain or modify models at runtime - artifacts are immutable per
-  version; a new version is produced by re-running
-  `run_all.py` / `model_artifacts.py`.
-* Bypass the ensemble for a single pipeline - the NFR is defined on
-  the combined prediction; per-pipeline probabilities are returned for
-  transparency, not as a separate product.
+The account database and operational data database are separate files. Configure `DINEIQ_AUTH_DB` and `DINEIQ_DATA_DB` to persistent storage and back them up before production use.

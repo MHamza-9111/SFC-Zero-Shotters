@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Page not found — DineIQ Analytics">
+  <title>404 — Signal Lost · DineIQ Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <style>
+    body.error-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient grid */
+    .error-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(var(--accent-rgb), 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--accent-rgb), 0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    .error-card {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 480px);
+      padding: 56px 40px 48px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-card);
+      background: var(--card);
+      box-shadow: var(--shadow-lg);
+      animation: authCardIn 0.4s var(--ease-spring);
+    }
+    @keyframes authCardIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .error-code {
+      font-size: 72px;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      color: var(--accent);
+      line-height: 1;
+      margin: 0 0 8px;
+      text-shadow: 0 0 40px rgba(var(--accent-rgb), 0.3);
+    }
+
+    .error-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 16px;
+    }
+
+    .error-card h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0 0 10px;
+      color: var(--text);
+    }
+
+    .error-description {
+      color: var(--text-2);
+      margin-bottom: 28px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Glowing nodes */
+    .error-node {
+      position: fixed;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.15;
+      pointer-events: none;
+      animation: nodeGlow 4s ease-in-out infinite;
+    }
+    .error-node:nth-child(1) { width: 6px; height: 6px; top: 20%; left: 15%; animation-delay: 0s; }
+    .error-node:nth-child(2) { width: 4px; height: 4px; top: 70%; left: 80%; animation-delay: 1s; }
+    .error-node:nth-child(3) { width: 5px; height: 5px; top: 40%; left: 75%; animation-delay: 2s; }
+    @keyframes nodeGlow {
+      0%, 100% { opacity: 0.1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.8); }
+    }
+
+    /* Measurement bar */
+    .error-measure {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+    }
+    .error-tick { width: 1px; background: rgba(var(--accent-rgb), 0.15); }
+    .error-tick:nth-child(odd) { height: 10px; }
+    .error-tick:nth-child(even) { height: 6px; }
+    .error-measure-label {
+      margin-left: 8px;
+      color: var(--text-3);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .error-node { animation: none !important; opacity: 0.15; }
+    }
+  </style>
+</head>
+<body class="error-page" data-theme="dark">
+  <div class="error-grid" aria-hidden="true"></div>
+  <div class="error-node" aria-hidden="true"></div>
+  <div class="error-node" aria-hidden="true"></div>
+  <div class="error-node" aria-hidden="true"></div>
+
+  <main class="error-card">
+    <div class="error-code">404</div>
+    <div class="error-label">Signal not found</div>
+    <h1>This intelligence node doesn't exist</h1>
+    <p class="error-description">
+      The analytics view or data endpoint you requested could not be located
+      within the DineIQ Intelligence Layer. It may have been moved or decommissioned.
+    </p>
+    <div class="error-actions">
+      <a class="btn btn-primary" href="/">Return to Command Center</a>
+      <a class="btn btn-ghost" href="/reports">View Reports</a>
+    </div>
+
+    <div class="error-measure" aria-hidden="true">
+      <div class="error-tick"></div>
+      <div class="error-tick"></div>
+      <div class="error-tick"></div>
+      <div class="error-tick"></div>
+      <div class="error-tick"></div>
+      <div class="error-tick"></div>
+      <div class="error-tick"></div>
+      <div class="error-tick"></div>
+      <span class="error-measure-label">Route · Unresolved</span>
+    </div>
+  </main>
+
+  <script>
+    const stored = localStorage.getItem('dq-theme') || 'dark';
+    document.body.setAttribute('data-theme', stored);
+    document.documentElement.setAttribute('data-theme', stored);
+  </script>
+</body>
+</html>

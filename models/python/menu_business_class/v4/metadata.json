@@ -1,0 +1,30 @@
+{
+  "model": "RandomForestClassifier (sklearn)",
+  "features": [
+    "average_rating",
+    "rating_count",
+    "wastage_ratio",
+    "avg_unit_price",
+    "promo_dependency",
+    "weekend_order_share",
+    "unique_customers",
+    "order_line_count"
+  ],
+  "n_train": 120,
+  "n_eval": 30,
+  "classes": [
+    "Hidden Opportunity",
+    "Low Performer",
+    "Profit Driver",
+    "Volume Driver"
+  ],
+  "metrics": {
+    "accuracy": 0.6,
+    "macro_f1": 0.5639
+  },
+  "label_rule": "median-based 4-class menu business rule",
+  "task": "menu_business_class",
+  "version": 4,
+  "engine": "python",
+  "trained_at": "2026-09-27 10:02:22"
+}

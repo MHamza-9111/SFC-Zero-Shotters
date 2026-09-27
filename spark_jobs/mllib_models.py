@@ -7,6 +7,8 @@ apples-to-apples:
 
   A. high_value_order  - is the completed order in the top 10% of
      training-side order value?  RandomForest (150 trees, seed 42).
+     Customer history features are leave-one-order-out to prevent target
+     leakage from the current order value.
   B. customer_churn    - no completed order in the final 60 days of
      the window (documented recency proxy), stable 180-day
      observation window.  LogisticRegression (seed 42).
@@ -21,7 +23,7 @@ comparison stage then scores as unseen.
 Every model is persisted as a versioned artifact:
     models/<task>/v<n>/  (model + metadata.json)
 so the 5-second ensemble NFR always loads a fixed, inspectable
-version (documentation/SRS_CLARIFICATIONS.md, rule 1).
+version (SRS_CLARIFICATIONS.md, rule 1).
 """
 
 from __future__ import annotations
@@ -127,6 +129,8 @@ def _train_task_a(frames, day_map, excluded_ids):
 
 def _train_task_b(frames, excluded_ids):
     from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import (accuracy_score, f1_score, roc_auc_score)
 
@@ -137,7 +141,7 @@ def _train_task_b(frames, excluded_ids):
         tr, test_size=0.2, random_state=RANDOM_STATE,
         stratify=tr["churned"])
     x = train_part[CHURN_FEATURES].fillna(0)
-    clf = LogisticRegression(max_iter=2000, random_state=RANDOM_STATE)
+    clf = make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000, random_state=RANDOM_STATE))
     clf.fit(x, train_part["churned"])
     pred = clf.predict(eval_part[CHURN_FEATURES].fillna(0))
     prob = clf.predict_proba(eval_part[CHURN_FEATURES].fillna(0))[:, 1]
@@ -148,7 +152,7 @@ def _train_task_b(frames, excluded_ids):
         "roc_auc": round(float(roc_auc_score(eval_part["churned"], prob)), 4),
     }
 
-    final = LogisticRegression(max_iter=2000, random_state=RANDOM_STATE)
+    final = make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000, random_state=RANDOM_STATE))
     final.fit(tr[CHURN_FEATURES].fillna(0), tr["churned"])
     return final, metrics, {
         "n_train": len(tr),
@@ -190,6 +194,144 @@ def _train_task_c(frames, excluded_cells):
     return final, metrics, {
         "n_train": len(tr),
         "n_eval": len(eval_part),
+        "classes": sorted(tr["business_class"].unique().tolist()),
+        "label_rule": "median-based 4-class rule incl. contradictory cases",
+    }
+
+
+def _spark_input(engine, frame, feature_cols, label_col=None):
+    """Convert a pandas feature frame to a typed Spark DataFrame."""
+    data = frame.copy()
+    for col in feature_cols:
+        data[col] = pd.to_numeric(data[col], errors="coerce").fillna(0.0).astype(float)
+    if label_col and label_col in data.columns:
+        data[label_col] = pd.to_numeric(data[label_col], errors="coerce").fillna(0).astype(float)
+    return engine.spark.createDataFrame(data)
+
+
+def _spark_binary_metrics(predicted, actual, probabilities):
+    from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+    y_pred = np.asarray(predicted, dtype=int)
+    y_true = np.asarray(actual, dtype=int)
+    out = {
+        "accuracy": round(float(accuracy_score(y_true, y_pred)), 4),
+        "f1": round(float(f1_score(y_true, y_pred)), 4),
+    }
+    try:
+        out["roc_auc"] = round(float(roc_auc_score(y_true, probabilities)), 4)
+    except ValueError:
+        out["roc_auc"] = None
+    return out
+
+
+def _spark_train_task_a(engine, frames, day_map, excluded_ids):
+    from pyspark.ml import Pipeline
+    from pyspark.ml.classification import RandomForestClassifier
+    from pyspark.ml.feature import VectorAssembler
+
+    df = build_order_frame(frames, day_map)
+    train_final, train_part, eval_part = _split(df, "order_id", excluded_ids, 0.2)
+    threshold = float(train_final["total_amount"].quantile(0.90))
+    train_part = train_part.copy(); eval_part = eval_part.copy()
+    train_part["y"] = (train_part["total_amount"] >= threshold).astype(int)
+    eval_part["y"] = (eval_part["total_amount"] >= threshold).astype(int)
+
+    assembler = VectorAssembler(inputCols=ORDER_FEATURES, outputCol="features")
+    classifier = RandomForestClassifier(
+        labelCol="y", featuresCol="features", predictionCol="prediction",
+        probabilityCol="probability", numTrees=150, seed=RANDOM_STATE)
+    pipeline = Pipeline(stages=[assembler, classifier])
+    fitted = pipeline.fit(_spark_input(engine, train_part, ORDER_FEATURES, "y"))
+    scored = fitted.transform(_spark_input(engine, eval_part, ORDER_FEATURES, "y"))
+    rows = scored.select("y", "prediction", "probability").collect()
+    y_true = [r["y"] for r in rows]
+    y_pred = [r["prediction"] for r in rows]
+    prob = [float(r["probability"][1]) for r in rows]
+    metrics = _spark_binary_metrics(y_pred, y_true, prob)
+
+    final = pipeline.fit(_spark_input(engine, train_final.assign(
+        y=(train_final["total_amount"] >= threshold).astype(int)),
+        ORDER_FEATURES, "y"))
+    return final, metrics, {
+        "threshold": round(threshold, 2),
+        "n_train": len(train_final), "n_eval": len(eval_part),
+        "label_rule": "total_amount >= 90th percentile of training orders",
+    }
+
+
+def _spark_train_task_b(engine, frames, excluded_ids):
+    from pyspark.ml import Pipeline
+    from pyspark.ml.classification import LogisticRegression
+    from pyspark.ml.feature import StandardScaler, VectorAssembler
+
+    df = build_churn_frame(frames)
+    tr = df.loc[~df["customer_id"].isin(set(excluded_ids))].copy()
+    from sklearn.model_selection import train_test_split
+    train_part, eval_part = train_test_split(
+        tr, test_size=0.2, random_state=RANDOM_STATE, stratify=tr["churned"])
+
+    assembler = VectorAssembler(inputCols=CHURN_FEATURES, outputCol="raw_features")
+    scaler = StandardScaler(inputCol="raw_features", outputCol="features",
+                            withStd=True, withMean=True)
+    classifier = LogisticRegression(
+        labelCol="churned", featuresCol="features", predictionCol="prediction",
+        probabilityCol="probability", maxIter=2000, seed=RANDOM_STATE)
+    pipeline = Pipeline(stages=[assembler, scaler, classifier])
+    fitted = pipeline.fit(_spark_input(engine, train_part, CHURN_FEATURES, "churned"))
+    scored = fitted.transform(_spark_input(engine, eval_part, CHURN_FEATURES, "churned"))
+    rows = scored.select("churned", "prediction", "probability").collect()
+    y_true = [int(r["churned"]) for r in rows]
+    y_pred = [int(r["prediction"]) for r in rows]
+    prob = [float(r["probability"][1]) for r in rows]
+    from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+    metrics = {
+        "accuracy": round(float(accuracy_score(y_true, y_pred)), 4),
+        "macro_f1": round(float(f1_score(y_true, y_pred, average="macro")), 4),
+        "roc_auc": round(float(roc_auc_score(y_true, prob)), 4),
+    }
+    final = pipeline.fit(_spark_input(engine, tr, CHURN_FEATURES, "churned"))
+    return final, metrics, {
+        "n_train": len(tr), "n_eval": len(eval_part),
+        "churn_rate_train": round(float(tr["churned"].mean()), 4),
+        "label_rule": "no completed order in final 60 days of window (recency proxy); observation window >= 180 days",
+    }
+
+
+def _spark_train_task_c(engine, frames, excluded_cells):
+    from pyspark.ml import Pipeline
+    from pyspark.ml.classification import RandomForestClassifier
+    from pyspark.ml.feature import IndexToString, StringIndexer, VectorAssembler
+    from sklearn.metrics import accuracy_score, f1_score
+
+    df = build_menu_frame(frames)
+    key = list(zip(df["menu_item_id"], df["restaurant_id"]))
+    keep = [k not in excluded_cells for k in key]
+    tr = df.loc[keep].copy()
+    rng = np.random.default_rng(RANDOM_STATE)
+    n_eval = max(1, int(len(tr) * 0.2))
+    eval_idx = rng.choice(tr.index.to_numpy(), size=n_eval, replace=False)
+    eval_part = tr.loc[tr.index.isin(set(eval_idx.tolist()))]
+    train_part = tr.loc[~tr.index.isin(set(eval_idx.tolist()))]
+
+    indexer = StringIndexer(inputCol="business_class", outputCol="label", handleInvalid="keep")
+    assembler = VectorAssembler(inputCols=MENU_FEATURES, outputCol="features")
+    classifier = RandomForestClassifier(
+        labelCol="label", featuresCol="features", predictionCol="prediction",
+        probabilityCol="probability", numTrees=150, seed=RANDOM_STATE)
+    decoder = IndexToString(inputCol="prediction", outputCol="predictionLabel")
+    pipeline = Pipeline(stages=[indexer, assembler, classifier, decoder])
+    fitted = pipeline.fit(_spark_input(engine, train_part, MENU_FEATURES, "business_class"))
+    scored = fitted.transform(_spark_input(engine, eval_part, MENU_FEATURES, "business_class"))
+    pdf = scored.select("business_class", "predictionLabel").toPandas()
+    metrics = {
+        "accuracy": round(float(accuracy_score(pdf["business_class"], pdf["predictionLabel"])), 4),
+        "macro_f1": round(float(f1_score(pdf["business_class"], pdf["predictionLabel"], average="macro")), 4),
+    }
+
+    # Fit the production pipeline on every non-case cell.
+    final = pipeline.fit(_spark_input(engine, tr, MENU_FEATURES, "business_class"))
+    return final, metrics, {
+        "n_train": len(tr), "n_eval": len(eval_part),
         "classes": sorted(tr["business_class"].unique().tolist()),
         "label_rule": "median-based 4-class rule incl. contradictory cases",
     }
@@ -250,11 +392,8 @@ def load_latest_model(models_dir: Path, task: str):
     if meta["model_file"] == "model.joblib":
         model = joblib.load(vdir / "model.joblib")
     else:  # pragma: no cover - spark path
-        from pyspark.ml.classification import (LogisticRegressionModel,
-                                               RandomForestClassificationModel)
-        cls = (LogisticRegressionModel if task == "customer_churn"
-               else RandomForestClassificationModel)
-        model = cls.load(str(vdir / "model"))
+        from pyspark.ml import PipelineModel
+        model = PipelineModel.load(str(vdir / "model"))
     return model, meta
 
 
@@ -293,21 +432,30 @@ def run(engine, processed_dir: Path, models_dir: Path, evidence_dir: Path,
 
     results = []
 
-    m, met, extra = _train_task_a(frames, day_map, excluded_orders)
+    m, met, extra = (
+        _spark_train_task_a(engine, frames, day_map, excluded_orders)
+        if engine.kind == "spark" else _train_task_a(frames, day_map, excluded_orders)
+    )
     vdir = _save_model(engine, m, models_dir, "high_value_order", met, extra)
     print(f"  high_value_order : acc={met['accuracy']} "
           f"f1={met['f1']} auc={met['roc_auc']} -> {vdir}")
     results.append({"task": "high_value_order", "model": vdir.name,
                     **{f"eval_{k}": v for k, v in met.items()}})
 
-    m, met, extra = _train_task_b(frames, excluded_customers)
+    m, met, extra = (
+        _spark_train_task_b(engine, frames, excluded_customers)
+        if engine.kind == "spark" else _train_task_b(frames, excluded_customers)
+    )
     vdir = _save_model(engine, m, models_dir, "customer_churn", met, extra)
     print(f"  customer_churn   : acc={met['accuracy']} "
           f"macro_f1={met['macro_f1']} auc={met['roc_auc']} -> {vdir}")
     results.append({"task": "customer_churn", "model": vdir.name,
                     **{f"eval_{k}": v for k, v in met.items()}})
 
-    m, met, extra = _train_task_c(frames, excluded_cells)
+    m, met, extra = (
+        _spark_train_task_c(engine, frames, excluded_cells)
+        if engine.kind == "spark" else _train_task_c(frames, excluded_cells)
+    )
     vdir = _save_model(engine, m, models_dir, "menu_business_class", met, extra)
     print(f"  menu_business    : acc={met['accuracy']} "
           f"macro_f1={met['macro_f1']} -> {vdir}")

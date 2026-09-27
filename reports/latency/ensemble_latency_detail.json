@@ -3,40 +3,40 @@
     "task": "high_value_order",
     "batch_size": 100,
     "nfr_limit_ms": 5000.0,
-    "python_model_version": 2,
-    "pipeline_model_version": 2,
+    "python_model_version": 11,
+    "pipeline_model_version": 6,
     "pipeline_engine": "pandas",
     "python_engine": "python",
     "runs_ms": [
-      139.727,
-      101.609,
-      131.614,
-      138.35,
-      127.754
+      67.225,
+      69.841,
+      66.9,
+      45.33,
+      66.821
     ],
-    "total_ms": 127.811,
-    "total_ms_min": 101.609,
-    "total_ms_max": 139.727,
+    "total_ms": 63.223,
+    "total_ms_min": 45.33,
+    "total_ms_max": 69.841,
     "pass": true
   },
   "customer_churn": {
     "task": "customer_churn",
     "batch_size": 200,
     "nfr_limit_ms": 5000.0,
-    "python_model_version": 2,
-    "pipeline_model_version": 2,
+    "python_model_version": 10,
+    "pipeline_model_version": 6,
     "pipeline_engine": "pandas",
     "python_engine": "python",
     "runs_ms": [
-      5.241,
-      8.259,
-      6.151,
-      5.788,
-      7.576
+      1.173,
+      1.366,
+      5.376,
+      1.75,
+      1.855
     ],
-    "total_ms": 6.603,
-    "total_ms_min": 5.241,
-    "total_ms_max": 8.259,
+    "total_ms": 2.304,
+    "total_ms_min": 1.173,
+    "total_ms_max": 5.376,
     "pass": true
   }
 }

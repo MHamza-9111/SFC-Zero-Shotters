@@ -1,56 +1,15 @@
-# DineIQ Analytics - Jupyter Pipeline Notebooks
+# Pipeline notebooks
 
-Interactive, step-by-step walkthrough of the Python data pipeline.
-Each notebook runs the real pipeline code (imported from
-``), so what you see in the notebook is exactly what the
-scripts produce.
+These notebooks demonstrate the generator and Python analytics stages using the code in `data_generator/` and `python_pipeline/`.
 
-## Notebooks
+| Notebook | Purpose |
+|---|---|
+| `01_data_generation.ipynb` | Generate raw relational datasets and inspect their relationships. |
+| `02_data_quality_check.ipynb` | Assess missing values, duplicates, invalid values, and logical checks. |
+| `03_cleaning_and_quarantine.ipynb` | Clean inputs, validate relationships, and inspect quarantined rows. |
+| `04_processing_and_integration.ipynb` | Integrate processed datasets and calculate core analytics. |
+| `05_advanced_analytics_and_ml.ipynb` | Explore menu classes, customer segments, baskets, forecasts, wastage, pricing, promotions, anomalies, recommendations, what-if results, and comparison sets. |
 
-| # | Notebook | What it does |
-| --- | --- | --- |
-| 01 | `01_data_generation.ipynb` | Generates the raw datasets (SRS minimums), previews them, and verifies the relationship guarantees (restaurant consistency, promotion linkage, ratings in-order) |
-| 02 | `02_data_quality_check.ipynb` | Pre-cleaning quality assessment: missing values, duplicates, invalid values, logical checks |
-| 03 | `03_cleaning_and_quarantine.ipynb` | Cleaning + full FK validation + quarantine, then verifies zero orphans remain |
-| 04 | `04_processing_and_integration.ipynb` | Joins the cleaned datasets, builds features, core analytics (completed-orders-only rule) |
-| 05 | `05_advanced_analytics_and_ml.ipynb` | The SRS intelligence layer: RFM/KMeans, menu classes, market basket, forecasting vs baseline, wastage, elasticity, promotion traps, anomalies, slow movers, churn model, recommendations, what-if, and the dual-pipeline comparison sets |
+Each notebook starts with `MODE = "quick"` or `MODE = "full"`. Quick mode uses a medium generated dataset under `notebooks/outputs/quick/`; full mode uses the repository paths `raw_data/`, `processed_data/`, `reports/`, and `python_pipeline/dual_pipeline/`. Review `config/data_generation_config.yaml` before running full-scale generation.
 
-## Two run modes
-
-Every notebook starts with:
-
-```python
-MODE = "quick"   # or "full"
-```
-
-- **`quick`** (default): medium scale (~20k orders / 200k lines)
-  written into `notebook/outputs/quick/`. Fast (~30 s per notebook)
-  and never touches the repository's canonical data.
-- **`full`**: full SRS scale (1M order lines) in the canonical
-  locations (`raw_data` → `processed_data` →
-  `processed_data/analytics` →
-  `data_cleaning/dual_pipeline`). Same outputs as
-  `run_pipeline.py`.
-
-Notebooks are **self-contained**: each one runs every step it depends
-on, and skips a step whose outputs already exist. To force a rerun,
-delete the corresponding output directory.
-
-## Run
-
-```bash
-python -m venv .venv
-.venv/bin/pip install -r requirements.txt
-
-# in Jupyter:
-jupyter notebook notebook/
-# or execute headless (writes outputs in place):
-.venv/bin/jupyter nbconvert --to notebook --execute --inplace notebook/*.ipynb
-```
-
-## Outputs
-
-- Quick-mode outputs: `notebook/outputs/` (git-ignored)
-- Full-mode outputs: the canonical repository directories
-  (large data is git-ignored; small reports and the dual-pipeline
-  comparison sets are committed under `data_cleaning/`)
+Install dependencies from the repository root with `python -m pip install -r requirements.txt`, then open `notebooks/` in Jupyter. Headless execution is available through `python -m jupyter nbconvert --to notebook --execute notebooks/<notebook>.ipynb`.

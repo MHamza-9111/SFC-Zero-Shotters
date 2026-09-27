@@ -1,35 +1,26 @@
-# DineIQ Analytics — Dual Pipeline Comparison & Latency Report
+# Dual-pipeline comparison and latency evidence
 
-This document reports the empirical validation results comparing the independent PySpark Big Data pipeline against the Python Data Science pipeline, as well as NFR performance latency benchmarks.
+The comparison runner is `spark_jobs/dual_pipeline_compare.py`. It compares saved pipeline-side model outputs with independent Python predictions for the committed holdout cases in `python_pipeline/dual_pipeline/` and writes evidence under `reports/dual_pipeline/`.
 
----
+## Recorded held-out comparison
 
-## 1. Dual Pipeline Agreement Metrics
+`reports/dual_pipeline/dual_pipeline_summary.csv` records:
 
-Per SRS Section 6 requirements, both pipelines independently scored **530 unseen held-out records**:
+| Task | Cases | Agreement | Python accuracy | Pipeline accuracy |
+|---|---:|---:|---:|---:|
+| High-value order | 300 | 300/300 (100%) | 0.9867 | 0.9867 |
+| Customer churn | 200 | 200/200 (100%) | 1.0000 | 1.0000 |
+| Menu business class | 30 | 30/30 (100%) | 0.9667 | 0.9667 |
 
-| Task Area | Unseen Test Cases | Spark Prediction Match | Python Prediction Match | Agreement Percentage | Disagreement Explanation |
-|---|---|---|---|---|---|
-| **High-Value Order** | 300 Orders | 300 / 300 | 300 / 300 | **100.0%** | None (100% exact match) |
-| **Customer Churn Risk** | 200 Customers | 200 / 200 | 200 / 200 | **100.0%** | None (100% exact match) |
-| **Menu Classification** | 30 Items | 30 / 30 | 30 / 30 | **100.0%** | None (100% exact match) |
-| **Total Evaluation** | **530 Cases** | **530 / 530** | **530 / 530** | **100.0%** | **Perfect Pipeline Alignment** |
+The recorded evidence uses pipeline artifacts v5 and Python artifacts v6 (high-value/churn) and v2 (menu class); it labels the pipeline engine `pandas`. Because feature-building and training rules are shared, agreement is evidence of parity on these holdout cases, not an independent proof of generalization or Spark runtime execution. Re-run the comparison after model retraining and inspect each per-case file for mismatches.
 
-Full per-case agreement logs are committed under:
-- `reports/dual_pipeline/order_value_comparison.csv`
-- `reports/dual_pipeline/churn_comparison.csv`
-- `reports/dual_pipeline/menu_class_comparison.csv`
+## Recorded warm scoring latency
 
----
+`reports/latency/ensemble_latency_report.csv` records the latest persisted benchmark in this checkout:
 
-## 2. NFR #1 Ensemble Latency Performance Benchmark
+| Task | Batch | Maximum | Limit | Recorded result |
+|---|---:|---:|---:|---|
+| High-value order | 100 | 148.700 ms max (119.357 ms mean) | 5,000 ms | Pass |
+| Customer churn | 200 | 5.847 ms max (3.148 ms mean) | 5,000 ms | Pass |
 
-Per instructor clarification (`documentation/SRS_CLARIFICATIONS.md`), the application must load versioned models into a warm process and generate ensemble predictions for uploaded records **within 5 seconds (< 5000 ms)**.
-
-### Latency Measurement Results (100-Record Batch)
-- **Measured Latency**: **90.3 ms**
-- **SRS NFR Limit**: **5,000.0 ms**
-- **Margin**: **4,909.7 ms under budget (55x faster than limit)**
-- **Status**: **PASS**
-
-Committed benchmark evidence: `reports/spark_execution/ensemble_latency_report.csv`.
+These timings come from the recorded environment and model versions. Measure again on the deployment host; they are not a production SLO by themselves. The runtime API reports its measured request latency and the participating model versions.
