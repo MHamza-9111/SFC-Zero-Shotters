@@ -31,7 +31,9 @@ BASE = Path(__file__).resolve().parents[1]
 
 # Make the pipeline modules importable from notebooks.
 for _p in (BASE / "data_generator",
-           BASE / "python_pipeline" / "cleaning"):
+           BASE / "python_pipeline" / "cleaning",
+           BASE / "python_pipeline" / "processing",
+           BASE / "python_pipeline" / "analytics"):
     _s = str(_p)
     if _s not in sys.path:
         sys.path.insert(0, _s)

@@ -72,8 +72,6 @@
             if (!v.initialized && v.init) { v.init(); v.initialized = true; }
             if (v.refresh) v.refresh();
         }
-        // Initialize 3D tilt on newly visible cards
-        init3DTilt();
     }
 
     /* ---------------- Sidebar Drawer (Mobile) ---------------- */
@@ -413,6 +411,51 @@
         }, { passive: true });
     }
 
+    /* ---------------- Ambient micro-interactions ---------------- */
+    // Card spotlight: the radial highlight follows the pointer across each
+    // surface. Delegated so it also covers dynamically rendered cards/tables.
+    (function cardSpotlight() {
+        let raf = null;
+        document.addEventListener("mousemove", (e) => {
+            if (raf) return;
+            raf = requestAnimationFrame(() => {
+                raf = null;
+                const card = e.target && e.target.closest && e.target.closest(".card, .kpi");
+                if (!card) return;
+                const r = card.getBoundingClientRect();
+                card.style.setProperty("--mouse-x", (e.clientX - r.left) + "px");
+                card.style.setProperty("--mouse-y", (e.clientY - r.top) + "px");
+            });
+        }, { passive: true });
+    })();
+
+    // Cursor aura: a soft, eased glow that trails the pointer. Pointer-fine and
+    // motion-tolerant contexts only — never on touch or reduced-motion.
+    (function cursorAura() {
+        const aura = document.getElementById("cursor-aura");
+        if (!aura) return;
+        const fine = window.matchMedia && window.matchMedia("(pointer: fine)").matches;
+        const calm = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+        if (!fine || !calm) { aura.style.display = "none"; return; }
+        let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
+        let ax = tx, ay = ty, running = false;
+        document.addEventListener("mousemove", (e) => {
+            tx = e.clientX; ty = e.clientY;
+            if (!running) { running = true; requestAnimationFrame(loop); }
+        }, { passive: true });
+        function loop() {
+            ax += (tx - ax) * 0.12;
+            ay += (ty - ay) * 0.12;
+            aura.style.left = ax + "px";
+            aura.style.top = ay + "px";
+            if (Math.abs(tx - ax) > 0.4 || Math.abs(ty - ay) > 0.4) {
+                requestAnimationFrame(loop);
+            } else {
+                running = false;
+            }
+        }
+    })();
+
     /* ---------------- Global Keyboard Shortcuts ---------------- */
     window.addEventListener("keydown", (e) => {
         // Ctrl+K or Cmd+K: Focus search
@@ -468,7 +511,6 @@
         loadAlerts();
         loadStatus();
         loadSignedInUser();
-        init3DTilt();
     }
 
     boot();

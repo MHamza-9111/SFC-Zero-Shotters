@@ -170,3 +170,40 @@ Exact results are in `documentation/TESTING.md`.
 session. The project team must review this entry and the changes before
 representing the SRS package as formally approved. No generated model
 prediction was manually edited by the AI.
+
+### 2026-09-27 - Notebook chart enhancements and a path fix
+
+**Tool:** Claude (Anthropic) with local file inspection and command
+execution.
+
+**Purpose:** Add chart/visualization cells to the five pipeline notebooks
+in `notebooks/` without changing any existing logic, printed values, or
+computed results, and fix a resulting `sys.path` gap in `nb_common.py`
+that was found while running the notebooks end-to-end.
+
+**Affected files and changes:**
+
+| File | Change |
+| --- | --- |
+| `notebooks/01_data_generation.ipynb` | Added a matplotlib/seaborn style-setup cell and two chart cells: generated dataset sizes (bar chart) and order status/channel/monthly-volume (three-panel chart). No existing cell was modified. |
+| `notebooks/02_data_quality_check.ipynb` | Added a style-setup cell and two chart cells: missing cells and duplicate rows by dataset, and injected quality issues by check type. No existing cell was modified. |
+| `notebooks/03_cleaning_and_quarantine.ipynb` | Added a style-setup cell and three chart cells: rows removed by dataset, quarantined rows by reason, and a pass/fail chart for the post-cleaning FK checks. No existing cell was modified. |
+| `notebooks/04_processing_and_integration.ipynb` | Added a style-setup cell and two chart cells: analytical output row counts, and completed-vs-cancelled/promotion-usage breakdowns. The existing monthly-sales chart cell was left as-is. |
+| `notebooks/05_advanced_analytics_and_ml.ipynb` | Added a style-setup cell and five chart cells: menu business class breakdown, top item pairs by lift, promotion effectiveness (trap cases highlighted), churn model metrics, and churn risk breakdown. The existing forecast and RFM segment charts were left as-is. |
+| `notebooks/nb_common.py` | Fixed: `sys.path` setup only added `data_generator/` and `python_pipeline/cleaning/`, so a from-scratch run of notebooks 04 and 05 raised `ModuleNotFoundError` for `process_dineiq_data` and `run_advanced_analytics`. Added `python_pipeline/processing/` and `python_pipeline/analytics/` to the path list. |
+
+**How the code was verified:** all five notebooks were executed
+end-to-end, in order, in `quick` mode, after clearing
+`notebooks/outputs/quick/` to force a from-scratch run. Every code cell
+in all five notebooks executed with no errors; the added chart cells
+render from the same in-notebook dataframes the existing cells already
+computed (no hardcoded figures). Printed outputs were compared against a
+pre-change run of notebook 01 (dataset counts, restaurant-mismatch,
+orphan-rating, and out-of-period-order figures) and were unchanged.
+
+**Analytical honesty note:** this entry covers presentation additions and
+one import-path fix only. No analytics, model, cleaning, or generation
+logic was changed, and no figure produced by the pipeline itself was
+altered. The project team should still review the added chart cells
+before treating this as reviewed/approved, consistent with the policy
+above.

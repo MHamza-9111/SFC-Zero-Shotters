@@ -1,0 +1,12 @@
+dataset,purpose,rows,processing_run
+customers,Customer analytics and segmentation,8000,2026-09-27 15:32:46
+orders,Order processing and time-based analysis,19980,2026-09-27 15:32:46
+orders_completed,Completed orders used for revenue analytics,15858,2026-09-27 15:32:46
+order_items,"Sales, revenue and profit calculations",199440,2026-09-27 15:32:46
+menu_items,Menu performance and profitability,150,2026-09-27 15:32:46
+restaurants,Restaurant performance,20,2026-09-27 15:32:46
+wastage,Wastage and cost analysis,10000,2026-09-27 15:32:46
+ratings,Rating and feedback analysis,19868,2026-09-27 15:32:46
+inventory,Inventory and stock analysis,10000,2026-09-27 15:32:46
+pricing_history,Price-change and price-sensitivity preparation,272,2026-09-27 15:32:46
+promotions,Promotion usage summary,120,2026-09-27 15:32:46

@@ -1,0 +1,21 @@
+restaurant_id,restaurant_name,location_id,restaurant_type,opening_date
+1,Restaurant 001,1,Casual Dining,2024-01-01
+2,Restaurant 002,2,Casual Dining,2024-01-01
+3,Restaurant 003,3,Fast Food,2024-01-01
+4,Restaurant 004,4,Cafe,2024-01-01
+5,Restaurant 005,5,Casual Dining,2024-01-01
+6,Restaurant 006,6,Fast Food,2024-01-01
+7,Restaurant 007,7,Casual Dining,2024-01-01
+8,Restaurant 008,8,Family Restaurant,2024-01-01
+9,Restaurant 009,9,Cafe,2024-01-01
+10,Restaurant 010,10,Family Restaurant,2024-01-01
+11,Restaurant 011,11,Cafe,2024-01-01
+12,Restaurant 012,12,Fast Food,2024-01-01
+13,Restaurant 013,13,Cafe,2024-01-01
+14,Restaurant 014,14,Cafe,2024-01-01
+15,Restaurant 015,15,Fast Food,2024-01-01
+16,Restaurant 016,16,Cafe,2024-01-01
+17,Restaurant 017,17,Casual Dining,2024-01-01
+18,Restaurant 018,18,Fast Food,2024-01-01
+19,Restaurant 019,19,Fast Food,2024-01-01
+20,Restaurant 020,20,Fast Food,2024-01-01

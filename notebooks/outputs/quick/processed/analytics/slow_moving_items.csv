@@ -1,0 +1,14 @@
+menu_item_id,item_name,restaurant_id,first_60d,last_60d,mid,sales_change_percentage,status
+49,Menu Item 049,9,75,80,289,6.666666666666667,low_velocity
+85,Menu Item 085,5,69,73,250,5.797101449275362,low_velocity
+55,Menu Item 055,15,69,81,317,17.391304347826086,low_velocity
+89,Menu Item 089,9,68,82,295,20.588235294117645,low_velocity
+100,Menu Item 100,20,66,81,367,22.727272727272727,low_velocity
+5,Menu Item 005,5,65,69,271,6.153846153846154,low_velocity
+70,Menu Item 070,10,59,71,258,20.33898305084746,low_velocity
+50,Menu Item 050,10,57,81,228,42.10526315789473,low_velocity
+28,Menu Item 028,8,54,60,259,11.11111111111111,low_velocity
+88,Menu Item 088,8,54,58,236,7.4074074074074066,low_velocity
+134,Menu Item 134,14,50,66,233,32.0,low_velocity
+30,Menu Item 030,10,47,73,261,55.319148936170215,low_velocity
+34,Menu Item 034,14,41,67,219,63.41463414634146,low_velocity

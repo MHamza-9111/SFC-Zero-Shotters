@@ -1,0 +1,23 @@
+output:
+  processed_dir: processed_data
+  raw_dir: raw_data
+quality:
+  duplicate_rate: 0.005
+  invalid_value_rate: 0.002
+  missing_value_rate: 0.01
+  outlier_rate: 0.003
+scale:
+  categories: 10
+  customers: 8000
+  locations: 20
+  menu_items: 150
+  months: 12
+  order_items_min: 200000
+  orders: 20000
+  ratings: 20000
+  restaurants: 20
+  wastage: 10000
+seed: 42
+time:
+  end_date: '2025-12-31'
+  start_date: '2025-01-01'

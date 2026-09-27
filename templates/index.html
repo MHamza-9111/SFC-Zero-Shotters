@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="DineIQ Analytics — Next-generation restaurant intelligence platform with dual ML pipeline, demand forecasting, and menu intelligence.">
   <title>DineIQ Analytics — Restaurant Intelligence</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=2">
 </head>
 <body data-view="{{ view }}" data-theme="dark">
   <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
@@ -27,10 +27,12 @@
     <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 6-7"/></symbol>
     <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 17 9 11l4 4 8-9M15 6h6v6"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></symbol>
     <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
     <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2zM12 9v5M12 17h.01"/></symbol>
     <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4m14-6h4m-4 6h4"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8z"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5z"/><path d="m8.5 12 2.3 2.3 4.8-5"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></symbol>
     <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
@@ -430,10 +432,10 @@
     </div>
   </div>
 
-  <script defer src="{{ url_for('static', filename='js/core.js') }}"></script>
-  <script defer src="{{ url_for('static', filename='js/charts.js') }}"></script>
-  <script defer src="{{ url_for('static', filename='js/overview.js') }}"></script>
-  <script defer src="{{ url_for('static', filename='js/pages.js') }}"></script>
-  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/core.js') }}?v=2"></script>
+  <script defer src="{{ url_for('static', filename='js/charts.js') }}?v=2"></script>
+  <script defer src="{{ url_for('static', filename='js/overview.js') }}?v=2"></script>
+  <script defer src="{{ url_for('static', filename='js/pages.js') }}?v=2"></script>
+  <script defer src="{{ url_for('static', filename='js/app.js') }}?v=2"></script>
 </body>
 </html>

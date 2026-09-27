@@ -1,0 +1,15 @@
+analysis,rows,key_model
+rfm_segmentation,6884,KMeans(k=5)
+menu_business_classes,150,median thresholds + RandomForest (comparison set)
+market_basket_pairs,200,support/confidence/lift
+peak_period_analysis,140,cell aggregation
+daily_forecast,90,LinearRegression vs naive baseline
+wastage_risk_analysis,150,ratio thresholds + trend
+price_sensitivity_analysis,150,log-log elasticity
+promotion_effectiveness,120,promo vs control AOV lift
+anomaly_detection,67,z-score + IQR
+slow_moving_items,13,first-60d vs last-60d
+location_channel_intelligence,80,aggregation
+churn_risk,6884,LogisticRegression
+recommendations,20,evidence rules
+what_if_analysis,3,elasticity-based scenarios

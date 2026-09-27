@@ -1,0 +1,13 @@
+dataset,rows,missing_cells,duplicate_rows
+locations.csv,20,0,0
+restaurants.csv,20,0,0
+menu_categories.csv,10,0,0
+menu_items.csv,150,0,0
+customers.csv,8040,80,40
+orders.csv,20000,17317,0
+order_items.csv,200040,0,0
+pricing_history.csv,272,0,0
+promotions.csv,120,0,0
+ratings.csv,20000,0,0
+inventory.csv,10000,0,0
+wastage.csv,10000,0,0

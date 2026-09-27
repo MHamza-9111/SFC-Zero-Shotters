@@ -1,0 +1,133 @@
+rating_id,customer_id,order_id,menu_item_id,restaurant_id,rating,review_date,review_text,quarantine_reason
+1484,1598,4505,58,18,4,2025-10-17,Excellent,Unknown order_id
+1512,3180,3298,113,13,5,2025-08-31,Good experience,Unknown order_id
+1981,6081,1711,110,10,4,2025-04-06,Very good,Unknown order_id
+2250,5374,19537,117,17,3,2025-02-20,Average,Unknown order_id
+2311,3367,6766,53,13,5,2025-06-11,Excellent,Unknown order_id
+3870,5601,2224,56,16,4,2025-07-21,Very good,Unknown order_id
+5845,3565,18390,9,9,3,2025-06-09,Excellent,Unknown order_id
+5970,1598,4505,78,18,5,2025-10-17,Could be better,Unknown order_id
+8337,5601,2224,76,16,5,2025-07-21,Excellent,Unknown order_id
+9993,734,7281,95,15,3,2025-05-07,Excellent,Unknown order_id
+10561,3565,18390,109,9,2,2025-06-10,Good value,Unknown order_id
+11240,3517,6480,9,9,2,2025-09-03,Good value,Unknown order_id
+13007,3180,3298,133,13,5,2025-09-01,Excellent,Unknown order_id
+13599,2094,19784,19,19,3,2025-11-22,Good experience,Unknown order_id
+16345,3367,6766,53,13,5,2025-06-13,Good experience,Unknown order_id
+16877,5601,2224,116,16,5,2025-07-21,Average,Unknown order_id
+18153,3315,852,26,6,5,2025-04-17,Good experience,Unknown order_id
+18386,2547,13618,80,20,4,2025-04-22,Excellent,Unknown order_id
+19920,2547,13618,140,20,5,2025-04-23,Average,Unknown order_id
+220,7805,17282,68,17,4,2025-12-01,Good experience,Rated menu item is not part of the referenced order
+251,5020,7594,42,3,5,2025-05-13,Average,Rated menu item is not part of the referenced order
+751,4061,6948,26,1,4,2025-02-03,Average,Rated menu item is not part of the referenced order
+811,5792,9308,25,5,5,2025-08-24,Excellent,Rated menu item is not part of the referenced order
+816,4420,572,11,13,5,2025-05-09,Excellent,Rated menu item is not part of the referenced order
+926,6153,9249,82,18,3,2025-11-10,Very good,Rated menu item is not part of the referenced order
+1111,1082,17118,51,12,5,2025-04-04,Could be better,Rated menu item is not part of the referenced order
+1200,4178,6158,131,3,1,2025-04-07,Excellent,Rated menu item is not part of the referenced order
+1528,7759,12748,62,18,5,2025-05-06,Could be better,Rated menu item is not part of the referenced order
+1533,2593,3749,18,11,4,2025-10-13,Could be better,Rated menu item is not part of the referenced order
+1815,3807,15760,32,12,5,2025-11-23,Very good,Rated menu item is not part of the referenced order
+2372,54,16057,17,17,5,2025-12-04,Could be better,Rated menu item is not part of the referenced order
+2525,2511,13072,133,4,5,2025-05-09,Average,Rated menu item is not part of the referenced order
+2625,3314,17388,23,4,4,2025-05-31,Good value,Rated menu item is not part of the referenced order
+2633,1497,14788,10,9,5,2025-02-23,Very good,Rated menu item is not part of the referenced order
+3058,750,454,104,16,5,2025-12-05,Excellent,Rated menu item is not part of the referenced order
+3148,3405,7962,64,1,5,2025-11-18,Average,Rated menu item is not part of the referenced order
+3303,1929,9912,60,8,4,2025-12-23,Could be better,Rated menu item is not part of the referenced order
+3427,2424,18544,15,13,3,2025-06-20,Excellent,Rated menu item is not part of the referenced order
+3462,2394,19366,54,9,2,2025-11-12,Good experience,Rated menu item is not part of the referenced order
+3488,273,15784,51,5,1,2025-01-27,Good value,Rated menu item is not part of the referenced order
+3691,3343,5985,53,2,5,2025-04-22,Good experience,Rated menu item is not part of the referenced order
+3709,3198,6015,110,2,3,2025-05-19,Very good,Rated menu item is not part of the referenced order
+3854,2177,5902,51,6,4,2025-08-02,Good value,Rated menu item is not part of the referenced order
+3940,959,1939,32,19,2,2025-06-16,Average,Rated menu item is not part of the referenced order
+4314,3006,18113,140,10,5,2025-02-13,Good experience,Rated menu item is not part of the referenced order
+4394,2822,17623,11,6,5,2025-07-08,Could be better,Rated menu item is not part of the referenced order
+4433,3581,14174,150,17,5,2025-01-21,Good experience,Rated menu item is not part of the referenced order
+4551,4901,7971,44,14,3,2025-05-28,Could be better,Rated menu item is not part of the referenced order
+4611,4101,6977,43,1,5,2025-11-21,Excellent,Rated menu item is not part of the referenced order
+5107,7968,17918,57,17,4,2025-07-06,Good experience,Rated menu item is not part of the referenced order
+5531,1345,5664,24,3,5,2025-12-06,Average,Rated menu item is not part of the referenced order
+5599,7474,1353,64,17,5,2025-12-31,Very good,Rated menu item is not part of the referenced order
+5641,3199,11207,128,7,5,2025-02-18,Average,Rated menu item is not part of the referenced order
+5712,3341,12802,125,15,4,2025-09-03,Excellent,Rated menu item is not part of the referenced order
+5724,7350,16892,9,10,5,2025-10-25,Good experience,Rated menu item is not part of the referenced order
+6313,804,19851,10,12,4,2025-08-12,Average,Rated menu item is not part of the referenced order
+6522,2433,16413,111,11,5,2025-06-20,Excellent,Rated menu item is not part of the referenced order
+7749,4221,18651,76,8,3,2025-12-20,Average,Rated menu item is not part of the referenced order
+7800,7537,13425,131,14,5,2025-11-24,Average,Rated menu item is not part of the referenced order
+7849,498,6253,147,5,5,2025-07-19,Could be better,Rated menu item is not part of the referenced order
+7855,2051,3414,150,10,1,2025-09-09,Good value,Rated menu item is not part of the referenced order
+8079,4652,8077,71,6,3,2025-09-24,Good value,Rated menu item is not part of the referenced order
+8097,5114,30,96,12,4,2025-04-01,Good experience,Rated menu item is not part of the referenced order
+8206,3802,3859,135,8,3,2025-08-30,Good experience,Rated menu item is not part of the referenced order
+8409,7689,18422,35,2,4,2025-04-08,Very good,Rated menu item is not part of the referenced order
+8608,411,13405,133,11,2,2025-01-29,Very good,Rated menu item is not part of the referenced order
+8623,2200,918,114,5,4,2025-10-21,Very good,Rated menu item is not part of the referenced order
+8682,6270,6335,128,8,2,2025-12-31,Excellent,Rated menu item is not part of the referenced order
+8729,375,9780,20,1,3,2025-09-26,Excellent,Rated menu item is not part of the referenced order
+8773,4437,15681,19,3,5,2025-04-19,Average,Rated menu item is not part of the referenced order
+8788,2754,7556,80,13,5,2025-01-10,Good value,Rated menu item is not part of the referenced order
+8818,672,18473,28,1,5,2025-05-06,Average,Rated menu item is not part of the referenced order
+8922,94,19841,98,5,4,2025-10-11,Could be better,Rated menu item is not part of the referenced order
+9029,3744,13538,22,7,5,2025-07-29,Good experience,Rated menu item is not part of the referenced order
+9035,4979,6361,142,19,4,2025-12-29,Excellent,Rated menu item is not part of the referenced order
+9048,2823,15003,3,16,5,2025-09-19,Good experience,Rated menu item is not part of the referenced order
+9155,4354,6679,45,17,4,2025-08-09,Very good,Rated menu item is not part of the referenced order
+9204,3000,11045,75,5,3,2025-09-27,Could be better,Rated menu item is not part of the referenced order
+9389,3927,18433,103,19,5,2025-07-09,Could be better,Rated menu item is not part of the referenced order
+9468,280,18564,46,11,3,2025-02-27,Good value,Rated menu item is not part of the referenced order
+9657,759,3514,53,15,5,2025-06-09,Good experience,Rated menu item is not part of the referenced order
+9686,1083,2738,29,9,4,2025-10-12,Very good,Rated menu item is not part of the referenced order
+9971,5595,16610,117,7,5,2025-02-05,Could be better,Rated menu item is not part of the referenced order
+10428,6238,4956,105,13,5,2025-10-14,Could be better,Rated menu item is not part of the referenced order
+10449,5849,14781,29,4,5,2025-12-07,Good experience,Rated menu item is not part of the referenced order
+10496,1194,10369,41,20,5,2025-06-08,Average,Rated menu item is not part of the referenced order
+10715,3540,5685,150,4,3,2025-03-18,Excellent,Rated menu item is not part of the referenced order
+10774,4208,14607,34,18,4,2025-04-12,Average,Rated menu item is not part of the referenced order
+11342,2582,15983,122,2,2,2025-11-17,Could be better,Rated menu item is not part of the referenced order
+11585,4281,9824,145,2,2,2025-03-01,Good experience,Rated menu item is not part of the referenced order
+11727,7653,2942,63,8,2,2025-08-07,Excellent,Rated menu item is not part of the referenced order
+11774,1872,3212,16,6,5,2025-02-13,Good experience,Rated menu item is not part of the referenced order
+11928,3154,4167,109,18,2,2025-11-21,Good value,Rated menu item is not part of the referenced order
+11991,6441,4984,110,1,5,2025-02-28,Good experience,Rated menu item is not part of the referenced order
+12405,4756,8223,130,19,5,2025-12-21,Good experience,Rated menu item is not part of the referenced order
+12422,4066,13902,38,3,5,2025-01-20,Very good,Rated menu item is not part of the referenced order
+12439,2717,13095,102,4,4,2025-04-27,Good value,Rated menu item is not part of the referenced order
+12472,4513,8368,62,16,4,2025-06-03,Average,Rated menu item is not part of the referenced order
+12620,6433,17101,117,3,5,2025-09-05,Good experience,Rated menu item is not part of the referenced order
+12681,6198,3949,90,9,5,2025-01-24,Excellent,Rated menu item is not part of the referenced order
+12684,1515,17888,103,12,5,2025-02-25,Average,Rated menu item is not part of the referenced order
+12692,1567,9749,52,17,5,2025-09-07,Good experience,Rated menu item is not part of the referenced order
+12720,6509,18112,37,20,5,2025-05-03,Could be better,Rated menu item is not part of the referenced order
+13381,4010,13176,48,4,5,2025-12-10,Excellent,Rated menu item is not part of the referenced order
+13388,2027,14987,4,18,5,2025-10-13,Good experience,Rated menu item is not part of the referenced order
+13495,4445,18517,106,14,1,2025-06-29,Good value,Rated menu item is not part of the referenced order
+13626,7618,15216,15,15,5,2025-08-10,Good experience,Rated menu item is not part of the referenced order
+14018,6112,202,61,13,4,2025-05-12,Good experience,Rated menu item is not part of the referenced order
+14411,951,4480,40,3,3,2025-10-29,Excellent,Rated menu item is not part of the referenced order
+14466,4153,2098,77,7,5,2025-02-11,Good experience,Rated menu item is not part of the referenced order
+15585,4110,1134,63,9,3,2025-08-31,Could be better,Rated menu item is not part of the referenced order
+15597,2871,16662,150,19,5,2025-01-30,Good experience,Rated menu item is not part of the referenced order
+15628,6912,13355,140,3,5,2025-03-01,Could be better,Rated menu item is not part of the referenced order
+16614,5951,11784,48,16,5,2025-03-09,Good value,Rated menu item is not part of the referenced order
+16939,6102,7035,13,16,3,2025-02-18,Average,Rated menu item is not part of the referenced order
+17228,3818,11142,136,12,5,2025-11-07,Could be better,Rated menu item is not part of the referenced order
+17239,1437,2895,72,5,5,2025-12-22,Excellent,Rated menu item is not part of the referenced order
+17406,3079,14623,36,16,5,2025-03-18,Very good,Rated menu item is not part of the referenced order
+17576,6976,478,85,12,5,2025-10-27,Good experience,Rated menu item is not part of the referenced order
+17706,6270,9133,22,15,5,2025-11-05,Average,Rated menu item is not part of the referenced order
+17888,3086,4679,74,3,2,2025-05-24,Excellent,Rated menu item is not part of the referenced order
+18340,5355,6669,92,6,5,2025-07-10,Very good,Rated menu item is not part of the referenced order
+18436,1837,9943,90,20,5,2025-11-05,Average,Rated menu item is not part of the referenced order
+18649,287,19279,138,18,5,2025-03-09,Average,Rated menu item is not part of the referenced order
+18732,3930,265,37,7,5,2025-12-12,Very good,Rated menu item is not part of the referenced order
+18815,5207,11807,37,10,5,2025-01-16,Good experience,Rated menu item is not part of the referenced order
+18894,1343,8632,54,6,2,2025-01-27,Very good,Rated menu item is not part of the referenced order
+18917,525,2853,22,3,3,2025-07-30,Very good,Rated menu item is not part of the referenced order
+18939,152,7462,65,3,1,2025-10-19,Good experience,Rated menu item is not part of the referenced order
+19316,287,19279,138,18,5,2025-03-09,Good experience,Rated menu item is not part of the referenced order
+19337,4898,15707,66,18,5,2025-06-23,Very good,Rated menu item is not part of the referenced order
+19916,6435,6218,126,3,5,2025-05-20,Very good,Rated menu item is not part of the referenced order

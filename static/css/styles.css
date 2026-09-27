@@ -907,6 +907,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   color: var(--text-3);
   font-size: 10px;
 }
+.rev-trend { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.rev-trend.up { color: var(--success); }
+.rev-trend.down { color: var(--danger); }
+.rev-trend.flat { color: var(--text-3); }
 
 /* ==========================================================================
    KPI — Command Surface Metrics (NOT boring cards)
@@ -1022,26 +1026,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
    ========================================================================== */
 
 .chart {
-  height: 260px;
   position: relative;
-  padding: 10px 14px 14px;
+  padding: 12px 14px 6px;
   min-width: 0;
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
-.chart-large { height: 320px; }
-.chart-small { height: 200px; }
 
 .chart svg {
   display: block;
-  width: 100%; height: 100%;
+  width: 100%; height: auto;
   max-width: 100%;
   overflow: visible;
+  /* The global `svg { stroke: currentColor; stroke-width: 1.8 }` icon rule must
+     NOT leak into charts: it outlines every bar (boxy) and strokes every label
+     glyph (bloated/bold text). Elements that need a stroke set it explicitly. */
+  stroke: none;
 }
-.chart svg.chart-svg-wide { width: 100%; height: 100%; min-width: 0; max-width: 100%; }
-.chart svg.chart-svg-square { width: 100%; height: 100%; max-width: 240px; max-height: 240px; margin: 0 auto; }
+.chart svg.chart-svg-wide { width: 100%; height: auto; min-width: 0; max-width: 100%; }
+.chart svg.chart-svg-square { width: 100%; height: auto; max-width: 240px; max-height: 240px; margin: 0 auto; }
 
 /* Chart Tooltip — premium glass */
 .chart-tip {
@@ -1061,7 +1065,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   transition: opacity 0.1s ease;
 }
 .chart-tip[hidden] { display: none !important; }
-.tip-label { color: var(--text-2); font-size: 9.5px; font-weight: 600; }
+.tip-label { color: var(--text-2); font-size: 9.5px; font-weight: 500; }
 .tip-value {
   margin-top: 2px; color: var(--text);
   font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums;
@@ -1277,8 +1281,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   background-size: 200% 100%;
   animation: shimmer 1.5s linear infinite;
 }
+.sk-line { height: 11px; }
 .sk-block { height: 72px; border-radius: 10px; }
 @keyframes shimmer { to { background-position: -200% 0; } }
+
+/* Refresh button spin state */
+.refresh-button.spinning svg { animation: dq-spin 0.6s linear infinite; }
+@keyframes dq-spin { to { transform: rotate(360deg); } }
 
 /* ==========================================================================
    DROPDOWNS & OVERLAYS
@@ -2063,6 +2072,8 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 @media (max-width: 860px) {
   .g3, .g2 { grid-template-columns: 1fr; }
   .g5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Collapse inline-styled asymmetric grids (e.g. 2fr 1fr) to a single column */
+  .dashboard-grid { grid-template-columns: 1fr !important; }
   .view-heading {
     flex-direction: column;
     align-items: flex-start;
@@ -2085,8 +2096,8 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   .pulse-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .report-stats { grid-template-columns: 1fr; }
   .data-form-grid { grid-template-columns: 1fr; }
-  .chart { height: 220px; padding: 6px 8px; }
-  .chart-large { height: 260px; }
+  .chart { padding: 8px 8px 4px; }
+  .chart-large { min-height: 0; }
   .filter-row { padding: 10px 12px; gap: 6px; }
 }
 
@@ -2203,12 +2214,13 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
 /* Chart insight strip: a compact interpretation layer under each visualization. */
 .chart-insight {
-  margin: 2px 14px 12px;
-  padding: 7px 9px;
+  margin: 10px 0 6px;
+  padding: 8px 11px;
   border-left: 2px solid var(--accent-muted);
+  border-radius: 0 8px 8px 0;
   background: var(--accent-soft);
   color: var(--text-2);
   font-size: 10.5px;
   line-height: 1.45;
 }
-.chart-insight strong { color: var(--text); font-weight: 700; }
+.chart-insight strong { color: var(--text); font-weight: 600; }

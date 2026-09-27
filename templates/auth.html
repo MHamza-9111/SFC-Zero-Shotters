@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Sign in to DineIQ Analytics — Restaurant Intelligence Platform">
   <title>{{ 'Create account' if mode == 'register' else 'Sign in' }} · DineIQ Analytics</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=2">
   <style>
     /* ================================================================
        AUTH PAGE — "Enter the Intelligence Layer"
@@ -536,6 +536,6 @@
       }
     })();
   </script>
-  <script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/auth.js') }}?v=2"></script>
 </body>
 </html>

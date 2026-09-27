@@ -1,0 +1,10 @@
+metric,value
+accuracy,1.0
+roc_auc,1.0
+macro_f1,1.0
+train_size,3923
+test_size,981
+churn_rate,0.6917
+definition,No completed order in the final 60 days of the analysis window
+observation_window,Customers with first order on or before 2025-07-04
+model,LogisticRegression (sklearn)

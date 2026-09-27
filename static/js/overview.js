@@ -307,6 +307,7 @@
             DQ.charts.areaLine(wrap, s.points, {
                 aria: `Revenue for ${state.revRange}`,
                 tension: 0.3,
+                height: 320,
             });
         } catch (err) {
             wrap.innerHTML = errorState(err.message);

@@ -1,0 +1,13 @@
+dataset,raw_rows,processed_rows,rows_removed_or_quarantined
+locations.csv,20,20,0
+restaurants.csv,20,20,0
+menu_categories.csv,10,10,0
+menu_items.csv,150,150,0
+customers.csv,8040,8000,40
+orders.csv,20000,19980,20
+order_items.csv,200040,199440,600
+pricing_history.csv,272,272,0
+promotions.csv,120,120,0
+ratings.csv,20000,19868,132
+inventory.csv,10000,10000,0
+wastage.csv,10000,10000,0
