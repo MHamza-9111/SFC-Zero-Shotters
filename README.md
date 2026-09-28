@@ -52,6 +52,19 @@ python src/backend/app.py
 
 Open `http://127.0.0.1:5000`. The first Administrator is created only when the bootstrap environment variables are set and no Administrator exists. Public registrations receive the Data Analyst role. Keep the secret and bootstrap password outside source control.
 
+### Missing models? (`Could not load … model …: 118`)
+
+The trained models (`models/**/model.joblib`) and `processed_data/analytics/order_items_integrated.csv` are stored with **Git LFS**. A ZIP download of this repository, or a clone made without `git-lfs`, contains only tiny pointer text files instead of the real bytes — scoring then logs `Could not load … model …: 118`, `GET /api/v1/status` reports `DEGRADED`, and order line items come back empty.
+
+* If you cloned with git: `git lfs install && git lfs pull`
+* Otherwise run (no Java/Spark needed):
+
+```powershell
+python scripts/restore_artifacts.py
+```
+
+The script regenerates the artifacts from the committed pipeline code and verifies `OPERATIONAL` status before exiting. Restart the server afterwards.
+
 ## Production process
 
 Use the Waitress WSGI server behind a TLS terminating reverse proxy. Set `DINEIQ_ENV=production`, `DINEIQ_SECRET_KEY`, and `DINEIQ_AUTH_DB` / `DINEIQ_DATA_DB` to persistent writable locations. Configure the reverse proxy, backups, monitoring, and process supervision for the target environment; no public deployment is configured by this repository.

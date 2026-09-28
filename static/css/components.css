@@ -1162,4 +1162,4 @@ input[type="range"]::-moz-range-thumb {
 
 .settings-date-card .date-controls { gap: 10px; }
 
-.icon-library { position: absolute; width: 0; height: 0; overflow: hidden; }
+.icon-library { position: absolute; width: 0; height: 0; overflow: hidden; display: none; }

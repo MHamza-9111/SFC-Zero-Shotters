@@ -117,8 +117,21 @@ class ScoringService:
                 return loaded
             except Exception as exc:
                 self._errors[key] = str(exc)
-                LOGGER.warning("Could not load %s model for task %s: %s",
-                               pipeline, task, exc)
+                hint = ""
+                try:
+                    root = self.models_dir if pipeline == "big_data" else self.python_models_dir
+                    versions = sorted(
+                        (d for d in (root / task).iterdir() if d.name.startswith("v")),
+                        key=lambda d: int(d.name[1:]))
+                    latest = versions[-1] / "model.joblib"
+                    if latest.read_bytes()[:40].startswith(b"version https://git-lfs"):
+                        hint = (" — the model file is an unfetched Git-LFS pointer; "
+                                "run `python scripts/restore_artifacts.py` or "
+                                "`git lfs pull` (see README)")
+                except Exception:
+                    pass
+                LOGGER.warning("Could not load %s model for task %s: %s%s",
+                               pipeline, task, exc, hint)
                 raise ModelsUnavailable(f"{pipeline} model for {task} is unavailable") from exc
 
     def warm(self) -> dict:

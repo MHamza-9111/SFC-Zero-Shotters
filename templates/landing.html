@@ -3,6 +3,7 @@
 {% block meta_description %}Big Data and ML-powered restaurant intelligence — Spark + Python dual pipelines forecasting demand, profitability, wastage and customer behaviour.{% endblock %}
 {% block body %}
 <main class="landing" id="main-content">
+  {% include "components/food_decor.html" %}
   <div class="landing-inner">
     <div class="landing-mark" aria-hidden="true">
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke-linecap="round">
@@ -70,5 +71,5 @@
 </main>
 {% endblock %}
 {% block scripts %}
-  <script defer src="{{ url_for('static', filename='js/landing.js') }}?v=3"></script>
+  <script defer src="{{ url_for('static', filename='js/landing.js') }}?v=4"></script>
 {% endblock %}

@@ -8,26 +8,40 @@
 </button>
 
 <main class="auth-page" id="main-content">
-  <div class="auth-card">
-    <a class="brand" href="/" aria-label="DineIQ Analytics home">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">
-          <g transform="rotate(32 12 12)" stroke="#fbbf24" stroke-width="1.7"><path d="M8.6 2.8v4.4a3.4 3.4 0 0 0 6.8 0V2.8M12 2.8v18.4"/></g>
-          <g transform="rotate(-32 12 12)" stroke="#2dd4bf" stroke-width="1.7"><path d="M8.6 2.8v4.4a3.4 3.4 0 0 0 6.8 0V2.8M12 2.8v18.4"/></g>
-        </svg>
-      </span>
-      <span class="brand-copy"><strong>DineIQ <em>Analytics</em></strong><small>DINING INTELLIGENCE v1.0</small></span>
-    </a>
+  {# Blurred hero scene — echoes the prototype's auth modal over the landing. #}
+  <div class="auth-scene" aria-hidden="true">
+    <div class="auth-scene-inner">
+      <p class="ghost-kicker">Aptech · Data Science Intelligence Arena</p>
+      <div class="ghost-title">Dine<em>IQ</em> Analytics</div>
+      <p class="ghost-sub">Big Data &amp; ML-powered restaurant intelligence — Spark + Python dual pipelines forecasting demand, profitability, wastage and customer behaviour across the network.</p>
+      <div class="ghost-chips">
+        <span class="chip"><span class="dot" style="background:#fbbf24"></span>Menu Intelligence</span>
+        <span class="chip"><span class="dot" style="background:#2dd4bf"></span>Demand Forecasting</span>
+        <span class="chip"><span class="dot" style="background:#38bdf8"></span>Customer Segments</span>
+        <span class="chip"><span class="dot" style="background:#a78bfa"></span>Wastage Analytics</span>
+        <span class="chip"><span class="dot" style="background:#fb7185"></span>AI Recommendations</span>
+      </div>
+    </div>
+  </div>
 
-    <h1>{{ 'Create account' if mode == 'register' else 'Welcome back' }}</h1>
-    <p class="auth-note">
-      {% if mode == 'register' %}
-        Join your restaurant intelligence workspace. New accounts receive the Data Analyst role;
-        an administrator can change it later.
-      {% else %}
-        Sign in to DineIQ Analytics — restaurant intelligence for your brand.
-      {% endif %}
-    </p>
+  {% include "components/food_decor.html" %}
+
+  <div class="auth-card">
+    <div class="auth-head">
+      <div>
+        <h1>{{ 'Create account' if mode == 'register' else 'Welcome back' }}</h1>
+        <p class="auth-sub">
+          {% if mode == 'register' %}
+            Join DineIQ Analytics — restaurant intelligence for your brand
+          {% else %}
+            Sign in to DineIQ Analytics
+          {% endif %}
+        </p>
+      </div>
+      <a class="btn btn-ghost btn-sm auth-close" href="/" aria-label="Close and return to the landing page" title="Back to landing">
+        <svg><use href="#i-close"/></svg>
+      </a>
+    </div>
 
     <form id="auth-form" class="auth-fields" novalidate>
       {% if mode == 'register' %}
@@ -48,7 +62,7 @@
       {% endif %}
 
       <div class="auth-field">
-        <label class="auth-label" for="auth-email">Work email</label>
+        <label class="auth-label" for="auth-email">{{ 'Work email' if mode == 'register' else 'Email' }}</label>
         <input class="auth-input" id="auth-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@restaurant.com" required>
       </div>
 
@@ -57,17 +71,17 @@
         <input class="auth-input" id="auth-password" name="password" type="password"
                autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}"
                minlength="{{ 12 if mode == 'register' else 1 }}"
-               placeholder="{{ 'Minimum 12 characters' if mode == 'register' else 'Your password' }}" required>
+               placeholder="{{ 'Minimum 12 characters' if mode == 'register' else '••••••••' }}" required>
       </div>
 
       {% if mode == 'register' %}
-      <p class="auth-hint">Use at least 12 characters. Accounts are created with the Data Analyst role.</p>
+      <p class="auth-hint">Use at least 12 characters. Accounts start with the Data Analyst role; an administrator can change it later.</p>
       {% endif %}
 
       <p id="auth-error" class="auth-error" role="alert" aria-live="polite"></p>
 
       <button class="btn btn-primary auth-submit" type="submit" id="auth-submit">
-        {{ 'Create account' if mode == 'register' else 'Sign in' }}
+        {{ 'Create Free Account' if mode == 'register' else 'Sign In' }}
       </button>
     </form>
 
@@ -75,12 +89,12 @@
       {% if mode == 'register' %}
         Already have an account? <a href="/login">Sign in</a>
       {% else %}
-        New to DineIQ? <a href="/register">Create an account</a>
+        No account? <a href="/register">Create one</a>
       {% endif %}
     </p>
   </div>
 </main>
 {% endblock %}
 {% block scripts %}
-  <script defer src="{{ url_for('static', filename='js/auth.js') }}?v=3"></script>
+  <script defer src="{{ url_for('static', filename='js/auth.js') }}?v=4"></script>
 {% endblock %}
