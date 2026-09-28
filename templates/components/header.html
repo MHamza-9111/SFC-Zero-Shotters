@@ -1,0 +1,53 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"><svg><use href="#i-menu"/></svg></button>
+    <div class="topbar-title">
+      <span class="eyebrow">DineIQ Analytics</span>
+      <h1 id="page-title">Executive dashboard</h1>
+    </div>
+  </div>
+
+  <button class="branch-chip" id="branch-chip" type="button" aria-label="Change location scope">
+    <svg><use href="#i-pin"/></svg><span id="branch-chip-name">All locations</span><svg class="branch-chevron"><use href="#i-chevron"/></svg>
+  </button>
+
+  <div class="topbar-right">
+    <div class="search-wrap">
+      <svg class="search-icon"><use href="#i-search"/></svg>
+      <label class="sr-only" for="global-search">Search orders, dishes, customers and locations</label>
+      <input class="control search" id="global-search" type="search" placeholder="Search orders, dishes… (Ctrl+K)" autocomplete="off">
+      <div class="dropdown search-results" id="search-results" role="listbox" aria-label="Search results" hidden></div>
+    </div>
+
+    <div class="dropdown-wrap">
+      <button class="icon-btn notification-button" id="notif-btn" type="button" aria-label="View current alerts" aria-haspopup="true" aria-expanded="false">
+        <svg><use href="#i-bell"/></svg><span class="notification-count" id="notif-count" hidden></span>
+      </button>
+      <div class="dropdown notification-panel" id="notif-panel" hidden>
+        <div class="dropdown-heading"><strong>Current alerts</strong><span id="notif-meta">Checking</span></div>
+        <div id="notif-list"></div>
+      </div>
+    </div>
+
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false"><svg id="theme-icon"><use href="#i-sun"/></svg></button>
+
+    <button class="btn btn-ghost refresh-button" id="refresh-dashboard" type="button">
+      <svg><use href="#i-refresh"/></svg><span>Refresh</span>
+    </button>
+
+    <div class="dropdown-wrap">
+      <button class="user-menu-button" id="user-menu-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu">
+        <span id="user-initials">··</span>
+      </button>
+      <div class="dropdown" id="user-menu" hidden>
+        <div class="user-menu-head">
+          <div class="name" id="user-name">Signed in</div>
+          <div class="meta" id="user-meta"></div>
+        </div>
+        <a class="user-menu-item" href="/settings"><svg><use href="#i-check"/></svg>Profile &amp; preferences</a>
+        <a class="user-menu-item" id="user-team-link" href="/team" hidden><svg><use href="#i-users"/></svg>Team &amp; roles</a>
+        <button class="user-menu-item danger" id="logout-button" type="button"><svg><use href="#i-x"/></svg>Sign out</button>
+      </div>
+    </div>
+  </div>
+</header>

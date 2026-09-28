@@ -1,0 +1,213 @@
+/* ==========================================================================
+   DineIQ Analytics — Responsive layouts
+   Breakpoints: 1440 · 1280 · 1080 · 1024 · 900 · 768 · 680 · 560 · 440 · 360
+   ========================================================================== */
+
+/* ---------------------------- Large desktop (max 1440) ------------------- */
+@media (max-width: 1440px) {
+  .content { padding: 24px 22px 36px; }
+  .search-wrap { width: min(260px, 22vw); }
+}
+
+/* ---------------------------- Desktop (max 1280) ------------------------ */
+@media (max-width: 1280px) {
+  .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .topbar-title h1 { max-width: 26vw; }
+}
+
+/* ---------------------------- Small laptop (max 1080) ------------------- */
+@media (max-width: 1080px) {
+  .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* Sidebar becomes an off-canvas drawer */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    height: 100dvh;
+    transform: translateX(-100%);
+    transition: transform 0.3s var(--ease-spring);
+    z-index: 70;
+    box-shadow: none;
+  }
+  .sidebar.open { transform: none; box-shadow: var(--shadow-lg); }
+  .sidebar-close { display: inline-flex; }
+  .sidebar-scrim { display: block; }
+  .sidebar-scrim[hidden] { display: none; }
+  .menu-toggle { display: inline-flex; }
+
+  .topbar-title h1 { max-width: 40vw; }
+}
+
+/* ---------------------------- Tablet (max 1024) ------------------------- */
+@media (max-width: 1024px) {
+  .content { padding: 20px 18px 32px; }
+  .g4, .g3, .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi-grid.g4 .kpi { min-height: 0; }
+
+  /* Two-column dashboards keep pairs; asymmetric overview rows stack. */
+  #view-overview .dashboard-grid > * { grid-column: auto / -1; }
+
+  .branch-chip { display: none; }
+  .search-wrap { width: min(240px, 30vw); }
+}
+
+/* ---------------------------- Tablet portrait (max 900) ----------------- */
+@media (max-width: 900px) {
+  .topbar { padding: 0 14px; gap: 8px; }
+  .topbar-title .eyebrow { display: none; }
+  .topbar-title h1 { font-size: 15px; max-width: 34vw; }
+  .search-wrap { width: 200px; }
+  .refresh-button span { display: none; }
+  .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------------------------- Tablet / small laptop (max 768) ----------- */
+@media (max-width: 768px) {
+  .g4, .g3, .g2 { grid-template-columns: 1fr; }
+
+  .content { padding: 16px 14px 30px; }
+  .view-heading h2 { font-size: 22px; }
+  .view-heading { flex-direction: column; align-items: stretch; }
+
+  .kpi-value { font-size: 23px; }
+  .kpi.hero .kpi-value { font-size: 26px; }
+
+  .chart { height: 230px; }
+  .chart-large { height: 280px; }
+
+  .search-wrap { flex: 1; width: auto; min-width: 0; }
+  .search-results { min-width: 260px; }
+
+  .landing-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .landing-stat .val { font-size: 18px; }
+  .landing-stat .sub { display: none; }
+
+  .auth-grid-2 { grid-template-columns: 1fr; }
+
+  .modal { padding: 10px; align-items: flex-end; }
+  .modal-card {
+    width: 100%;
+    max-height: 92dvh;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------------------------- Mobile landscape (max 680) ---------------- */
+@media (max-width: 680px) {
+  .topbar { height: 56px; }
+  .topbar-title h1 { display: none; }
+  .topbar-left { flex: 0 0 auto; }
+  .topbar-right { flex-wrap: nowrap; }
+
+  /* Collapse secondary header controls behind the search on small phones */
+  .notification-button { order: 3; }
+
+  .card-head { padding: 14px 14px 0; }
+  .card-body, .compact-body { padding: 12px 14px 14px; }
+  .card-tools { padding: 10px 14px 0; }
+  .kpi { padding: 14px; }
+
+  .filter-row { gap: 8px; }
+  .filter-row .control { flex: 1 1 140px; min-width: 0; }
+
+  .pager { padding: 12px 14px 14px; }
+
+  .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .pulse-grid { grid-template-columns: 1fr; }
+
+  .report-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .data-form-grid { grid-template-columns: 1fr; padding: 14px; }
+
+  .toast-wrap { right: 12px; left: 12px; bottom: 12px; max-width: none; }
+
+  .landing { padding: 44px 16px; }
+  .landing-actions .btn { flex: 1 1 100%; }
+}
+
+/* ---------------------------- Mobile (max 560) -------------------------- */
+@media (max-width: 560px) {
+  .g4, .g3, .g2 { grid-template-columns: 1fr; }
+
+  .landing h1 { font-size: clamp(38px, 11vw, 52px); }
+  .landing-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .landing-stat { padding: 12px 6px; }
+  .landing-stat .val { font-size: 15.5px; }
+  .landing-stat .lbl { font-size: 8px; letter-spacing: 1px; }
+
+  .auth-card { padding: 22px 18px; }
+  .auth-card h1 { font-size: 21px; }
+
+  .view-heading h2 { font-size: 20px; }
+
+  .kpi-value { font-size: 22px; }
+
+  .table { font-size: 12px; }
+  .table th { font-size: 9.5px; padding: 8px 10px; }
+  .table td { padding: 9px 10px; }
+
+  .segmented { flex-wrap: wrap; }
+
+  .command-card { width: 94vw; }
+
+  .date-controls { flex-wrap: wrap; }
+  .date-controls .control { flex: 1 1 auto; }
+}
+
+/* ---------------------------- Small phones (max 440) ------------------- */
+@media (max-width: 440px) {
+  .content { padding: 14px 10px 26px; }
+
+  .landing-stats { grid-template-columns: 1fr; max-width: 260px; }
+  .landing-stat .sub { display: block; }
+  .landing-chips { gap: 6px; }
+  .landing-chips .chip { font-size: 10.5px; padding: 4px 9px; }
+
+  .icon-btn { width: 34px; height: 34px; }
+  .btn { padding: 8px 14px; font-size: 12px; }
+
+  .detail-grid { grid-template-columns: 1fr; }
+  .report-stats { grid-template-columns: 1fr; }
+  .quick-grid { grid-template-columns: 1fr; }
+
+  .kpi-ic { display: none; }
+
+  .search-wrap { min-width: 0; }
+  .search { font-size: 16px; } /* prevents iOS zoom on focus */
+}
+
+/* ---------------------------- Tiny (max 360) ---------------------------- */
+@media (max-width: 360px) {
+  .topbar { gap: 6px; padding: 0 8px; }
+  .topbar-right { gap: 5px; }
+  .theme-only-hide { display: none !important; }
+  .view-heading h2 { font-size: 18px; }
+  .kpi-value { font-size: 20px; }
+  .landing h1 { font-size: 34px; }
+  .auth-input, .control { font-size: 16px; } /* avoids iOS focus zoom */
+}
+
+/* ---------------------------- Ultrawide (min 1920) ---------------------- */
+@media (min-width: 1920px) {
+  .content { max-width: var(--content-max); padding: 30px 32px 48px; }
+  :root { --content-max: 1680px; }
+}
+
+/* ---------------------------- Reduced motion ---------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+    scroll-behavior: auto !important;
+  }
+  .aurora::after { animation: none; }
+  .ticker-track { animation: none; }
+  .landing-mark { animation: none; }
+  .cursor-aura { display: none; }
+}

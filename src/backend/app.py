@@ -91,7 +91,7 @@ def create_app() -> Flask:
     def protect_pages():
         if (app.testing or not app.config["AUTH_REQUIRED"]
                 or request.path.startswith("/api/")
-                or request.path in {"/health", "/login", "/register"}
+                or request.path in {"/health", "/login", "/register", "/"}
                 or request.path.startswith("/static/")):
             return None
         if not session.get("user"):
@@ -104,7 +104,12 @@ def create_app() -> Flask:
     def dashboard_page(page: str):
         if page not in PAGES and page != "overview":
             return render_template("404.html"), 404
-        return render_template("index.html", view=page)
+        # Anonymous visitors get the public landing experience on "/"; every
+        # other page keeps the existing sign-in redirect handled above.
+        if (page == "overview" and app.config["AUTH_REQUIRED"]
+                and not app.testing and not session.get("user")):
+            return render_template("landing.html")
+        return render_template("app.html", view=page)
 
     @app.route("/login")
     def login_page():

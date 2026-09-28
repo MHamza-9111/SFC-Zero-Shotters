@@ -270,16 +270,24 @@ ORDER_RECORD = {
 }
 
 CHURN_RECORD = {
-    "recency_days": 45, "f_log_orders": 1.2, "f_log_spend": 9.4,
+    # recency_days was deliberately removed from CHURN_FEATURES (label
+    # leakage — see AUDIT_PHASE2_FINDINGS.md); records must match the
+    # published feature contract exactly.
+    "f_log_orders": 1.2, "f_log_spend": 9.4,
     "average_order_value": 3200, "discount_dependency": 0.02,
     "promo_dependency": 0.1, "top_category_share": 0.4,
-    "unique_categories": 5,
+    "unique_categories": 5, "total_items_purchased": 64,
+    "weekend_order_share": 0.28,
 }
 
 MENU_RECORD = {
-    "units_sold": 8871, "revenue": 10189641.65, "estimated_profit": 5308219.75,
-    "profit_margin_percentage": 52.09, "average_rating": 4.22,
-    "wastage_ratio": 0.08,
+    # Derived target-defining fields (units_sold, revenue, estimated_profit,
+    # profit_margin_percentage) are excluded from MENU_FEATURES by design;
+    # records must match the published feature contract exactly.
+    "average_rating": 4.22, "rating_count": 3100, "wastage_ratio": 0.08,
+    "avg_unit_price": 640.5, "promo_dependency": 0.12,
+    "weekend_order_share": 0.38, "unique_customers": 1840,
+    "order_line_count": 9600,
 }
 
 
@@ -379,7 +387,11 @@ def test_pages_render(client, path):
     assert "DineIQ" in html and "side-nav" in html
     view = "overview" if path == "/" else path.strip("/")
     assert f'id="view-{view}"' in html
-    assert 'id="theme-toggle"' in html and 'id="theme-segment"' in html
+    assert 'id="theme-toggle"' in html
+    if view == "settings":
+        # Theme picker lives in the settings view of the split Jinja layout;
+        # every app page carries the header toggle instead.
+        assert 'id="theme-segment"' in html
     assert "<img" not in html
     if view == "models":
         assert all(f'id="{element}"' in html for element in (

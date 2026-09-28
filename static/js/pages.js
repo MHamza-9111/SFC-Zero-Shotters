@@ -1016,7 +1016,55 @@
     }, updateWhatIf);
     DQ.registerView("recommendations", () => {}, loadRecommendationsView);
     DQ.registerView("quality", () => {}, loadQualityView);
-    DQ.registerView("team", () => {}, loadTeamView);
+    async function loadAuditView() {
+        const tbody = document.getElementById("audit-tbody");
+        const status = document.getElementById("audit-status");
+        if (!tbody) return;
+        setLoading(tbody, 6);
+        try {
+            const limit = (document.getElementById("audit-limit") || {}).value || "100";
+            const result = await api.get("/api/v1/audit", { limit });
+            const items = result.items || [];
+            if (status) {
+                status.textContent = items.length
+                    ? `Showing the ${items.length} most recent events recorded by the API`
+                    : "No audit events recorded yet.";
+            }
+            const statusKind = (s) => {
+                if (s === "success") return "green";
+                if (s === "failed" || s === "rejected") return "red";
+                if (s === "unavailable") return "amber";
+                return "gray";
+            };
+            tbody.innerHTML = items.map(a => `<tr style="cursor:default">
+                <td class="cell-sub">${esc(String(a.created_at || "—").replace("T", " ").slice(0, 19))}</td>
+                <td>${esc(a.actor_email || "system")}</td>
+                <td>${esc(a.actor_role || "—")}</td>
+                <td class="cell-strong">${esc(a.action)}</td>
+                <td class="num">${a.record_count === null || a.record_count === undefined ? "—" : fmt.num(a.record_count)}</td>
+                <td>${badge(a.status || "—", statusKind(a.status))}</td>
+                <td class="audit-details" title="${esc(JSON.stringify(a.details || {}))}">${esc(JSON.stringify(a.details || {}))}</td>
+            </tr>`).join("")
+                || `<tr><td colspan="7">${emptyState("No audit events", "Sign-ins, exports, predictions and admin changes appear here.", "shield")}</td></tr>`;
+        } catch (error) {
+            const message = error.status === 403
+                ? "Administrator access is required to view the audit trail."
+                : error.status === 401
+                    ? "Sign in to view the audit trail."
+                    : error.message;
+            if (status) status.textContent = message;
+            tbody.innerHTML = `<tr><td colspan="7">${errorState(message)}</td></tr>`;
+        }
+    }
+
+    DQ.registerView("team",
+        function init() {
+            const limit = document.getElementById("audit-limit");
+            if (limit) limit.addEventListener("change", loadAuditView);
+            const reload = document.getElementById("audit-refresh");
+            if (reload) reload.addEventListener("click", loadAuditView);
+        },
+        function refresh() { loadTeamView(); loadAuditView(); });
     DQ.registerView("billing", () => {}, loadUsageView);
     DQ.registerView("data", initDataManagement, loadDataManagement);
 

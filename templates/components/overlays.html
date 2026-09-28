@@ -1,0 +1,59 @@
+{# Shared overlays: modals, toasts, command palette. Included by app.html. #}
+
+<div class="modal" id="modal-order" role="dialog" aria-modal="true" aria-labelledby="order-modal-title" hidden>
+  <div class="modal-card">
+    <div class="modal-heading">
+      <h2 id="order-modal-title">Order details</h2>
+      <button class="icon-btn" type="button" data-close="modal-order" aria-label="Close order details"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div id="order-modal-body"></div>
+  </div>
+</div>
+
+<div class="modal" id="modal-info" role="dialog" aria-modal="true" aria-labelledby="info-modal-title" hidden>
+  <div class="modal-card">
+    <div class="modal-heading">
+      <h2 id="info-modal-title">Details</h2>
+      <button class="icon-btn" type="button" data-close="modal-info" aria-label="Close details"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div id="info-modal-body"></div>
+  </div>
+</div>
+
+<div id="toast-wrap" class="toast-wrap" role="status" aria-live="polite" aria-atomic="false"></div>
+
+<div class="command-palette" id="command-palette" hidden role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="command-card">
+    <div class="command-input-wrap">
+      <svg><use href="#i-search"/></svg>
+      <input class="command-input" id="command-input" type="text" placeholder="Search DineIQ…" autocomplete="off" aria-label="Search commands and navigation">
+      <span class="command-kbd">ESC</span>
+    </div>
+    <div class="command-results" id="command-results">
+      <div class="nav-group-label">Navigation</div>
+      <button class="command-item" data-nav="overview"><svg><use href="#i-grid"/></svg>Executive Dashboard</button>
+      <button class="command-item" data-nav="orders"><svg><use href="#i-receipt"/></svg>Orders</button>
+      <button class="command-item" data-nav="menu"><svg><use href="#i-menu-book"/></svg>Menu Intelligence</button>
+      <button class="command-item" data-nav="customers"><svg><use href="#i-users"/></svg>Customer Intelligence</button>
+      <button class="command-item" data-nav="basket"><svg><use href="#i-bag"/></svg>Market Basket</button>
+      <button class="command-item" data-nav="price"><svg><use href="#i-trend"/></svg>Price Intelligence</button>
+      <button class="command-item" data-nav="forecast"><svg><use href="#i-chart"/></svg>Demand Forecast</button>
+      <button class="command-item" data-nav="inventory"><svg><use href="#i-box"/></svg>Wastage &amp; Stock</button>
+      <button class="command-item" data-nav="promotions"><svg><use href="#i-tag"/></svg>Promotions</button>
+      <button class="command-item" data-nav="payments"><svg><use href="#i-wallet"/></svg>Payments</button>
+      <button class="command-item" data-nav="locations"><svg><use href="#i-pin"/></svg>Locations</button>
+      <button class="command-item" data-nav="channels"><svg><use href="#i-globe"/></svg>Channels</button>
+      <button class="command-item" data-nav="peak"><svg><use href="#i-clock"/></svg>Peak Periods</button>
+      <button class="command-item" data-nav="anomalies"><svg><use href="#i-alert"/></svg>Anomalies</button>
+      <button class="command-item" data-nav="recommendations"><svg><use href="#i-spark"/></svg>Recommendations</button>
+      <button class="command-item" data-nav="whatif"><svg><use href="#i-sliders"/></svg>What-If Analysis</button>
+      <button class="command-item" data-nav="models"><svg><use href="#i-cpu"/></svg>Models &amp; Serving</button>
+      <button class="command-item" data-nav="quality"><svg><use href="#i-shield"/></svg>Data Quality</button>
+      <button class="command-item" data-nav="reports"><svg><use href="#i-doc"/></svg>Reports</button>
+      <button class="command-item" data-nav="team"><svg><use href="#i-users"/></svg>Team &amp; Access</button>
+      <button class="command-item" data-nav="data"><svg><use href="#i-doc"/></svg>Data Management</button>
+      <button class="command-item" data-nav="billing"><svg><use href="#i-chart"/></svg>Usage</button>
+      <button class="command-item" data-nav="settings"><svg><use href="#i-check"/></svg>Settings</button>
+    </div>
+  </div>
+</div>

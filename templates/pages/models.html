@@ -1,0 +1,13 @@
+<section class="view" id="view-models" data-title="Models &amp; serving">
+          <div class="view-heading"><div><div class="eyebrow">Platform engineering</div><h2>Model Laboratory</h2><p>Versioned artifacts, dual-pipeline agreement metrics, and production serving latency.</p></div></div>
+          <div class="grid g4 kpi-grid" id="models-kpis"></div>
+          <section class="card page-grid scorer-card">
+            <div class="card-head"><div><h3 class="card-title">Prediction workbench</h3><div class="card-sub">Score a record with both available models. Responses include model versions and request latency.</div></div></div>
+            <div class="card-tools scorer-tools"><div class="segmented" id="scorer-task" role="tablist" aria-label="Prediction task"></div><div class="filter-row compact-filters"><button class="btn btn-ghost" id="scorer-sample" type="button">Load benchmark sample</button><button class="btn btn-primary" id="scorer-run" type="button">Run prediction</button></div></div>
+            <form id="scorer-form" class="data-form-grid scorer-form" autocomplete="off"></form>
+            <div class="card-body scorer-result" id="scorer-result" role="status" aria-live="polite" hidden></div>
+          </section>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Dual-pipeline comparison</h3><div class="card-sub">Recorded unseen-case agreement</div></div></div><div class="dual-panels" id="dual-panels"></div></section>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Ensemble serving latency</h3><div class="card-sub">Measured runtime against the five-second requirement</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Task</th><th class="num">Batch size</th><th class="num">Max time</th><th class="num">Budget</th><th>Result</th></tr></thead><tbody id="latency-tbody"></tbody></table></div></section>
+          <section class="card page-grid"><div class="card-head"><div><h3 class="card-title">Model registry</h3><div class="card-sub">Available artifact metadata and evaluation measures</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Task</th><th>Pipeline</th><th>Version</th><th>Engine</th><th>Trained</th><th>Evaluation</th><th>Artifact</th><th>Status</th></tr></thead><tbody id="models-tbody"></tbody></table></div></section>
+        </section>

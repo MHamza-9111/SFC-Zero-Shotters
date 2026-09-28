@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}DineIQ — {{ 'Executive dashboard' if view == 'overview' else view|replace('_',' ')|title }}{% endblock %}
+{% block body_class %} data-view="{{ view }}" data-theme="dark"{% endblock %}
+{% block body %}
+<div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+<div class="cursor-aura" id="cursor-aura" aria-hidden="true"></div>
+
+<div class="app-shell">
+  {% include "components/sidebar.html" %}
+
+  <div class="main">
+    {% include "components/header.html" %}
+
+    <main class="content" id="main-content" tabindex="-1">
+      {% include "pages/" ~ view ~ ".html" %}
+    </main>
+
+    <footer class="app-foot">DineIQ Analytics <span>·</span> Intelligence Platform v1.0</footer>
+  </div>
+</div>
+
+{% include "components/overlays.html" %}
+{% endblock %}
+{% block scripts %}
+  <script defer src="{{ url_for('static', filename='js/core.js') }}?v=3"></script>
+  <script defer src="{{ url_for('static', filename='js/charts.js') }}?v=3"></script>
+  <script defer src="{{ url_for('static', filename='js/overview.js') }}?v=3"></script>
+  <script defer src="{{ url_for('static', filename='js/pages.js') }}?v=3"></script>
+  <script defer src="{{ url_for('static', filename='js/app.js') }}?v=3"></script>
+{% endblock %}

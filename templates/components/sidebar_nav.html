@@ -1,0 +1,38 @@
+{# Primary navigation — single source of truth for the sidebar.
+   Every entry maps to a real Flask route (/<slug>). #}
+<nav class="nav side-nav" id="nav" aria-label="Main navigation">
+  <div class="nav-group-label">Overview</div>
+  <a class="nav-item" data-view="overview" href="/"><svg><use href="#i-grid"/></svg><span>Executive dashboard</span></a>
+
+  <div class="nav-group-label">Operations</div>
+  <a class="nav-item" data-view="orders" href="/orders"><svg><use href="#i-receipt"/></svg><span>Orders</span></a>
+  <a class="nav-item" data-view="inventory" href="/inventory"><svg><use href="#i-box"/></svg><span>Wastage &amp; stock</span></a>
+  <a class="nav-item" data-view="payments" href="/payments"><svg><use href="#i-wallet"/></svg><span>Payments</span></a>
+  <a class="nav-item" data-view="promotions" href="/promotions"><svg><use href="#i-tag"/></svg><span>Promotions</span></a>
+  <a class="nav-item" data-view="locations" href="/locations"><svg><use href="#i-pin"/></svg><span>Locations</span></a>
+  <a class="nav-item" data-view="data" href="/data"><svg><use href="#i-doc"/></svg><span>Data management</span></a>
+
+  <div class="nav-group-label">Intelligence</div>
+  <a class="nav-item" data-view="menu" href="/menu"><svg><use href="#i-menu-book"/></svg><span>Menu intelligence</span></a>
+  <a class="nav-item" data-view="channels" href="/channels"><svg><use href="#i-globe"/></svg><span>Channels</span></a>
+  <a class="nav-item" data-view="customers" href="/customers"><svg><use href="#i-users"/></svg><span>Customers</span></a>
+  <a class="nav-item" data-view="basket" href="/basket"><svg><use href="#i-bag"/></svg><span>Market basket</span></a>
+  <a class="nav-item" data-view="price" href="/price"><svg><use href="#i-trend"/></svg><span>Price intelligence</span></a>
+  <a class="nav-item" data-view="forecast" href="/forecast"><svg><use href="#i-chart"/></svg><span>Demand forecast</span></a>
+  <a class="nav-item" data-view="peak" href="/peak"><svg><use href="#i-clock"/></svg><span>Peak periods</span></a>
+  <a class="nav-item" data-view="anomalies" href="/anomalies"><svg><use href="#i-alert"/></svg><span>Anomalies</span></a>
+
+  <div class="nav-group-label">Models &amp; simulation</div>
+  <a class="nav-item" data-view="models" href="/models"><svg><use href="#i-cpu"/></svg><span>Models &amp; serving</span></a>
+  <a class="nav-item" data-view="whatif" href="/whatif"><svg><use href="#i-sliders"/></svg><span>What-if scenarios</span></a>
+  <a class="nav-item" data-view="recommendations" href="/recommendations"><svg><use href="#i-spark"/></svg><span>Recommendations</span></a>
+
+  <div class="nav-group-label">Action &amp; governance</div>
+  <a class="nav-item" data-view="quality" href="/quality"><svg><use href="#i-shield"/></svg><span>Data quality</span></a>
+  <a class="nav-item" data-view="reports" href="/reports"><svg><use href="#i-doc"/></svg><span>Reports</span></a>
+  <a class="nav-item" data-view="team" href="/team"><svg><use href="#i-users"/></svg><span>Team &amp; access</span></a>
+
+  <div class="nav-group-label">Workspace</div>
+  <a class="nav-item" data-view="billing" href="/billing"><svg><use href="#i-chart"/></svg><span>Usage</span></a>
+  <a class="nav-item" data-view="settings" href="/settings"><svg><use href="#i-check"/></svg><span>Settings</span></a>
+</nav>

@@ -1,0 +1,18 @@
+<section class="view" id="view-data" data-title="Data management">
+          <div class="view-heading"><div><div class="eyebrow">Operations</div><h2>Data management</h2><p>Maintain operational restaurant records. Customer profiles in this store contain no direct personal identifiers.</p></div></div>
+          <div class="notice">Operational records are stored in the application database. Analytics continue to use the versioned pipeline artifacts shown in Data quality.</div>
+          <section class="card page-grid">
+            <div class="filter-row">
+              <label class="sr-only" for="data-resource">Data resource</label><select class="control" id="data-resource" aria-label="Data resource"></select>
+              <label class="sr-only" for="data-search">Search records</label><input class="control" id="data-search" type="search" placeholder="Search records">
+              <button class="btn btn-ghost" id="data-search-button" type="button">Search</button>
+              <button class="btn btn-primary" id="data-new" type="button">New record</button>
+            </div>
+            <div class="table-wrap"><table class="table"><thead id="data-head"></thead><tbody id="data-tbody"></tbody></table></div>
+            <div class="pager"><span id="data-page-info">Loading records</span><div class="pager-btns"><button id="data-prev" type="button">Previous</button><button id="data-next" type="button">Next</button></div></div>
+          </section>
+          <section class="card page-grid" id="data-editor" hidden>
+            <div class="card-head"><div><h3 class="card-title" id="data-editor-title">New record</h3><div class="card-sub" id="data-editor-note">Changes require Administrator access.</div></div></div>
+            <form id="data-form"><div class="data-form-grid" id="data-fields"></div><div class="filter-row"><button class="btn btn-primary" id="data-save" type="submit">Save record</button><button class="btn btn-ghost" id="data-cancel" type="button">Cancel</button><span class="muted" id="data-form-error" role="alert"></span></div></form>
+          </section>
+        </section>

@@ -1,0 +1,40 @@
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
+  <div class="sidebar-head">
+    <a class="brand" href="/" aria-label="DineIQ Analytics home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">
+          <g transform="rotate(32 12 12)" stroke="#fbbf24" stroke-width="1.7"><path d="M8.6 2.8v4.4a3.4 3.4 0 0 0 6.8 0V2.8M12 2.8v18.4"/></g>
+          <g transform="rotate(-32 12 12)" stroke="#2dd4bf" stroke-width="1.7"><path d="M8.6 2.8v4.4a3.4 3.4 0 0 0 6.8 0V2.8M12 2.8v18.4"/></g>
+        </svg>
+      </span>
+      <span class="brand-copy"><strong>DineIQ <em>Analytics</em></strong><small>DINING INTELLIGENCE v1.0</small></span>
+    </a>
+    <button class="icon-btn sidebar-close" id="sidebar-close" type="button" aria-label="Close navigation" aria-controls="sidebar"><svg><use href="#i-close"/></svg></button>
+  </div>
+
+  <div class="branch-wrap">
+    <button class="branch-selector" id="branch-selector" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="branch-menu">
+      <span class="branch-icon"><svg><use href="#i-pin"/></svg></span>
+      <span class="branch-text">
+        <span class="branch-label">Operating scope</span>
+        <span class="branch-name" id="branch-name">Loading locations</span>
+      </span>
+      <svg class="branch-chevron"><use href="#i-chevron"/></svg>
+    </button>
+    <div class="branch-menu" id="branch-menu" role="listbox" aria-label="Filter by location" hidden>
+      <label class="sr-only" for="branch-search">Find a location</label>
+      <input class="control dropdown-search" id="branch-search" type="search" placeholder="Find a location" autocomplete="off">
+      <div id="branch-list"></div>
+    </div>
+  </div>
+
+  {% include "components/sidebar_nav.html" %}
+
+  <div class="sidebar-foot">
+    <div class="system-card">
+      <div class="system-row"><span class="status-dot" id="sys-dot"></span><span id="sys-label">Checking service</span></div>
+      <div class="system-sub" id="sys-sub">Connecting to the analytics API</div>
+    </div>
+  </div>
+</aside>
+<button class="sidebar-scrim" id="sidebar-scrim" type="button" aria-label="Close navigation" hidden></button>
