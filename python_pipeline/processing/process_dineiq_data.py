@@ -6,34 +6,34 @@ import tempfile
 import pandas as pd
 import numpy as np
 
-# ============================================================
-# DineIQ Analytics - Data Processing & Integration
-# ============================================================
-# Purpose:
-#   - Read cleaned datasets
-#   - Integrate related datasets
-#   - Create analytical features
-#   - Prepare model-ready analytical datasets
-#   - Generate summary datasets for EDA / ML
-#
-# Analytical accounting rule (documented decision):
-#   Revenue, sales and performance analytics are computed on
-#   COMPLETED orders only. Cancelled orders remain in
-#   orders_processed.csv (flagged) for data-quality and
-#   cancellation-behaviour analysis but never contribute to
-#   revenue figures.
-#
-# Raw data is NEVER modified.
-# ============================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 BASE = Path(__file__).resolve().parents[2]
 
 RUN_TIME = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-# ============================================================
-# Helper functions
-# ============================================================
+
+
+
 
 def read_csv(base_dir: Path, name: str) -> pd.DataFrame:
     path = Path(base_dir) / name
@@ -68,9 +68,9 @@ def safe_divide(a, b):
     )
 
 
-# ============================================================
-# Main
-# ============================================================
+
+
+
 
 def main(
     processed_dir=None,
@@ -98,9 +98,9 @@ def main(
     print(f"Output: {output_dir}")
     print()
 
-    # ==========================================================
-    # 1. Load core reference datasets
-    # ==========================================================
+
+
+
 
     locations = read_csv(processed_dir, "locations.csv")
     restaurants = read_csv(processed_dir, "restaurants.csv")
@@ -119,9 +119,9 @@ def main(
         restaurants["opening_date"], errors="coerce"
     )
 
-    # ==========================================================
-    # 2. Enriched menu reference
-    # ==========================================================
+
+
+
 
     print()
     print("Creating enriched menu reference...")
@@ -149,9 +149,9 @@ def main(
 
     save(output_dir, menu_enriched, "menu_enriched.csv")
 
-    # ==========================================================
-    # 3. Process orders
-    # ==========================================================
+
+
+
 
     print()
     print("Processing orders...")
@@ -162,14 +162,14 @@ def main(
     for col in ["subtotal", "discount_amount", "tax_amount", "delivery_fee", "total_amount"]:
         orders[col] = pd.to_numeric(orders[col], errors="coerce")
 
-    # Completion flag - the core analytical accounting rule.
+
     orders["is_completed"] = orders["order_status"].astype(str).str.strip() == "Completed"
 
-    # Promotion flag.
-    # Note: empty promotion_id fields are read back from CSV as NaN,
-    # so they must be normalized to "" BEFORE any string comparison.
-    # The column also comes back as float64 (56.0); convert to a clean
-    # integer string ("56") so downstream joins match promotions.
+
+
+
+
+
     if "promotion_id" not in orders.columns:
         orders["promotion_id"] = ""
     orders["promotion_id"] = orders["promotion_id"].apply(
@@ -177,7 +177,7 @@ def main(
     )
     orders["is_promo_order"] = orders["promotion_id"] != ""
 
-    # Date-based analytical features.
+
     orders["order_year"] = orders["order_date"].dt.year
     orders["order_month"] = orders["order_date"].dt.month
     orders["order_month_name"] = orders["order_date"].dt.month_name()
@@ -212,12 +212,12 @@ def main(
 
     save(output_dir, orders, "orders_processed.csv")
 
-    # Completed orders drive every revenue-based analysis.
+
     orders_completed = orders.loc[orders["is_completed"]].copy()
 
-    # ==========================================================
-    # 4. Process order items
-    # ==========================================================
+
+
+
 
     print()
     print("Processing order items...")
@@ -266,7 +266,7 @@ def main(
         0
     )
 
-    # Order context (date + completion) for time-based item analytics.
+
     order_items_enriched = order_items_enriched.merge(
         orders[["order_id", "customer_id", "order_date", "order_status",
                 "is_completed", "is_promo_order"]],
@@ -279,14 +279,14 @@ def main(
 
     save(output_dir, order_items_enriched, "order_items_integrated.csv")
 
-    # Completed-order view for revenue analytics.
+
     items_completed = order_items_enriched.loc[
         order_items_enriched["is_completed"]
     ].copy()
 
-    # ==========================================================
-    # 5. Integrated order-level analytical dataset
-    # ==========================================================
+
+
+
 
     print()
     print("Creating integrated order dataset...")
@@ -315,9 +315,9 @@ def main(
 
     save(output_dir, order_customer, "orders_integrated.csv")
 
-    # ==========================================================
-    # 6. Customer analytical summary (completed orders only)
-    # ==========================================================
+
+
+
 
     print()
     print("Creating customer analytics...")
@@ -370,9 +370,9 @@ def main(
 
     save(output_dir, customer_analytics, "customer_analytics.csv")
 
-    # ==========================================================
-    # 7. Menu item performance (completed orders only)
-    # ==========================================================
+
+
+
 
     print()
     print("Creating menu item performance...")
@@ -422,9 +422,9 @@ def main(
 
     save(output_dir, menu_sales, "menu_item_performance.csv")
 
-    # ==========================================================
-    # 8. Restaurant performance (completed orders only)
-    # ==========================================================
+
+
+
 
     print()
     print("Creating restaurant performance...")
@@ -451,9 +451,9 @@ def main(
 
     save(output_dir, restaurant_performance, "restaurant_performance.csv")
 
-    # ==========================================================
-    # 9. Daily / monthly sales analytics (completed only)
-    # ==========================================================
+
+
+
 
     print()
     print("Creating sales trend analytics...")
@@ -483,9 +483,9 @@ def main(
 
     save(output_dir, monthly_sales, "monthly_sales.csv")
 
-    # ==========================================================
-    # 10. Channel analytics (completed only)
-    # ==========================================================
+
+
+
 
     print()
     print("Creating channel analytics...")
@@ -503,9 +503,9 @@ def main(
 
     save(output_dir, channel_analysis, "channel_analysis.csv")
 
-    # ==========================================================
-    # 11. Weekend and peak-hour analytics (completed only)
-    # ==========================================================
+
+
+
 
     print()
     print("Creating time-pattern analytics...")
@@ -518,9 +518,9 @@ def main(
 
     save(output_dir, time_analysis, "time_pattern_analysis.csv")
 
-    # ==========================================================
-    # 12. Wastage analytics
-    # ==========================================================
+
+
+
 
     print()
     print("Processing wastage...")
@@ -559,9 +559,9 @@ def main(
 
     save(output_dir, wastage_item_analysis, "wastage_item_analysis.csv")
 
-    # ==========================================================
-    # 13. Ratings analytics
-    # ==========================================================
+
+
+
 
     print()
     print("Processing ratings...")
@@ -604,9 +604,9 @@ def main(
 
     save(output_dir, rating_item_analysis, "rating_item_analysis.csv")
 
-    # ==========================================================
-    # 14. Inventory analytics
-    # ==========================================================
+
+
+
 
     print()
     print("Processing inventory...")
@@ -638,9 +638,9 @@ def main(
 
     save(output_dir, inventory_enriched, "inventory_integrated.csv")
 
-    # ==========================================================
-    # 15. Price sensitivity preparation
-    # ==========================================================
+
+
+
 
     print()
     print("Creating pricing analytics...")
@@ -671,9 +671,9 @@ def main(
 
     save(output_dir, pricing, "pricing_analysis.csv")
 
-    # ==========================================================
-    # 16. Promotion usage summary
-    # ==========================================================
+
+
+
 
     print()
     print("Creating promotion usage summary...")
@@ -704,9 +704,9 @@ def main(
 
     save(output_dir, promotion_usage, "promotion_usage.csv")
 
-    # ==========================================================
-    # 17. Processing summary
-    # ==========================================================
+
+
+
 
     print()
     print("Creating processing summary...")

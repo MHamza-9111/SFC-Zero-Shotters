@@ -1,6 +1,6 @@
-/* ============================================================
-   DineIQ Dashboard — Overview view
-   ============================================================ */
+
+
+
 (function () {
     "use strict";
 
@@ -20,7 +20,7 @@
         return DQ.state.businessDate;
     }
 
-    /* ---------------- KPI row ---------------- */
+
     function kpiCard({ label, value, trendPct, trendSuffix, support, hero, icon: ic, tint, format }) {
         const trend = fmt.trend(trendPct, trendSuffix);
         const val = format === "money" ? fmt.money0(value)
@@ -83,7 +83,7 @@
                 }),
             ].join("");
 
-            // coverage note + scope labels
+
             const note = document.getElementById("coverage-note");
             if (note) note.textContent = ov.coverage_note || "";
             const foot = document.getElementById("foot-coverage");
@@ -101,14 +101,14 @@
         }
     }
 
-    /* ---------------- Service pulse ---------------- */
+
     function renderPulse(ov) {
         const wrap = document.getElementById("pulse-grid");
         const sub = document.getElementById("pulse-sub");
         const pulse = ov.service_pulse || {};
         const channels = pulse.channels || [];
         const colors = ["green", "blue", "amber", "rose"];
-        // Stable accent per channel (matches the reference's coloured pulse values).
+
         const CHANNEL_COLORS = { "Dine-in": "green", "Takeaway": "amber", "Website/App": "blue", "Third-party Delivery": "rose" };
         sub.textContent = `${fmt.num(pulse.orders)} order(s) · ${fmt.num(pulse.items_sold)} items sold`;
 
@@ -124,7 +124,7 @@
             </a>`).join("");
     }
 
-    /* ---------------- Quick access ---------------- */
+
     function renderQuick() {
         const tiles = [
             { label: "Orders", href: "/orders", ic: "receipt", cls: "rose" },
@@ -141,7 +141,7 @@
             </a>`).join("");
     }
 
-    /* ---------------- Recent orders ---------------- */
+
     function renderRecent(ov) {
         const list = document.getElementById("recent-orders");
         const sub = document.getElementById("recent-sub");
@@ -174,7 +174,7 @@
             btn.addEventListener("click", () => DQ.openOrder(btn.dataset.order)));
     }
 
-    /* ---------------- Payment methods ---------------- */
+
     const PAY_ICONS = { "Cash": "cash", "Card": "card", "Online Wallet": "phone", "Unspecified": "wallet" };
 
     function renderPayments(ov) {
@@ -202,7 +202,7 @@
         totalEl.textContent = fmt.money2(total);
     }
 
-    /* ---------------- Recent transactions ---------------- */
+
     function renderTx(ov) {
         const list = document.getElementById("tx-list");
         const sub = document.getElementById("tx-sub");
@@ -225,7 +225,7 @@
             </a>`).join("");
     }
 
-    /* ---------------- Top dishes / areas / categories ---------------- */
+
     function renderDishesLists(dishes) {
         const list = document.getElementById("dish-list");
         if (!dishes.length) {
@@ -278,7 +278,7 @@
             </div>`).join("");
     }
 
-    /* ---------------- Revenue chart ---------------- */
+
     async function loadRevenue() {
         const wrap = document.getElementById("rev-chart");
         const totalEl = document.getElementById("rev-total");
@@ -329,7 +329,7 @@
         }
     }
 
-    /* ---------------- Wiring ---------------- */
+
     function syncDateInputs() {
         ["asof-date", "settings-date"].forEach(id => {
             const el = document.getElementById(id);
@@ -368,7 +368,7 @@
 
             document.getElementById("recent-sort").addEventListener("change", (e) => {
                 state.recentSort = e.target.value;
-                loadKpis(); // cheap full reload keeps one code path
+                loadKpis();
             });
 
             document.getElementById("dishes-range").addEventListener("change", (e) => {

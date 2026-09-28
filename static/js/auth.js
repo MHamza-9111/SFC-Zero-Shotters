@@ -1,7 +1,7 @@
-/* ============================================================
-   DineIQ Auth — real signup/login against /api/v1/auth/*.
-   Handles validation, loading, errors, session redirect.
-   ============================================================ */
+
+
+
+
 (function () {
     "use strict";
 
@@ -14,7 +14,7 @@
     const endpoint = mode === "register" ? "/api/v1/auth/signup" : "/api/v1/auth/login";
     const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    /* ---------------- Theme toggle ---------------- */
+
     const themeBtn = document.getElementById("auth-theme-toggle");
     const themeIcon = document.getElementById("auth-theme-icon")?.querySelector("use");
     function paintTheme(theme) {
@@ -27,12 +27,12 @@
     if (themeBtn) {
         themeBtn.addEventListener("click", () => {
             const next = (document.documentElement.getAttribute("data-theme") === "dark") ? "light" : "dark";
-            try { localStorage.setItem("dq-theme", next); } catch (_) { /* keep in-memory theme */ }
+            try { localStorage.setItem("dq-theme", next); } catch (_) {  }
             paintTheme(next);
         });
     }
 
-    /* ---------------- Validation ---------------- */
+
     function showError(message) {
         if (errorNode) errorNode.textContent = message || "";
         if (message && errorNode) {
@@ -52,7 +52,7 @@
         return "";
     }
 
-    /* ---------------- Safe redirect ---------------- */
+
     function safeNext() {
         const raw = document.body.dataset.next || "/home";
         try {
@@ -64,7 +64,7 @@
         }
     }
 
-    /* ---------------- Submit ---------------- */
+
     let submitting = false;
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -73,7 +73,7 @@
 
         const values = Object.fromEntries(new FormData(form).entries());
         Object.keys(values).forEach((k) => { values[k] = String(values[k] || "").trim(); });
-        if (mode === "login") delete values.remember; // backend has no remember-me field
+        if (mode === "login") delete values.remember;
 
         const invalid = validate(values);
         if (invalid) {
@@ -102,7 +102,7 @@
                             : "Account request failed.");
                 throw new Error(detail);
             }
-            // Session cookie is set; move to the requested (same-origin) page.
+
             window.location.assign(safeNext());
         } catch (error) {
             showError(error.message || "Network error — check your connection and try again.");
@@ -112,6 +112,6 @@
             }
             submitting = false;
         }
-        // On success the page navigates away; the button stays disabled.
+
     });
 })();

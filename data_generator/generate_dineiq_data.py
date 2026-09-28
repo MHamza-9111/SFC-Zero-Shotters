@@ -46,9 +46,9 @@ BASE = Path(__file__).resolve().parents[1]
 CONFIG_PATH = BASE / "config" / "data_generation_config.yaml"
 
 
-# ============================================================
-# CONSTANTS
-# ============================================================
+
+
+
 
 CATEGORIES = [
     "Burgers",
@@ -100,8 +100,8 @@ RESTAURANT_TYPES = [
     "Family Restaurant",
 ]
 
-# Monthly demand seasonality (Jan..Dec).
-# Creates a real signal for the demand-forecasting requirement.
+
+
 MONTH_WEIGHTS = {
     1: 0.85,
     2: 0.90,
@@ -118,9 +118,9 @@ MONTH_WEIGHTS = {
 }
 
 
-# ============================================================
-# CONFIG
-# ============================================================
+
+
+
 
 def load_config(path: Path = CONFIG_PATH) -> dict:
     defaults = {
@@ -166,9 +166,9 @@ def load_config(path: Path = CONFIG_PATH) -> dict:
     return defaults
 
 
-# ============================================================
-# HELPERS
-# ============================================================
+
+
+
 
 def ensure_dirs(raw_dir: Path):
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -255,9 +255,9 @@ def realistic_order_time() -> str:
     return f"{hour:02d}:{minute:02d}:00"
 
 
-# ============================================================
-# LOCATIONS
-# ============================================================
+
+
+
 
 def make_locations(n=20):
     rows = []
@@ -292,9 +292,9 @@ def make_locations(n=20):
     return rows
 
 
-# ============================================================
-# RESTAURANTS
-# ============================================================
+
+
+
 
 def make_restaurants(n=20):
     rows = []
@@ -311,9 +311,9 @@ def make_restaurants(n=20):
     return rows
 
 
-# ============================================================
-# MENU CATEGORIES
-# ============================================================
+
+
+
 
 def make_categories():
     return [
@@ -325,36 +325,36 @@ def make_categories():
     ]
 
 
-# ============================================================
-# MENU ITEMS
-# ============================================================
+
+
+
 
 def make_menu_items(n=150, restaurants=20):
     rows = []
 
     category_prices = {
-        1: (450, 1200),    # Burgers
-        2: (700, 1800),    # Pizza
-        3: (350, 1000),    # Biryani
-        4: (300, 900),     # Rice
-        5: (600, 1800),    # BBQ
-        6: (500, 1400),    # Pasta
-        7: (400, 1100),    # Sandwiches
-        8: (250, 800),     # Desserts
-        9: (120, 500),     # Beverages
-        10: (250, 900),    # Salads
+        1: (450, 1200),
+        2: (700, 1800),
+        3: (350, 1000),
+        4: (300, 900),
+        5: (600, 1800),
+        6: (500, 1400),
+        7: (400, 1100),
+        8: (250, 800),
+        9: (120, 500),
+        10: (250, 900),
     }
 
     for i in range(1, n + 1):
         category_id = ((i - 1) % 10) + 1
-        # Deterministic spread: every restaurant owns a fair
-        # share of the menu (guarantees >= 6 items per restaurant).
+
+
         restaurant_id = ((i - 1) % restaurants) + 1
 
         low, high = category_prices[category_id]
         base_price = random.randint(low, high)
 
-        # Most items have normal margins.
+
         cost_ratio = random.uniform(0.35, 0.65)
 
         rows.append({
@@ -378,9 +378,9 @@ def make_menu_items(n=150, restaurants=20):
     return rows
 
 
-# ============================================================
-# CUSTOMERS
-# ============================================================
+
+
+
 
 def make_customers(n=50000, locations=20):
     rows = []
@@ -410,9 +410,9 @@ def make_customers(n=50000, locations=20):
     return rows
 
 
-# ============================================================
-# ORDER GENERATION
-# ============================================================
+
+
+
 
 def build_restaurant_item_index(items):
     """restaurant_id -> list of items (only that restaurant's menu)."""
@@ -453,14 +453,14 @@ def pick_promotion_for_order(
 
     promo = random.choice(eligible)
 
-    # Prefer a line that matches the promoted item exactly.
+
     chosen = None
     for idx, line in enumerate(basket):
         if line[0]["menu_item_id"] == promo["menu_item_id"]:
             chosen = idx
             break
 
-    # Then prefer a line in the promoted category.
+
     if chosen is None:
         category_lines = [
             idx for idx, line in enumerate(basket)
@@ -469,7 +469,7 @@ def pick_promotion_for_order(
         if category_lines:
             chosen = random.choice(category_lines)
 
-    # Otherwise any line qualifies (restaurant-level promo).
+
     if chosen is None:
         chosen = random.randrange(len(basket))
 
@@ -488,7 +488,7 @@ def make_orders_and_items(
 ):
     orders = []
     order_items = []
-    order_line_items = {}  # order_id -> list of menu_item_id
+    order_line_items = {}
 
     item_index = build_restaurant_item_index(items)
 
@@ -500,7 +500,7 @@ def make_orders_and_items(
 
     sample_day = build_day_sampler(start, end)
 
-    # Guarantee at least the requested number of order lines.
+
     remaining = max(0, min_items - n_orders)
 
     basket_extra = [remaining // n_orders] * n_orders
@@ -520,7 +520,7 @@ def make_orders_and_items(
 
         basket_size = 1 + basket_extra[oid - 1]
 
-        # IMPORTANT: only this restaurant's menu items are eligible.
+
         restaurant_items = item_index.get(restaurant["restaurant_id"], items)
         weights = [x["_popularity_weight"] for x in restaurant_items]
 
@@ -549,17 +549,17 @@ def make_orders_and_items(
                 quantity,
                 unit_price,
                 line_total,
-                0.0,  # line discount (promotion), filled below
+                0.0,
             ])
 
-        # Base order-level discount (loyalty / happy hour style).
+
         base_discount = round(
             subtotal
             * random.choice([0, 0, 0, 0, 0, 0, 0, 0.05, 0.05, 0.10, 0.10, 0.15]),
             2,
         )
 
-        # Optional promotion, linked consistently.
+
         promo, promo_line = pick_promotion_for_order(
             order_date,
             restaurant["restaurant_id"],
@@ -628,9 +628,9 @@ def make_orders_and_items(
     return orders, order_items, order_line_items
 
 
-# ============================================================
-# PRICING HISTORY
-# ============================================================
+
+
+
 
 def make_pricing(items):
     rows = []
@@ -669,9 +669,9 @@ def make_pricing(items):
     return rows
 
 
-# ============================================================
-# PROMOTIONS
-# ============================================================
+
+
+
 
 def make_promotions(items, restaurants, n=120):
     rows = []
@@ -680,7 +680,7 @@ def make_promotions(items, restaurants, n=120):
 
     for i in range(1, n + 1):
         restaurant = random.choice(restaurants)
-        # Promotion item must belong to the promotion's restaurant.
+
         restaurant_items = items_by_restaurant.get(
             restaurant["restaurant_id"]
         )
@@ -709,7 +709,7 @@ def make_promotions(items, restaurants, n=120):
             "usage_limit": random.choice([100, 500, 1000, 5000]),
         }
 
-        # Parsed dates for order-time eligibility checks.
+
         row["_start"] = date(
             2025, start_month, 1
         )
@@ -722,9 +722,9 @@ def make_promotions(items, restaurants, n=120):
     return rows
 
 
-# ============================================================
-# RATINGS
-# ============================================================
+
+
+
 
 def make_ratings(orders, order_line_items, items, n=100000):
     rows = []
@@ -739,7 +739,7 @@ def make_ratings(orders, order_line_items, items, n=100000):
         if not line_ids:
             continue
 
-        # The rated item must be one actually present in the order.
+
         menu_item_id = random.choice(line_ids)
         review_date = date.fromisoformat(order["order_date"])
         review_date = min(
@@ -772,9 +772,9 @@ def make_ratings(orders, order_line_items, items, n=100000):
     return rows
 
 
-# ============================================================
-# INVENTORY
-# ============================================================
+
+
+
 
 def make_inventory(items, n=50000):
     rows = []
@@ -823,9 +823,9 @@ def make_inventory(items, n=50000):
     return rows
 
 
-# ============================================================
-# WASTAGE
-# ============================================================
+
+
+
 
 def make_wastage(items, n=50000):
     rows = []
@@ -858,9 +858,9 @@ def make_wastage(items, n=50000):
     return rows
 
 
-# ============================================================
-# DATA QUALITY ISSUES (documented, small rates)
-# ============================================================
+
+
+
 
 def inject_data_quality_issues(
     customers,
@@ -878,7 +878,7 @@ def inject_data_quality_issues(
     and documented in CLEANING_DECISIONS.md.
     """
 
-    # ---- Missing values ------------------------------------
+
     missing_customer = max(1, int(len(customers) * quality["missing_value_rate"]))
     for _ in range(missing_customer):
         random.choice(customers)["email"] = ""
@@ -887,7 +887,7 @@ def inject_data_quality_issues(
     for _ in range(missing_payment):
         random.choice(orders)["payment_method"] = ""
 
-    # ---- Invalid transaction values -------------------------
+
     invalid_lines = max(1, int(len(order_items) * quality["invalid_value_rate"]))
     for _ in range(invalid_lines):
         line = random.choice(order_items)
@@ -896,12 +896,12 @@ def inject_data_quality_issues(
         else:
             line["line_total"] = -abs(float(line["line_total"]))
 
-    # ---- Duplicate customer records -------------------------
+
     duplicate_count = max(1, int(len(customers) * quality["duplicate_rate"]))
     for customer in random.sample(customers, min(duplicate_count, len(customers))):
         customers.append(customer.copy())
 
-    # ---- Price outlier order lines --------------------------
+
     outlier_lines = max(
         1, int(len(order_items) * quality["outlier_rate"] * 0.35)
     )
@@ -915,8 +915,8 @@ def inject_data_quality_issues(
             float(line["unit_price"]) * line["quantity"], 2
         )
 
-    # ---- Inconsistent order totals --------------------------
-    # Line total changed without updating the order header total.
+
+
     inconsistent_totals = max(1, int(len(orders) * 0.0005))
     lines_by_order = {}
     for line in order_items:
@@ -931,8 +931,8 @@ def inject_data_quality_issues(
         line = random.choice(lines)
         line["line_total"] = round(float(line["line_total"]) * 1.25, 2)
 
-    # ---- Business-duplicate order lines ---------------------
-    # Same item ordered twice inside one order (looks duplicated).
+
+
     duplicate_line_count = max(1, int(len(orders) * 0.002))
     for _ in range(duplicate_line_count):
         lines = random.choice(list(lines_by_order.values()))
@@ -949,20 +949,20 @@ def inject_data_quality_issues(
             "line_total": source["line_total"],
         })
 
-    # ---- Orphan ratings (item not in the order) -------------
+
     orphan_ratings = max(1, int(len(ratings) * 0.005))
     items_by_id = {item["menu_item_id"]: item for item in items}
 
     for rating in random.sample(ratings, min(orphan_ratings, len(ratings))):
-        # Pick an item that belongs to a DIFFERENT restaurant,
-        # which guarantees it cannot be in this order's basket.
+
+
         for _ in range(10):
             item = random.choice(items)
             if item["restaurant_id"] != rating["restaurant_id"]:
                 rating["menu_item_id"] = item["menu_item_id"]
                 break
 
-    # ---- Orders outside the analysis period -----------------
+
     out_of_period = max(1, int(len(orders) * 0.001))
     for order in random.sample(orders, min(out_of_period, len(orders))):
         order["order_date"] = (
@@ -971,9 +971,9 @@ def inject_data_quality_issues(
         )
 
 
-# ============================================================
-# MAIN
-# ============================================================
+
+
+
 
 def generate(raw_dir: Path | None = None, config_path: Path = CONFIG_PATH):
     """
@@ -1050,14 +1050,14 @@ def generate(raw_dir: Path | None = None, config_path: Path = CONFIG_PATH):
         quality,
     )
 
-    # Strip internal helper fields before writing.
+
     for promo in promotions:
         promo.pop("_start", None)
         promo.pop("_end", None)
 
-    # --------------------------------------------------------
-    # Write datasets
-    # --------------------------------------------------------
+
+
+
 
     write_csv(raw_dir / "locations.csv", locations, [
         "location_id", "city_area", "latitude", "longitude",

@@ -1,8 +1,8 @@
-/* ============================================================
-   DineIQ Dashboard — Handcrafted SVG Charts
-   Responsive (pixel-true, no text distortion), theme-aware,
-   gradient fills, refined typography, subtle motion.
-   ============================================================ */
+
+
+
+
+
 (function () {
     "use strict";
 
@@ -13,8 +13,8 @@
         return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     }
 
-    /* Resolve "var(--token)" strings (passed from view code) into real colors
-       so SVG presentation attributes receive valid paint values. */
+
+
     function resolveColor(color, fallback) {
         if (color === undefined || color === null || color === "") return fallback;
         const s = String(color).trim();
@@ -25,15 +25,15 @@
         return s;
     }
 
-    /* Content width of the chart host (excludes padding) so the SVG viewBox can
-       map 1:1 to CSS pixels — this prevents stretched labels and strokes. */
+
+
     function measureWidth(wrap, fallback) {
         try {
             const style = getComputedStyle(wrap);
             const pad = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
             const w = wrap.clientWidth - pad;
             if (w > 60) return Math.round(w);
-        } catch (_) { /* hidden or detached */ }
+        } catch (_) {  }
         return fallback;
     }
 
@@ -45,8 +45,8 @@
         return nf * exp;
     }
 
-    /* Choose a round axis maximum whose step size is also round, so gridline
-       labels land on clean numbers (0, 10, 20, 30 …) instead of 0, 17, 33, 50. */
+
+
     function niceScale(maxVal, target) {
         if (!(maxVal > 0)) return { max: 1, step: 1 };
         const raw = maxVal / target;
@@ -98,8 +98,8 @@
         return note;
     }
 
-    /* Position the tooltip relative to the chart host, accounting for the SVG's
-       offset inside the (padded) host box. svgX/svgY are viewBox units. */
+
+
     function placeTip(wrap, svg, tip, svgX, svgY) {
         const wrapRect = wrap.getBoundingClientRect();
         const svgRect = svg.getBoundingClientRect();
@@ -157,7 +157,7 @@
         return `<strong>Signal:</strong> peak at ${DQ.esc(peak.label)} · ${fmtValue(peak.value)}; latest is ${trend} ${delta >= 0 ? "+" : ""}${delta.toFixed(1)}% versus the first plotted point.`;
     }
 
-    /* Catmull-Rom → cubic bezier smoothing */
+
     function smoothPath(pts, tension) {
         if (pts.length < 2) return "";
         const t = tension === undefined ? 0.32 : tension;
@@ -206,7 +206,7 @@
         }
     };
 
-    // Auto re-render on resize (debounced)
+
     let resizeTimer;
     window.addEventListener("resize", () => {
         clearTimeout(resizeTimer);
@@ -215,7 +215,7 @@
         }, 120);
     });
 
-    /* Shared axis/grid renderer for cartesian charts. */
+
     function renderGrid(svg, { W, H, pad, yMax, steps, grid, text3, moneyFalse }) {
         for (let s = 0; s <= steps; s++) {
             const v = (yMax / steps) * s;
@@ -232,9 +232,9 @@
         }
     }
 
-    /* Decide which x-axis labels to show and whether they must rotate to avoid
-       overlap. Returns { idx, rotate }. plotW is independent of pad.b so this
-       runs before the plot height is finalised. */
+
+
+
     function xLabelPlan(points, plotW, W) {
         const n = points.length;
         const maxLabels = W < 460 ? 5 : (W < 680 ? 8 : 11);
@@ -249,7 +249,7 @@
     }
 
     function drawXLabels(svg, points, plan, pad, H, plotW, text3, xCenter) {
-        const right = pad.l + plotW; // plot's right edge (W - pad.r)
+        const right = pad.l + plotW;
         plan.idx.forEach(i => {
             const p = points[i];
             const label = String(p.label || "");
@@ -263,8 +263,8 @@
                 }, svg);
                 t.textContent = label;
             } else {
-                // Edge-anchor the first/last labels so they never collide with
-                // the y-axis gutter or spill past the plot's right edge.
+
+
                 const half = label.length * 3;
                 let anchor = "middle", x = cx;
                 if (cx - half < pad.l) { anchor = "start"; x = pad.l; }
@@ -278,7 +278,7 @@
         });
     }
 
-    /* ---------------- Area / Line Chart ---------------- */
+
     charts.areaLine = function (wrap, points, opts) {
         opts = opts || {};
         charts.store(wrap, { type: "area", points, opts });
@@ -326,7 +326,7 @@
         const xOf = i => pad.l + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1));
         const yOf = v => pad.t + plotH - (v / yMax) * plotH;
 
-        // Gradient definition for the area fill (premium fade)
+
         const defs = el("defs", {}, svg);
         const gid = gradId();
         const ag = el("linearGradient", { id: gid, x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
@@ -339,7 +339,7 @@
         const pts = points.map((p, i) => [xOf(i), yOf(+p.value || 0)]);
         const line = smoothPath(pts, opts.tension);
 
-        // Area fill
+
         let areaPath = null;
         if (pts.length > 1) {
             areaPath = el("path", {
@@ -348,7 +348,7 @@
             }, svg);
         }
 
-        // Soft glow underlay (wide, low-opacity stroke) — depth without a filter
+
         if (pts.length > 1) {
             el("path", {
                 d: line, fill: "none", stroke: accent,
@@ -356,14 +356,14 @@
             }, svg);
         }
 
-        // Main line
+
         const linePath = el("path", {
             d: line, fill: "none", stroke: accent,
             "stroke-width": 2.2, "stroke-linecap": "round", "stroke-linejoin": "round",
             style: `filter: drop-shadow(0 4px 8px ${accent});`
         }, svg);
 
-        // Entrance animation: draw the line, fade the area
+
         if (animate && pts.length > 1) {
             try {
                 const len = linePath.getTotalLength();
@@ -371,7 +371,7 @@
                 linePath.style.strokeDashoffset = `${len}`;
                 linePath.style.transition = "stroke-dashoffset 900ms cubic-bezier(0.16,1,0.3,1)";
                 nextFrame(() => { linePath.style.strokeDashoffset = "0"; });
-            } catch (_) { /* getTotalLength unsupported */ }
+            } catch (_) {  }
             if (areaPath) {
                 areaPath.style.opacity = "0";
                 areaPath.style.transition = "opacity 720ms ease 140ms";
@@ -379,7 +379,7 @@
             }
         }
 
-        // Hover interaction (guide line + focus dot — no static data dots)
+
         const tip = ensureTip(wrap);
         const hoverLine = el("line", {
             y1: pad.t, y2: H - pad.b, stroke: accent, "stroke-width": 1,
@@ -428,7 +428,7 @@
         ensureInsight(wrap, opts.insight || autoInsight(points, "area", opts));
     };
 
-    /* ---------------- Grouped Bars ---------------- */
+
     charts.bars = function (wrap, points, opts) {
         opts = opts || {};
         charts.store(wrap, { type: "bars", points, opts });
@@ -474,7 +474,7 @@
         const slot = plotW / points.length;
         const yOf = v => pad.t + plotH - (v / yMax) * plotH;
 
-        // Vertical gradients (top opaque → base softened)
+
         const defs = el("defs", {}, svg);
         const gid1 = gradId();
         const g1 = el("linearGradient", { id: gid1, x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
@@ -540,7 +540,7 @@
 
         drawXLabels(svg, points, plan, pad, H, plotW, text3, i => pad.l + slot * i + slot / 2);
 
-        // Legend
+
         if (opts.legend && opts.legend.length) {
             const g = el("g", {}, svg);
             const legGap = W < 460 ? 96 : 140;
@@ -557,7 +557,7 @@
         ensureInsight(wrap, opts.insight || autoInsight(points, "bars", opts));
     };
 
-    /* ---------------- Stacked Bars ---------------- */
+
     charts.stacked = function (wrap, points, opts) {
         opts = opts || {};
         charts.store(wrap, { type: "stacked", points, opts });
@@ -680,7 +680,7 @@
         ensureInsight(wrap, opts.insight || autoInsight(points, "stacked", opts));
     };
 
-    /* ---------------- Donut Chart ---------------- */
+
     charts.donut = function (wrap, segments, opts) {
         opts = opts || {};
         charts.store(wrap, { type: "donut", segments, opts });
@@ -743,7 +743,7 @@
                 style: `filter: drop-shadow(0 4px 12px ${color}); transition: transform 0.3s ease, filter 0.3s ease;`
             }, group);
 
-            // Hover: nudge the slice outward along its mid-angle
+
             const mid = (angle + a2) / 2;
             const popX = (Math.cos(mid) * 5).toFixed(2);
             const popY = (Math.sin(mid) * 5).toFixed(2);
@@ -772,7 +772,7 @@
             angle = a2;
         });
 
-        // Center label & value
+
         const center = el("text", {
             x: cx, y: cy - 4, "text-anchor": "middle",
             fill: cssVar("--text-3"), "font-size": "10.5", "font-weight": "600",

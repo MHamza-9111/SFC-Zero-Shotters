@@ -100,7 +100,7 @@ def _fk_checks(engine, data, report):
     """
     p = {name: engine.to_pandas(df) for name, df in data.items()}
 
-    # orders -> customers / restaurants / promotions
+
     o = p["orders"]
     _add(report, "orders", "fk_customer_id",
          int((~o["customer_id"].isin(set(p["customers"]["customer_id"]))).sum()),
@@ -114,7 +114,7 @@ def _fk_checks(engine, data, report):
          int((has_promo & ~o["promotion_id"].astype(str).isin(promo_ids)).sum()),
          "unknown promotion_id")
 
-    # order_items -> orders / menu + restaurant consistency
+
     oi = p["order_items"]
     _add(report, "order_items", "fk_order_id",
          int((~oi["order_id"].isin(set(o["order_id"]))).sum()), "unknown order_id")
@@ -128,7 +128,7 @@ def _fk_checks(engine, data, report):
          int((m["menu_item_id"].map(item_rest) != m["restaurant_id"]).sum()),
          "item not from the order's restaurant")
 
-    # ratings -> orders + customer match + item in order
+
     r = p["ratings"]
     _add(report, "ratings", "fk_order_id",
          int((~r["order_id"].isin(set(o["order_id"]))).sum()), "unknown order_id")
@@ -142,7 +142,7 @@ def _fk_checks(engine, data, report):
     _add(report, "ratings", "fk_item_in_order", orphan,
          "rated item not present in the order")
 
-    # menu_items -> restaurants / categories
+
     mi = p["menu_items"]
     _add(report, "menu_items", "fk_restaurant_id",
          int((~mi["restaurant_id"].isin(set(p["restaurants"]["restaurant_id"]))).sum()),
@@ -151,7 +151,7 @@ def _fk_checks(engine, data, report):
          int((~mi["category_id"].isin(set(p["menu_categories"]["category_id"]))).sum()),
          "unknown category_id")
 
-    # inventory / wastage -> item ownership
+
     for name in ("inventory", "wastage"):
         d = p[name]
         valid = set(zip(p["menu_items"]["menu_item_id"],
@@ -161,7 +161,7 @@ def _fk_checks(engine, data, report):
         _add(report, name, "fk_restaurant_item_pair", bad,
              "item not owned by the restaurant")
 
-    # pricing_history -> menu
+
     ph = p["pricing_history"]
     _add(report, "pricing_history", "fk_menu_item_id",
          int((~ph["menu_item_id"].isin(set(p["menu_items"]["menu_item_id"]))).sum()),
@@ -187,7 +187,7 @@ def _schema_inference_drift(engine, name, explicit_df, raw_path, report):
         _add(report, name, "inferred_schema_extra_columns",
              len(inf_cols - exp_cols),
              f"columns: {sorted(inf_cols - exp_cols)}")
-    except Exception as exc:  # pragma: no cover
+    except Exception as exc:
         _add(report, name, "inferred_schema_error", 1, str(exc)[:200])
 
 
@@ -216,7 +216,7 @@ def run(engine, raw_dir: Path, parquet_dir: Path, reports_dir: Path,
     print(f"output : {parquet_dir} (partitioned Parquet)")
     print("=" * 70)
 
-    # -- explicit-schema ingestion --------------------------------
+
     for name in DATASETS:
         path = raw_dir / f"{name}.csv"
         if not path.exists():
@@ -228,12 +228,12 @@ def run(engine, raw_dir: Path, parquet_dir: Path, reports_dir: Path,
         _schema_inference_drift(engine, name, df, path, report)
         print(f"  ingested {name}: {engine.to_pandas(df).shape[0]:,} rows")
 
-    # -- primary-key + range validation ---------------------------
+
     for name, df in data.items():
         _pk_checks(engine, df, name, report)
         _range_checks(engine, name, df, report)
 
-    # -- foreign-key validation ------------------------------------
+
     _fk_checks(engine, data, report)
 
     report_df = pd.DataFrame(report)
@@ -258,7 +258,7 @@ def run(engine, raw_dir: Path, parquet_dir: Path, reports_dir: Path,
     else:
         print("All checks passed - the cleaned layer is relationship-consistent.")
 
-    # -- write validated Parquet (partitioned) ----------------------
+
     for name, df in data.items():
         partition = PARTITION_BY.get(name)
         if partition == "order_month" and engine.kind == "pandas":

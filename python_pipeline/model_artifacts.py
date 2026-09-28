@@ -37,7 +37,7 @@ import pandas as pd
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE))
 
-from spark_jobs.features import (  # noqa: E402
+from spark_jobs.features import (
     CHURN_FEATURES,
     MENU_FEATURES,
     ORDER_FEATURES,
@@ -153,10 +153,10 @@ def main() -> dict:
     churn_cases = pd.read_csv(CASES_DIR / "churn_unseen_cases.csv")
     menu_cases = pd.read_csv(CASES_DIR / "menu_class_unseen_cases.csv")
 
-    # ---- high-value order classifier --------------------------------
-    # The day_of_week_code mapping is recovered from the committed case
-    # file so it is identical to the one the original Python run used
-    # (factorize codes are appearance-order dependent).
+
+
+
+
     from spark_jobs.features import _day_code_map_from_cases
     day_map = _day_code_map_from_cases(
         CASES_DIR / "order_value_unseen_cases.csv")
@@ -176,7 +176,7 @@ def main() -> dict:
     print(f"  high_value_order -> {vdir}")
     _verify_order_value(clf, vdir)
 
-    # ---- churn classifier --------------------------------------------
+
     cf = build_churn_frame(frames)
     train = cf.loc[~cf["customer_id"].isin(set(churn_cases["customer_id"]))]
     lr = make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000, random_state=RANDOM_STATE))
@@ -189,7 +189,7 @@ def main() -> dict:
     print(f"  customer_churn   -> {vdir}")
     _verify_churn(lr, vdir)
 
-    # ---- menu business-class classifier -----------------------------
+
     menu = build_menu_frame(frames)
     excluded_cells = set(zip(menu_cases["menu_item_id"],
                              menu_cases["restaurant_id"]))

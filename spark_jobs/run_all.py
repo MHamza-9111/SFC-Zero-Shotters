@@ -30,10 +30,10 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
 
-from . import (dual_pipeline_compare, ensemble_latency, ingest_validate,  # noqa: E402
+from . import (dual_pipeline_compare, ensemble_latency, ingest_validate,
                mllib_models, spark_sql)
-from .engines import get_engine  # noqa: E402
-from .schemas import DATASETS  # noqa: E402
+from .engines import get_engine
+from .schemas import DATASETS
 
 
 def _load_all(engine, processed_dir: Path) -> dict:
@@ -98,7 +98,7 @@ def main(argv=None) -> int:
             print("\nNFR FAILED - see latency report")
             return 2
 
-    if engine.kind == "spark":  # pragma: no cover - spark path
+    if engine.kind == "spark":
         engine.stop()
     print("\nBig Data pipeline complete.")
     return 0

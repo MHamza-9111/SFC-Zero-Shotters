@@ -36,7 +36,7 @@ from .schemas import ANALYSIS_END
 
 PERIOD_END = pd.Timestamp(ANALYSIS_END)
 
-# Evidence copies are capped so the committed repo stays small.
+
 EVIDENCE_ROW_CAP = {
     "orders_enriched": 2000,
     "order_item_revenue": 2000,
@@ -45,9 +45,9 @@ EVIDENCE_ROW_CAP = {
 }
 
 
-# ---------------------------------------------------------------------------
-# Spark SQL (production path)
-# ---------------------------------------------------------------------------
+
+
+
 
 VIEW_ORDERS_ENRICHED = """
 CREATE OR REPLACE VIEW orders_enriched AS
@@ -254,9 +254,9 @@ ORDER BY days_since DESC
 }
 
 
-# ---------------------------------------------------------------------------
-# pandas equivalents (documented fallback engine)
-# ---------------------------------------------------------------------------
+
+
+
 
 def _pandas_outputs(engine, data) -> dict:
     p = {n: engine.to_pandas(df) for n, df in data.items()}
@@ -264,7 +264,7 @@ def _pandas_outputs(engine, data) -> dict:
     o = p["orders"]
     comp = o[o["order_status"].astype(str).str.strip().str.upper() == "COMPLETED"].copy()
 
-    # -- orders_enriched ------------------------------------------------
+
     oe = comp.merge(
         p["restaurants"][["restaurant_id", "restaurant_name", "restaurant_type", "location_id"]],
         on="restaurant_id")
@@ -300,7 +300,7 @@ def _pandas_outputs(engine, data) -> dict:
                         "promotion_name", "promotion_type"] if c in oe]
     out["orders_enriched"] = oe[cols].reset_index(drop=True)
 
-    # -- order_item_revenue ---------------------------------------------
+
     oi = p["order_items"].merge(
         p["menu_items"][["menu_item_id", "item_name", "category_id",
                          "base_price", "cost_price"]],
@@ -315,7 +315,7 @@ def _pandas_outputs(engine, data) -> dict:
     oir = oir.rename(columns={"discount_amount": "line_discount"})
     out["order_item_revenue"] = oir
 
-    # -- monthly_revenue --------------------------------------------------
+
     rl = p["restaurants"][["restaurant_id", "location_id"]].merge(
         p["locations"][["location_id", "city_area"]], on="location_id")
     mr = oir.merge(rl, on="restaurant_id", how="left")
@@ -325,7 +325,7 @@ def _pandas_outputs(engine, data) -> dict:
           .agg(orders=("order_id", "nunique"), revenue=("net_revenue", "sum"))
           .sort_values(["month", "city_area"]).reset_index(drop=True))
 
-    # -- category_revenue_share -------------------------------------------
+
     cat = oir.groupby("category_id").agg(revenue=("net_revenue", "sum")).reset_index()
     cat["share"] = cat["revenue"] / cat["revenue"].sum()
     out["category_revenue_share"] = (
@@ -333,14 +333,14 @@ def _pandas_outputs(engine, data) -> dict:
                   on="category_id")
             .sort_values("revenue", ascending=False).reset_index(drop=True))
 
-    # -- channel_monthly ----------------------------------------------------
+
     out["channel_monthly"] = (
         comp.assign(month=comp["order_date"].astype(str).str[:7])
             .groupby(["month", "order_channel"], as_index=False)
             .agg(orders=("order_id", "count"), revenue=("total_amount", "sum"))
             .sort_values(["month", "order_channel"]).reset_index(drop=True))
 
-    # -- peak_hours -----------------------------------------------------------
+
     dh = comp.assign(dow=pd.to_datetime(comp["order_date"]).dt.dayofweek,
                      hour=comp["order_time"].astype(str).str[:2].astype(int))
     dh["day_type"] = np.where(dh["dow"] >= 5, "weekend", "weekday")
@@ -349,10 +349,10 @@ def _pandas_outputs(engine, data) -> dict:
           .agg(orders=("order_id", "count"))
           .sort_values(["hour", "day_type"]).reset_index(drop=True))
 
-    # -- top_item_combos (completed orders, pair lift) -----------------------
-    # lift is measured WITHIN the pair's restaurant (an order never mixes
-    # restaurants); chain_lift (vs all chain orders) is ~20x inflated by
-    # co-location alone and is kept only for transparency.
+
+
+
+
     line_rest = oir.groupby("order_id")["restaurant_id"].first()
     line = oir.groupby("order_id")["menu_item_id"].apply(
         lambda s: tuple(sorted(set(s))))
@@ -385,9 +385,9 @@ def _pandas_outputs(engine, data) -> dict:
                               .sort_values("lift", ascending=False)
                               .head(25).reset_index(drop=True))
 
-    # -- promo_effectiveness (mirrors the Python pipeline design:
-    #      promo-tagged vs control orders within the promo's own
-    #      restaurant during the active window) ----------------------
+
+
+
     comp2 = comp.assign(promo_clean=comp["promotion_id"],
                         _od=pd.to_datetime(comp["order_date"]))
     prows = []
@@ -434,7 +434,7 @@ def _pandas_outputs(engine, data) -> dict:
         .sort_values("incremental_revenue_estimate", ascending=False)
         .reset_index(drop=True))
 
-    # -- location_ranking -------------------------------------------------------
+
     lc = comp.merge(p["restaurants"][["restaurant_id", "location_id"]],
                     on="restaurant_id")
     lc = lc.merge(p["locations"][["location_id", "city_area"]],
@@ -446,7 +446,7 @@ def _pandas_outputs(engine, data) -> dict:
                avg_order_value=("total_amount", "mean"))
           .sort_values("revenue", ascending=False).reset_index(drop=True))
 
-    # -- churn_candidates ---------------------------------------------------------
+
     last = o.groupby("customer_id")["order_date"].max().reset_index()
     last = last.rename(columns={"order_date": "last_order_date"})
     last["days_since"] = (PERIOD_END - pd.to_datetime(last["last_order_date"])).dt.days

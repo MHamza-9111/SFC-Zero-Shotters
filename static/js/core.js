@@ -1,6 +1,6 @@
-/* ============================================================
-   DineIQ Dashboard — core: API client, formatters, UI kit, store
-   ============================================================ */
+
+
+
 (function () {
     "use strict";
 
@@ -17,7 +17,7 @@
         views: {},
         state: {
             meta: null,
-            businessDate: null,      // 'YYYY-MM-DD' operating date
+            businessDate: null,
             minDate: null,
             maxDate: null,
             locationId: "all",
@@ -35,7 +35,7 @@
         return { "X-CSRF-Token": csrfToken };
     }
 
-    /* ---------------- API ---------------- */
+
     DQ.api = {
         async get(path, params) {
             const url = new URL(path, window.location.origin);
@@ -52,7 +52,7 @@
                 try {
                     const body = await res.json();
                     if (body && (body.message || body.error)) detail = body.message || body.error;
-                } catch (_) { /* not JSON */ }
+                } catch (_) {  }
                 const err = new Error(detail);
                 err.status = res.status;
                 throw err;
@@ -111,7 +111,7 @@
         },
     };
 
-    /* ---------------- Formatters ---------------- */
+
     const moneySymbol = "Rs.";
     DQ.fmt = {
         money(v, opts) {
@@ -182,7 +182,7 @@
         },
     };
 
-    /* ---------------- HTML helpers ---------------- */
+
     DQ.esc = function (s) {
         return String(s === null || s === undefined ? "" : s)
             .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -204,7 +204,6 @@
         return DQ.badge(status || "Unknown", "gray");
     };
 
-    /* Category-derived color for dish thumbnails (deterministic). */
     const DISH_COLORS = ["#f43f5e", "#3b82f6", "#22c55e", "#f59e0b", "#a855f7", "#06b6d4", "#ef4444", "#14b8a6"];
     DQ.dishColor = function (key) {
         const s = String(key || "");
@@ -217,7 +216,6 @@
         return s.slice(0, 2).toUpperCase() || "?";
     };
 
-    /* ---------------- States ---------------- */
     DQ.skeleton = function (rows) {
         let out = "";
         for (let i = 0; i < (rows || 4); i++) out += `<div class="skeleton sk-line" style="width:${85 - i * 7}%"></div>`;
@@ -243,12 +241,10 @@
         </div>`;
     };
 
-    /* Fill a container while loading */
     DQ.setLoading = function (el, rows) {
         if (el) el.innerHTML = DQ.skeleton(rows || 4);
     };
 
-    /* ---------------- Pager ---------------- */
     DQ.renderPager = function (el, info, onGo) {
         if (!el) return;
         if (!info || info.total === 0) { el.innerHTML = ""; return; }
@@ -263,7 +259,6 @@
         });
     };
 
-    /* ---------------- Dropdown manager ---------------- */
     const openPanels = new Set();
     DQ.closeAllPanels = function (except) {
         openPanels.forEach(p => {
@@ -301,13 +296,11 @@
         }
     });
 
-    /* Hard-hide overlays on boot: inline styles beat any stale cached CSS. */
     ["modal-order", "modal-info"].forEach((id) => {
         const m = document.getElementById(id);
         if (m) { m.hidden = true; m.style.display = "none"; }
     });
 
-    /* ---------------- Modals ---------------- */
     DQ.openModal = function (id) {
         const m = document.getElementById(id);
         if (m) { m.hidden = false; m.style.display = "flex"; document.body.style.overflow = "hidden"; }
@@ -322,7 +315,6 @@
         DQ.openModal("modal-info");
     };
 
-    /* ---------------- Toasts ---------------- */
     DQ.toast = function (message, kind) {
         const wrap = document.getElementById("toast-wrap");
         const t = document.createElement("div");
@@ -332,12 +324,10 @@
         setTimeout(() => t.remove(), 3800);
     };
 
-    /* ---------------- Query params ---------------- */
     DQ.queryParam = function (name) {
         return new URLSearchParams(window.location.search).get(name);
     };
 
-    /* ---------------- View registry ---------------- */
     DQ.registerView = function (name, init, refresh) {
         DQ.views[name] = { init, refresh, initialized: false };
     };

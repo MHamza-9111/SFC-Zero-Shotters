@@ -5,22 +5,22 @@ import pandas as pd
 import numpy as np
 import yaml
 
-# ============================================================
-# DineIQ Analytics - Data Cleaning Pipeline
-# ============================================================
-# Purpose:
-#   1. Preserve raw data
-#   2. Clean valid records
-#   3. Quarantine invalid/problematic records
-#   4. Remove duplicate records where appropriate
-#   5. Standardize dates and numeric fields
-#   6. Validate primary-key and foreign-key relationships
-#      across datasets (SRS requirement)
-#   7. Produce processed CSV files
-#   8. Generate cleaning reports
-#
-# Academic / SRS-aligned implementation.
-# ============================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 BASE = Path(__file__).resolve().parents[2]
 CONFIG_PATH = BASE / "config" / "data_generation_config.yaml"
@@ -101,9 +101,9 @@ NUMERIC_COLUMNS = {
 }
 
 
-# ------------------------------------------------------------
-# Config
-# ------------------------------------------------------------
+
+
+
 
 def load_config(path: Path = CONFIG_PATH) -> dict:
     defaults = {
@@ -127,10 +127,10 @@ def load_config(path: Path = CONFIG_PATH) -> dict:
     return defaults
 
 
-# ------------------------------------------------------------
-# Cleaning context (holds cleaned tables in memory so later
-# tables can be validated against earlier ones)
-# ------------------------------------------------------------
+
+
+
+
 
 class CleaningContext:
     def __init__(self, raw_dir, processed_dir, reports_dir,
@@ -149,7 +149,7 @@ class CleaningContext:
         self.reports_dir.mkdir(parents=True, exist_ok=True)
         self.quarantine_dir.mkdir(parents=True, exist_ok=True)
 
-    # -- logging ------------------------------------------------
+
     def log(self, dataset, action, affected_rows, reason):
         self.log_rows.append({
             "run_time": self.run_time,
@@ -162,7 +162,7 @@ class CleaningContext:
     def fk_check(self, dataset, name, affected_rows, reason):
         self.log(dataset, f"fk_validation_{name}", affected_rows, reason)
 
-    # -- quarantine / output ------------------------------------
+
     def save_quarantine(self, dataset, df, reason_column="quarantine_reason"):
         if df.empty:
             return
@@ -194,9 +194,9 @@ class CleaningContext:
         return output_path
 
 
-# ------------------------------------------------------------
-# Standardization helpers
-# ------------------------------------------------------------
+
+
+
 
 def standardize_dates(df, columns):
     for column in columns:
@@ -246,9 +246,9 @@ def report(ctx, dataset, before, df, extra=""):
     print(f"  Output rows: {len(df):,}")
 
 
-# ============================================================
-# 1. LOCATIONS
-# ============================================================
+
+
+
 
 def clean_locations(ctx):
     dataset = "locations.csv"
@@ -287,9 +287,9 @@ def clean_locations(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# 2. RESTAURANTS
-# ============================================================
+
+
+
 
 def clean_restaurants(ctx):
     dataset = "restaurants.csv"
@@ -328,9 +328,9 @@ def clean_restaurants(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# 3. MENU CATEGORIES
-# ============================================================
+
+
+
 
 def clean_categories(ctx):
     dataset = "menu_categories.csv"
@@ -358,9 +358,9 @@ def clean_categories(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# 4. MENU ITEMS
-# ============================================================
+
+
+
 
 def clean_menu_items(ctx):
     dataset = "menu_items.csv"
@@ -426,9 +426,9 @@ def clean_menu_items(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# 5. CUSTOMERS
-# ============================================================
+
+
+
 
 def clean_customers(ctx):
     dataset = "customers.csv"
@@ -486,9 +486,9 @@ def clean_customers(ctx):
     )
 
 
-# ============================================================
-# 6. ORDERS
-# ============================================================
+
+
+
 
 def clean_orders(ctx):
     dataset = "orders.csv"
@@ -508,9 +508,9 @@ def clean_orders(ctx):
 
     df["payment_method"] = df["payment_method"].fillna("").astype(str).str.strip()
     if "promotion_id" in df.columns:
-        # The column is read as float64 when some orders have no
-        # promotion (empty -> NaN). Convert to a clean integer string
-        # ("56", not "56.0") or "" so downstream string joins work.
+
+
+
         df["promotion_id"] = df["promotion_id"].apply(
             lambda x: "" if pd.isna(x) else str(int(x))
         )
@@ -524,7 +524,7 @@ def clean_orders(ctx):
             "Missing payment method retained as blank; value was not guessed.",
         )
 
-    # Financial values cannot be negative.
+
     financial_invalid = (
         (df["subtotal"] < 0)
         | (df["discount_amount"] < 0)
@@ -533,7 +533,7 @@ def clean_orders(ctx):
         | (df["total_amount"] < 0)
     )
 
-    # Check total calculation with small rounding tolerance.
+
     expected_total = (
         df["subtotal"]
         - df["discount_amount"]
@@ -550,7 +550,7 @@ def clean_orders(ctx):
             "Order total differs from calculated total; original value preserved for review.",
         )
 
-    # ---- Foreign key validation --------------------------------
+
     customers = ctx.cleaned.get("customers.csv")
     restaurants = ctx.cleaned.get("restaurants.csv")
     promotions = ctx.cleaned.get("promotions.csv")
@@ -596,10 +596,10 @@ def clean_orders(ctx):
             "Orders with a promotion must reference a known promotion.",
         )
 
-    # Promotion business logic: the referenced promotion should be
-    # active on the order date at the order's restaurant. Violations
-    # are documented (not quarantined) because the order itself is
-    # still a valid transaction.
+
+
+
+
     if promotions is not None and "promotion_id" in df.columns:
         promo_info = promotions.set_index(
             promotions["promotion_id"].astype(str)
@@ -631,7 +631,7 @@ def clean_orders(ctx):
                 "Promotion not active for the order date/restaurant; order kept, flagged for review.",
             )
 
-    # ---- Analysis period validation ----------------------------
+
     parsed = pd.to_datetime(df["order_date"], errors="coerce")
     out_of_period = parsed.isna() | (
         (parsed < ctx.start_date) | (parsed > ctx.end_date)
@@ -680,9 +680,9 @@ def clean_orders(ctx):
     )
 
 
-# ============================================================
-# 7. ORDER ITEMS
-# ============================================================
+
+
+
 
 def clean_order_items(ctx):
     dataset = "order_items.csv"
@@ -701,7 +701,7 @@ def clean_order_items(ctx):
     orders = ctx.cleaned.get("orders.csv")
     menu = ctx.cleaned.get("menu_items.csv")
 
-    # ---- Foreign key validation --------------------------------
+
     if orders is not None:
         orphan = ~df["order_id"].isin(orders["order_id"].dropna())
         if orphan.sum() > 0:
@@ -726,8 +726,8 @@ def clean_order_items(ctx):
             "Order items must reference a known menu item.",
         )
 
-    # Restaurant/menu consistency: the item must belong to the
-    # order's restaurant. Prevents location-level misattribution.
+
+
     if orders is not None and menu is not None:
         order_rest = orders.set_index("order_id")["restaurant_id"]
         item_rest = menu.set_index("menu_item_id")["restaurant_id"]
@@ -754,10 +754,10 @@ def clean_order_items(ctx):
             "Order items must come from the order's own restaurant menu.",
         )
 
-    # Potential business duplicates: exact repeat of every field in
-    # the same order (e.g. a double-entered line). Natural repeat
-    # purchases (same item, same quantity, different price draw)
-    # are NOT treated as duplicates.
+
+
+
+
     dup_lines = df.duplicated(
         subset=[
             "order_id",
@@ -804,9 +804,9 @@ def clean_order_items(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# 8. PRICING HISTORY
-# ============================================================
+
+
+
 
 def clean_pricing_history(ctx):
     dataset = "pricing_history.csv"
@@ -853,9 +853,9 @@ def clean_pricing_history(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# 9. PROMOTIONS
-# ============================================================
+
+
+
 
 def clean_promotions(ctx):
     dataset = "promotions.csv"
@@ -924,9 +924,9 @@ def clean_promotions(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# 10. RATINGS
-# ============================================================
+
+
+
 
 def clean_ratings(ctx):
     dataset = "ratings.csv"
@@ -941,7 +941,7 @@ def clean_ratings(ctx):
     orders = ctx.cleaned.get("orders.csv")
     order_items = ctx.cleaned.get("order_items.csv")
 
-    # ---- Foreign key validation --------------------------------
+
     if orders is not None:
         order_customer = orders.set_index("order_id")["customer_id"]
 
@@ -956,7 +956,7 @@ def clean_ratings(ctx):
             "Ratings must reference a known order.",
         )
 
-        # The rater must be the customer of the rated order.
+
         expected_customer = df["order_id"].map(order_customer)
         customer_mismatch = (
             expected_customer.notna()
@@ -977,7 +977,7 @@ def clean_ratings(ctx):
             "Ratings must come from the customer of the rated order.",
         )
 
-    # The rated item must actually appear in the rated order.
+
     if order_items is not None:
         order_line_items = order_items.groupby("order_id")["menu_item_id"].agg(
             set
@@ -1030,9 +1030,9 @@ def clean_ratings(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# 11. INVENTORY
-# ============================================================
+
+
+
 
 def clean_inventory(ctx):
     dataset = "inventory.csv"
@@ -1122,9 +1122,9 @@ def clean_inventory(ctx):
     )
 
 
-# ============================================================
-# 12. WASTAGE
-# ============================================================
+
+
+
 
 def clean_wastage(ctx):
     dataset = "wastage.csv"
@@ -1178,9 +1178,9 @@ def clean_wastage(ctx):
     report(ctx, dataset, before, df)
 
 
-# ============================================================
-# Main
-# ============================================================
+
+
+
 
 def main(
     raw_dir=None,
@@ -1220,7 +1220,7 @@ def main(
     print(f"Quarantine     : {ctx.quarantine_dir}")
     print()
 
-    # Clean in dependency-friendly order.
+
     clean_locations(ctx)
     clean_restaurants(ctx)
     clean_categories(ctx)
@@ -1234,17 +1234,17 @@ def main(
     clean_inventory(ctx)
     clean_wastage(ctx)
 
-    # --------------------------------------------------------
-    # Save cleaning log
-    # --------------------------------------------------------
+
+
+
 
     log_df = pd.DataFrame(ctx.log_rows)
     log_path = ctx.reports_dir / "cleaning_log.csv"
     log_df.to_csv(log_path, index=False)
 
-    # --------------------------------------------------------
-    # Create final dataset summary
-    # --------------------------------------------------------
+
+
+
 
     summary_rows = []
 

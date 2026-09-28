@@ -127,7 +127,7 @@ def _audit(action: str, *, record_count: int | None = None,
         con.commit()
         con.close()
     except sqlite3.Error:
-        # Audit database failures are logged without exposing request payloads.
+
         LOGGER.exception("Could not persist audit event %s", action)
 
 
@@ -267,7 +267,7 @@ def auth_signup():
             or not brand or len(brand) > 120):
         return _error("INVALID_REQUEST", "Enter a valid name, work email, brand, and password of at least 12 characters.", 400)
 
-    # Public self-registration cannot choose a privileged role.
+
     name, role = f"{first} {last}", "Data Analyst"
     salt = secrets.token_hex(24)
     con = _auth_db()
@@ -587,7 +587,7 @@ def get_menu_intelligence():
 
 
 def _read_analytics_csv(name: str, limit: int = 1000) -> list[dict]:
-    # `name` comes only from route-owned constants, never from a request path.
+
     path = BASE_DIR / "processed_data" / "analytics" / name
     if not path.is_file():
         return []
@@ -636,7 +636,7 @@ def get_anomalies():
     all_rows = _read_analytics_csv("anomaly_detection.csv", 5000)
     ratings = [row for row in all_rows if str(row.get("anomaly_type", "")).startswith("rating_")]
     sales = [row for row in all_rows if not str(row.get("anomaly_type", "")).startswith("rating_")]
-    # Preserve the overall limit while making both anomaly families visible.
+
     sales = sales[:limit]
     ratings = ratings[:limit]
     return jsonify({"sales": sales, "ratings": ratings,
@@ -784,12 +784,12 @@ def what_if():
         revenue_factor = demand_factor
         contribution_factor = demand_factor
     elif scenario == "price_change":
-        # Without causal elasticity evidence, hold demand constant and expose
-        # that assumption instead of inventing a demand response.
+
+
         revenue_factor = 1.0 + rate
         contribution_factor = (base_revenue * revenue_factor - (base_revenue - base_contribution)) / max(base_contribution, 1e-9)
         demand_factor = 1.0
-    else:  # discount change
+    else:
         revenue_factor = max(0.0, 1.0 - rate)
         contribution_factor = (base_revenue * revenue_factor - (base_revenue - base_contribution)) / max(base_contribution, 1e-9)
         demand_factor = 1.0
@@ -800,7 +800,7 @@ def what_if():
         "demand_units": round(base_units * demand_factor, 2),
     }
     if scenario == "wastage_change":
-        # Positive change means more wastage; negative change means a reduction.
+
         estimated["revenue"] = round(base_revenue, 2)
         estimated["contribution"] = round(base_contribution - base_waste_cost * rate, 2)
         estimated["demand_units"] = round(base_units, 2)

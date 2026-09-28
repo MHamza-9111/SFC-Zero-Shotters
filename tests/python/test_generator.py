@@ -23,7 +23,7 @@ def _read(raw: Path, name: str) -> pd.DataFrame:
 
 def test_scale_minimums_met(pipeline):
     counts = pipeline["counts"]
-    cfg = pipeline  # medium scale
+    cfg = pipeline
     assert counts["orders"] >= 20000
     assert counts["order_items"] >= 200000
     assert counts["customers"] >= 8000
@@ -100,13 +100,13 @@ def test_ratings_reference_items_in_their_order(pipeline):
         if r.menu_item_id not in allowed:
             orphan += 1
 
-    # Orphan ratings are an intentionally injected quality issue, so
-    # the count must be small (a documented rate), not systematic.
+
+
     assert orphan < len(ra) * 0.05, (
         f"{orphan}/{len(ra)} ratings do not reference an item in the "
         f"order (only a small injected fraction is expected)"
     )
-    # And the injected issue must actually be present.
+
     assert orphan > 0, "Injected orphan ratings are missing"
 
 
@@ -138,21 +138,21 @@ def test_injected_quality_issues_present(pipeline):
     od = _read(raw, "orders.csv")
     oi = _read(raw, "order_items.csv")
 
-    # Missing emails injected.
+
     missing_email = cu["email"].isna().sum() + (
         cu["email"].fillna("").astype(str).str.strip() == ""
     ).sum()
     assert missing_email > 0, "No missing-email customers injected"
 
-    # Duplicate customer records injected.
+
     dup_customers = cu["customer_id"].duplicated().sum()
     assert dup_customers > 0, "No duplicate customer records injected"
 
-    # Out-of-period orders injected.
+
     out_of_period = ~od["order_date"].astype(str).between("2025-01-01", "2025-12-31")
     assert out_of_period.sum() > 0, "No out-of-period orders injected"
 
-    # Invalid order lines injected (zero qty or negative total).
+
     qty = pd.to_numeric(oi["quantity"], errors="coerce")
     total = pd.to_numeric(oi["line_total"], errors="coerce")
     invalid_lines = ((qty <= 0) | (total < 0)).sum()

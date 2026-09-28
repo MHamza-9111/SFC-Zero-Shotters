@@ -1,25 +1,25 @@
-/* ==========================================================================
-   DineIQ Analytics — Responsive layouts
-   Breakpoints: 1440 · 1280 · 1080 · 1024 · 900 · 768 · 680 · 560 · 440 · 360
-   ========================================================================== */
 
-/* ---------------------------- Large desktop (max 1440) ------------------- */
+
+
+
+
+
 @media (max-width: 1440px) {
   .content { padding: 24px 22px 36px; }
   .search-wrap { width: min(260px, 22vw); }
 }
 
-/* ---------------------------- Desktop (max 1280) ------------------------ */
+
 @media (max-width: 1280px) {
   .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .topbar-title h1 { max-width: 26vw; }
 }
 
-/* ---------------------------- Small laptop (max 1080) ------------------- */
+
 @media (max-width: 1080px) {
   .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-  /* Sidebar becomes an off-canvas drawer */
+
   .sidebar {
     position: fixed;
     top: 0; left: 0; bottom: 0;
@@ -38,20 +38,20 @@
   .topbar-title h1 { max-width: 40vw; }
 }
 
-/* ---------------------------- Tablet (max 1024) ------------------------- */
+
 @media (max-width: 1024px) {
   .content { padding: 20px 18px 32px; }
   .g4, .g3, .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kpi-grid.g4 .kpi { min-height: 0; }
 
-  /* Two-column dashboards keep pairs; asymmetric overview rows stack. */
+
   #view-overview .dashboard-grid > * { grid-column: auto / -1; }
 
   .branch-chip { display: none; }
   .search-wrap { width: min(240px, 30vw); }
 }
 
-/* ---------------------------- Tablet portrait (max 900) ----------------- */
+
 @media (max-width: 900px) {
   .topbar { padding: 0 14px; gap: 8px; }
   .topbar-title .eyebrow { display: none; }
@@ -61,7 +61,7 @@
   .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* ---------------------------- Tablet / small laptop (max 768) ----------- */
+
 @media (max-width: 768px) {
   .g4, .g3, .g2 { grid-template-columns: 1fr; }
 
@@ -94,14 +94,14 @@
   .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* ---------------------------- Mobile landscape (max 680) ---------------- */
+
 @media (max-width: 680px) {
   .topbar { height: 56px; }
   .topbar-title h1 { display: none; }
   .topbar-left { flex: 0 0 auto; }
   .topbar-right { flex-wrap: nowrap; }
 
-  /* Collapse secondary header controls behind the search on small phones */
+
   .notification-button { order: 3; }
 
   .card-head { padding: 14px 14px 0; }
@@ -128,7 +128,7 @@
   .landing-actions .btn { flex: 1 1 100%; }
 }
 
-/* ---------------------------- Mobile (max 560) -------------------------- */
+
 @media (max-width: 560px) {
   .g4, .g3, .g2 { grid-template-columns: 1fr; }
 
@@ -157,7 +157,7 @@
   .date-controls .control { flex: 1 1 auto; }
 }
 
-/* ---------------------------- Small phones (max 440) ------------------- */
+
 @media (max-width: 440px) {
   .content { padding: 14px 10px 26px; }
 
@@ -176,10 +176,10 @@
   .kpi-ic { display: none; }
 
   .search-wrap { min-width: 0; }
-  .search { font-size: 16px; } /* prevents iOS zoom on focus */
+  .search { font-size: 16px; }
 }
 
-/* ---------------------------- Tiny (max 360) ---------------------------- */
+
 @media (max-width: 360px) {
   .topbar { gap: 6px; padding: 0 8px; }
   .topbar-right { gap: 5px; }
@@ -187,16 +187,16 @@
   .view-heading h2 { font-size: 18px; }
   .kpi-value { font-size: 20px; }
   .landing h1 { font-size: 34px; }
-  .auth-input, .control { font-size: 16px; } /* avoids iOS focus zoom */
+  .auth-input, .control { font-size: 16px; }
 }
 
-/* ---------------------------- Ultrawide (min 1920) ---------------------- */
+
 @media (min-width: 1920px) {
   .content { max-width: var(--content-max); padding: 30px 32px 48px; }
   :root { --content-max: 1680px; }
 }
 
-/* ---------------------------- Reduced motion ---------------------------- */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

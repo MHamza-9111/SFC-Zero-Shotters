@@ -154,8 +154,8 @@ def create_app() -> Flask:
             bootstrap_admin_from_environment()
     except Exception:
         app.logger.exception("Administrator bootstrap could not be completed")
-    # The models are loaded once before the first scoring request. Startup can
-    # continue in degraded mode so health and analytics remain available.
+
+
     try:
         scoring_service.warm()
     except Exception:
@@ -178,8 +178,8 @@ def create_app() -> Flask:
     def dashboard_page(page: str):
         if page not in PAGES and page != "overview":
             return render_template("404.html"), 404
-        # Signed-out visitors to the site root see the public landing page;
-        # every other page is protected by ``protect_pages`` above.
+
+
         if (request.path == "/" and app.config["AUTH_REQUIRED"]
                 and not refresh_session_user()):
             return render_template("landing.html")

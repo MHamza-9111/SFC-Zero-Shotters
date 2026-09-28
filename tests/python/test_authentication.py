@@ -11,8 +11,8 @@ BASE = Path(__file__).resolve().parents[2]
 if str(BASE) not in sys.path:
     sys.path.insert(0, str(BASE))
 
-from src.api import routes  # noqa: E402
-from src.backend.app import create_app  # noqa: E402
+from src.api import routes
+from src.backend.app import create_app
 
 
 @pytest.fixture()

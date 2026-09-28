@@ -55,23 +55,23 @@ def test_revenue_analytics_use_completed_orders_only(pipeline):
     daily = _read(out, "daily_sales.csv")
     daily["order_date"] = pd.to_datetime(daily["order_date"])
 
-    # Recompute daily completed sales from the processed orders and
-    # compare with the published daily_sales figures.
+
+
     completed = orders[orders["is_completed"]]
     expected = (
         completed.groupby("order_date")["total_amount"].sum().sort_index()
     )
 
-    # Every published day must match the completed-only recomputation.
+
     merged = daily.set_index("order_date").loc[expected.index]
     diff = (merged["total_sales"] - expected).abs()
     assert (diff < 0.05).all(), (
         "daily_sales includes non-completed orders or has wrong totals"
     )
 
-    # Cancelled orders must exist in orders_processed but contribute
-    # nothing to daily sales. A day whose ONLY orders are cancelled
-    # must not appear in daily_sales.
+
+
+
     cancelled = orders[~orders["is_completed"]]
     assert len(cancelled) > 0, "no cancelled orders in processed data"
     published = set(daily["order_date"].dt.date)
@@ -95,7 +95,7 @@ def test_promo_flags_consistent(pipeline):
     assert ((orders["is_promo_order"] == (pid != "")).all()), (
         "is_promo_order disagrees with promotion_id"
     )
-    # At least some promo orders and some non-promo orders must exist.
+
     assert orders["is_promo_order"].sum() > 0
     assert (~orders["is_promo_order"]).sum() > 0
 

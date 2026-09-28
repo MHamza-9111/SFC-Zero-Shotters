@@ -12,37 +12,37 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 
-# ============================================================
-# DineIQ Analytics - Advanced Analytics & Intelligence Layer
-# ============================================================
-# Implements the SRS intelligence requirements on top of the
-# cleaned/integrated Python data layer:
-#
-#   - RFM analysis and customer segmentation (KMeans)
-#   - Data-driven menu business classes (Profit Driver,
-#     Volume Driver, Hidden Opportunity, Low Performer)
-#     including contradictory cases
-#   - Market-basket analysis (support / confidence / lift)
-#   - Peak-period analysis
-#   - Demand forecasting with chronological validation and
-#     MAE / RMSE / MAPE, compared against a naive baseline
-#   - Wastage and wastage-risk analysis
-#   - Price sensitivity (elasticity)
-#   - Promotion effectiveness and promotion-trap detection
-#   - Rating and sales anomaly detection
-#   - Slow-moving dish detection
-#   - Location / channel intelligence
-#   - Churn risk modelling (logistic regression)
-#   - Evidence-backed prioritized recommendations
-#   - What-if scenario estimates
-#   - Dual-pipeline comparison sets (unseen cases + Python
-#     predictions) for Hamza's Spark side to compare against
-#
-# Analytical accounting rule: revenue-based analytics use
-# COMPLETED orders only (see process_dineiq_data.py).
-#
-# All models use random_state=42 for reproducibility.
-# ============================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 BASE = Path(__file__).resolve().parents[2]
 RUN_TIME = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -73,9 +73,9 @@ def rmse(y_true, y_pred):
     return float(np.sqrt(np.mean(d ** 2)))
 
 
-# ============================================================
-# 1. RFM + customer segmentation (KMeans)
-# ============================================================
+
+
+
 
 def rfm_segmentation(customers, customer_analytics, cutoff):
     print("\n[1/14] RFM analysis and customer segmentation (KMeans)...")
@@ -96,7 +96,7 @@ def rfm_segmentation(customers, customer_analytics, cutoff):
     for src, dst in [("r_days", "r_score"), ("f_orders", "f_score"), ("m_spend", "m_score")]:
         try:
             if src == "r_days":
-                # recent = low days = high score
+
                 active[dst] = pd.qcut(
                     -active[src], 5, labels=[1, 2, 3, 4, 5]
                 ).astype(int)
@@ -121,18 +121,18 @@ def rfm_segmentation(customers, customer_analytics, cutoff):
         kmeans.cluster_centers_,
         columns=["neg_r", "log_f", "log_m"],
     )
-    # Higher r_mean = more recent customers; higher f_mean = more frequent.
+
     centers["r_mean"] = -centers["neg_r"]
     centers["f_mean"] = centers["log_f"]
     centers["m_mean"] = centers["log_m"]
 
-    # Robust, deterministic segment labelling based on the median of
-    # the cluster centers (no arbitrary fixed thresholds).
-    #   Champions          = recent AND the most frequent recent cluster
-    #   Loyal Customers    = recent AND frequent (not the champion)
-    #   Potential Loyalist = recent but not frequent
-    #   At Risk - High Val = not recent but was frequent
-    #   Hibernating        = not recent and not frequent
+
+
+
+
+
+
+
     r_cut = centers["r_mean"].median()
     f_cut = centers["f_mean"].median()
 
@@ -171,9 +171,9 @@ def rfm_segmentation(customers, customer_analytics, cutoff):
     return out
 
 
-# ============================================================
-# 2. Menu business classes
-# ============================================================
+
+
+
 
 def menu_business_classes(menu_perf, rating_item, wastage_item, items_completed=None):
     print("\n[2/14] Menu business classes (Profit/Volume Driver, Hidden Opportunity, Low Performer)...")
@@ -192,8 +192,8 @@ def menu_business_classes(menu_perf, rating_item, wastage_item, items_completed=
     df["rating_count"] = df["rating_count"].fillna(0)
     df["quantity_wasted"] = df["quantity_wasted"].fillna(0)
 
-    # Independent model inputs: these are operational/customer signals,
-    # not the units/revenue/profit/margin values that define the target class.
+
+
     if items_completed is not None and not items_completed.empty:
         model_items = items_completed.copy()
         model_items["order_date"] = pd.to_datetime(model_items["order_date"], errors="coerce")
@@ -224,15 +224,15 @@ def menu_business_classes(menu_perf, rating_item, wastage_item, items_completed=
     p_med = df["estimated_profit"].median()
     m_med = df["profit_margin_percentage"].median()
 
-    # SRS Step 10 definitions, using a median split on each indicator:
-    #   Profit Driver      - high demand AND high profitability
-    #                        (estimated profit and margin both >= median)
-    #   Volume Driver      - high demand but comparatively lower
-    #                        profitability (every other high-demand item)
-    #   Hidden Opportunity - good profitability (margin) but low sales
-    #   Low Performer      - weak demand AND weak profitability
-    # The four conditions partition all items, so none reaches the default.
-    # Keep in sync with spark_jobs/features.py (dual pipeline).
+
+
+
+
+
+
+
+
+
     high_demand = df["units_sold"] >= u_med
     high_profit = df["estimated_profit"] >= p_med
     high_margin = df["profit_margin_percentage"] >= m_med
@@ -248,7 +248,7 @@ def menu_business_classes(menu_perf, rating_item, wastage_item, items_completed=
         default="Low Performer",
     )
 
-    # Contradictory / difficult cases the SRS explicitly requires.
+
     df["contradictory_case"] = ""
     c1 = (df["units_sold"] >= u_med) & (df["estimated_profit"] < 0)
     df.loc[c1, "contradictory_case"] = "High volume but negative profit"
@@ -269,9 +269,9 @@ def menu_business_classes(menu_perf, rating_item, wastage_item, items_completed=
     return df
 
 
-# ============================================================
-# 2b. Order value classification (primary dual-pipeline task)
-# ============================================================
+
+
+
 
 def order_value_classification(orders_completed, items_completed,
                                customer_analytics, holdout_size=300):
@@ -299,9 +299,9 @@ def order_value_classification(orders_completed, items_completed,
         on="customer_id",
         how="left",
     )
-    # Leave-one-order-out customer history. The current order is the label
-    # source, so its value must not be included in the customer's history
-    # features used to classify that same order.
+
+
+
     df["total_orders"] = (df["total_orders"].fillna(0) - 1).clip(lower=0)
     df["total_spend"] = (df["total_spend"].fillna(0) - df["total_amount"]).clip(lower=0)
 
@@ -326,8 +326,8 @@ def order_value_classification(orders_completed, items_completed,
         "total_spend",
     ]
 
-    # Holdout FIRST, then threshold on the training side only
-    # (no label leakage).
+
+
     idx = df.index.to_numpy()
     rng = np.random.default_rng(RANDOM_STATE)
     holdout_idx = rng.choice(idx, size=min(holdout_size, len(idx)), replace=False)
@@ -378,9 +378,9 @@ def order_value_classification(orders_completed, items_completed,
     return unseen_cases, predictions, report
 
 
-# ============================================================
-# 3. Market basket analysis
-# ============================================================
+
+
+
 
 def market_basket(items_completed, n_orders):
     print("\n[3/14] Market-basket analysis (support / confidence / lift)...")
@@ -420,13 +420,13 @@ def market_basket(items_completed, n_orders):
 
     freq_map = item_freq.to_dict()
 
-    # Every order comes from ONE restaurant and every menu item belongs to
-    # ONE restaurant, so a pair can only ever co-occur inside its own
-    # restaurant's orders. Support / confidence / lift are therefore
-    # measured against that restaurant's completed orders. Measuring against
-    # all chain orders (kept as `chain_lift` for transparency) inflates every
-    # same-menu pair by ~chain orders / restaurant orders (~20x with 20
-    # restaurants) even when the items are bought independently.
+
+
+
+
+
+
+
     item_rest = (
         items_completed[["menu_item_id", "restaurant_id"]]
         .drop_duplicates("menu_item_id")
@@ -458,9 +458,9 @@ def market_basket(items_completed, n_orders):
     return pair_df
 
 
-# ============================================================
-# 4. Peak period analysis
-# ============================================================
+
+
+
 
 def peak_period_analysis(orders_completed):
     print("\n[4/14] Peak-period analysis...")
@@ -481,9 +481,9 @@ def peak_period_analysis(orders_completed):
     return df.sort_values("total_orders", ascending=False).reset_index(drop=True)
 
 
-# ============================================================
-# 5. Demand forecasting (chronological validation)
-# ============================================================
+
+
+
 
 def demand_forecast(orders_completed, start_date, end_date):
     print("\n[5/14] Demand forecasting with chronological validation...")
@@ -500,7 +500,7 @@ def demand_forecast(orders_completed, start_date, end_date):
     daily = daily.reset_index()
     daily = daily.rename(columns={"order_date": "date"})
 
-    # Chronological split: last 90 days held out for validation.
+
     test_days = 90
 
     def build_features(df):
@@ -508,10 +508,10 @@ def demand_forecast(orders_completed, start_date, end_date):
         out["week_index"] = (
             (out["date"] - start_date).dt.days // 7
         ).astype(float)
-        # Moving averages are computed on the FULL series first, then
-        # the train/test split is applied, so the test window always
-        # sees only past data (no leakage, no cold-start NaNs in the
-        # held-out period).
+
+
+
+
         rev = out["actual_sales"]
         out["rev_7d_ma"] = rev.rolling(7, min_periods=1).mean().shift(1)
         out["rev_28d_ma"] = rev.rolling(28, min_periods=1).mean().shift(1)
@@ -526,8 +526,8 @@ def demand_forecast(orders_completed, start_date, end_date):
         c for c in train_f.columns if c.startswith("dow_")
     ]
 
-    # Only day 1 lacks a previous observation for the shifted
-    # moving averages; impute that single point with the mean level.
+
+
     train_f[feature_cols] = train_f[feature_cols].fillna(
         train_f["actual_sales"].mean()
     )
@@ -564,9 +564,9 @@ def demand_forecast(orders_completed, start_date, end_date):
     return daily_forecast, metrics
 
 
-# ============================================================
-# 6. Wastage risk analysis
-# ============================================================
+
+
+
 
 def wastage_risk(wastage_enriched, items_completed):
     print("\n[6/14] Wastage and wastage-risk analysis...")
@@ -598,7 +598,7 @@ def wastage_risk(wastage_enriched, items_completed):
         default="Low",
     )
 
-    # Trend: last quarter vs first quarter wastage cost.
+
     w = wastage_enriched.copy()
     w["wastage_date"] = pd.to_datetime(w["wastage_date"], errors="coerce")
     w["quarter"] = w["wastage_date"].dt.to_period("Q")
@@ -619,9 +619,9 @@ def wastage_risk(wastage_enriched, items_completed):
     return df.sort_values("wastage_cost", ascending=False).reset_index(drop=True)
 
 
-# ============================================================
-# 7. Price sensitivity (elasticity)
-# ============================================================
+
+
+
 
 def price_sensitivity(items_completed, menu):
     print("\n[7/14] Price sensitivity analysis (price elasticity)...")
@@ -664,9 +664,9 @@ def price_sensitivity(items_completed, menu):
     return df
 
 
-# ============================================================
-# 8. Promotion effectiveness
-# ============================================================
+
+
+
 
 def promotion_effectiveness(promotions, orders_completed, start_date, end_date):
     print("\n[8/14] Promotion effectiveness and trap detection...")
@@ -677,8 +677,8 @@ def promotion_effectiveness(promotions, orders_completed, start_date, end_date):
 
     o = orders_completed.copy()
 
-    # Empty promotion_id fields come back from CSV as NaN/float;
-    # normalize to a clean integer string before string comparison.
+
+
     o["promotion_id"] = o["promotion_id"].apply(
         lambda x: "" if pd.isna(x) else str(int(x))
     )
@@ -735,16 +735,16 @@ def promotion_effectiveness(promotions, orders_completed, start_date, end_date):
     return pd.DataFrame(rows).sort_values("incremental_revenue_estimate", ascending=False).reset_index(drop=True)
 
 
-# ============================================================
-# 9. Anomaly detection
-# ============================================================
+
+
+
 
 def anomaly_detection(orders_completed, ratings_enriched, items_completed=None):
     print("\n[9/14] Anomaly detection (sales, order totals, rating patterns)...")
 
     rows = []
 
-    # Daily sales anomalies per restaurant (z-score).
+
     daily_rest = orders_completed.groupby(["restaurant_id", "order_date"]).agg(
         sales=("total_amount", "sum")
     ).reset_index()
@@ -765,7 +765,7 @@ def anomaly_detection(orders_completed, ratings_enriched, items_completed=None):
                     "note": "Daily revenue more than 3 std deviations from restaurant mean",
                 })
 
-    # Order total outliers (IQR).
+
     q1 = orders_completed["total_amount"].quantile(0.25)
     q3 = orders_completed["total_amount"].quantile(0.75)
     iqr = q3 - q1
@@ -781,9 +781,9 @@ def anomaly_detection(orders_completed, ratings_enriched, items_completed=None):
             "note": f"Order total above Q3 + 3*IQR ({upper:.2f})",
         })
 
-    # Rating anomalies per item-month. The SRS calls for distinct patterns:
-    # sudden shifts, excessive identical ratings, short-period rating bursts,
-    # and rating volume inconsistent with purchases.
+
+
+
     ratings_enriched = ratings_enriched.copy()
     ratings_enriched["review_date"] = pd.to_datetime(
         ratings_enriched["review_date"], errors="coerce"
@@ -875,9 +875,9 @@ def anomaly_detection(orders_completed, ratings_enriched, items_completed=None):
     return pd.DataFrame(rows)
 
 
-# ============================================================
-# 10. Slow-moving items
-# ============================================================
+
+
+
 
 def slow_moving_items(items_completed, start_date, cutoff):
     print("\n[10/14] Slow-moving dish detection...")
@@ -912,8 +912,8 @@ def slow_moving_items(items_completed, start_date, cutoff):
         0,
     )
 
-    # Low-velocity: bottom decile of full-period sales AND bottom
-    # decile of recent sales (genuinely slow movers).
+
+
     total_units = piv["first_60d"] + piv["last_60d"]
     low_total = total_units <= total_units.quantile(0.10)
     low_recent = piv["last_60d"] <= piv["last_60d"].quantile(0.10)
@@ -936,9 +936,9 @@ def slow_moving_items(items_completed, start_date, cutoff):
     )
 
 
-# ============================================================
-# 11. Location / channel intelligence
-# ============================================================
+
+
+
 
 def location_channel_intelligence(orders_completed, restaurants, locations):
     print("\n[11/14] Location and channel intelligence...")
@@ -973,9 +973,9 @@ def location_channel_intelligence(orders_completed, restaurants, locations):
     return out.sort_values("total_sales", ascending=False).reset_index(drop=True)
 
 
-# ============================================================
-# 12. Churn risk modelling
-# ============================================================
+
+
+
 
 def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
                min_window_days=180, shared_model_frame=None):
@@ -987,14 +987,14 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
     df["last_order_date"] = pd.to_datetime(df["last_order_date"], errors="coerce")
     df["first_order_date"] = pd.to_datetime(df["first_order_date"], errors="coerce")
 
-    # Only customers with a stable observation window.
+
     min_first = cutoff - timedelta(days=min_window_days)
     df = df.loc[df["first_order_date"] <= min_first]
 
     df["recency_days"] = (cutoff - df["last_order_date"]).dt.days
     df["churned"] = (df["recency_days"] > 60).astype(int)
 
-    # Category behaviour.
+
     item_cat = items_completed.merge(
         df[["customer_id"]], on="customer_id", how="inner"
     ) if "customer_id" not in items_completed.columns else items_completed
@@ -1015,16 +1015,16 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
     df["top_category_share"] = df["top_category_share"].fillna(0)
     df["unique_categories"] = df["unique_categories"].fillna(0)
 
-    # One honest feature-engineering attempt after leakage removal: add
-    # non-target-defining purchase volume and weekend-habit signals.
+
+
     order_behavior = items_completed[["customer_id", "order_id", "order_date"]].drop_duplicates().copy()
     order_behavior["order_date"] = pd.to_datetime(order_behavior["order_date"], errors="coerce")
     weekend_share = (order_behavior.assign(
         is_weekend=(order_behavior["order_date"].dt.dayofweek >= 5).astype(int)
     ).groupby("customer_id")["is_weekend"].mean().rename("weekend_order_share"))
-    # customer_analytics already carries total_items_purchased from the
-    # completed-order customer aggregation; only the new weekend-habit
-    # feature needs to be joined here.
+
+
+
     df = df.merge(weekend_share, on="customer_id", how="left")
     df["total_items_purchased"] = df["total_items_purchased"].fillna(0)
     df["weekend_order_share"] = df["weekend_order_share"].fillna(0)
@@ -1037,9 +1037,9 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
         df["total_orders"] > 0, df["promo_orders"] / df["total_orders"], 0
     )
 
-    # recency_days defines the churn label and is deliberately NOT a model
-    # feature. The remaining behavioral features are computed from customer
-    # history and are not deterministic functions of the label.
+
+
+
     features = [
         "f_log_orders",
         "f_log_spend",
@@ -1055,9 +1055,9 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
     df["f_log_orders"] = np.log1p(df["total_orders"])
     df["f_log_spend"] = np.log1p(df["total_spend"])
 
-    # The shared model frame is the single feature contract used by the
-    # Python artifact path and the Spark path. The advanced analytics frame
-    # above remains responsible for the dashboard-facing risk output.
+
+
+
     model_df = (shared_model_frame.copy()
                 if shared_model_frame is not None else df.copy())
     X = model_df[features].fillna(0)
@@ -1089,16 +1089,16 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
         {"metric": "production_fit", "value": "All eligible customers except 200 committed dual-pipeline cases"},
     ])
 
-    # The 20% split above is used only to report honest holdout metrics.
-    # For the committed 200-case comparison set, refit a production model on
-    # every other eligible customer. This makes the saved Python artifact and
-    # the Spark-side model train on the same non-case population.
+
+
+
+
     case_indices = np.asarray(idx_test)[:200]
     production_train = model_df.loc[~model_df.index.isin(set(case_indices))].copy()
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000, random_state=RANDOM_STATE))
     model.fit(production_train[features].fillna(0), production_train["churned"])
 
-    # Score every customer with orders.
+
     all_customers = customer_analytics.copy()
     all_customers["last_order_date"] = pd.to_datetime(
         all_customers["last_order_date"], errors="coerce"
@@ -1153,9 +1153,9 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
         "average_order_value", "customer_value_segment",
     ]].sort_values("churn_probability", ascending=False).reset_index(drop=True)
 
-    # Unseen test cases for the dual-pipeline comparison. These are scored
-    # with the production model refit on all non-case rows, while the metrics
-    # above remain from the independent holdout split.
+
+
+
     test_cases = model_df.loc[case_indices, [
         "customer_id", "recency_days", "total_orders", "total_spend",
         "average_order_value", "discount_dependency", "promo_dependency",
@@ -1180,9 +1180,9 @@ def churn_risk(customer_analytics, items_completed, restaurants, cutoff,
     return out, metrics, test_cases, test_predictions
 
 
-# ============================================================
-# 13. Recommendations (evidence-backed)
-# ============================================================
+
+
+
 
 def build_recommendations(menu_classes, promo_eff, wastage_risk_df,
                           slow_movers, peak_df, churn_out, rating_analysis):
@@ -1327,9 +1327,9 @@ def build_recommendations(menu_classes, promo_eff, wastage_risk_df,
     return pd.DataFrame(rows)
 
 
-# ============================================================
-# 14. What-if scenarios
-# ============================================================
+
+
+
 
 def what_if_scenarios(menu_classes, price_sens_df):
     print("\n[14/14] What-if scenario estimates...")
@@ -1348,19 +1348,19 @@ def what_if_scenarios(menu_classes, price_sens_df):
         baseline_profit = float(sub["estimated_profit"].sum())
         base_units = float(sub["units_sold"].sum())
 
-        # Average observed elasticity across the scoped items
-        # (fallback -1.0 where no price change was observed).
-        # With only 12 monthly observations the estimate is noisy;
-        # a non-negative average is not economically plausible for
-        # these menu items, so fall back to -1.0 in that case.
+
+
+
+
+
         e_avg = float(np.mean(
             [elasticity_by_item.get(int(i), -1.0) for i in sub["menu_item_id"]]
         ))
         if not (e_avg < 0):
             e_avg = -1.0
 
-        # Quantity responds to price through elasticity:
-        # %ΔQ = elasticity * %ΔP  (elasticity is negative)
+
+
         qty_change_pct = e_avg * price_change
         new_units = base_units * (1 + qty_change_pct / 100.0)
 
@@ -1412,9 +1412,9 @@ def what_if_scenarios(menu_classes, price_sens_df):
     return pd.DataFrame(rows)
 
 
-# ============================================================
-# Main
-# ============================================================
+
+
+
 
 def main(processed_dir=None, output_dir=None, dual_dir=None):
 
@@ -1438,9 +1438,9 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
     print(f"Output: {output_dir}")
     print()
 
-    # ------------------------------------------------------------
-    # Load
-    # ------------------------------------------------------------
+
+
+
 
     print("Loading processed datasets...")
     customers = pd.read_csv(processed_dir / "customers.csv", low_memory=False)
@@ -1469,15 +1469,15 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
 
     print(f"Analysis window: {start_date.date()} to {cutoff.date()} | completed orders: {n_orders:,}")
 
-    # ------------------------------------------------------------
-    # 1. RFM
-    # ------------------------------------------------------------
+
+
+
     rfm = rfm_segmentation(customers, customer_analytics, cutoff)
     save(output_dir, rfm, "rfm_segmentation.csv")
 
-    # ------------------------------------------------------------
-    # 2. Menu business classes + dual-pipeline comparison set
-    # ------------------------------------------------------------
+
+
+
     menu_classes = menu_business_classes(menu_perf, rating_item, wastage_item, items_completed)
     save(output_dir, menu_classes, "menu_business_classes.csv")
 
@@ -1487,7 +1487,7 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
         "unique_customers", "order_line_count",
     ]
 
-    # 20% holdout (150 item/restaurant cells -> 30 unseen cases).
+
     unseen_idx = menu_classes.index.to_numpy()
     rng = np.random.default_rng(RANDOM_STATE)
     holdout = rng.choice(unseen_idx, size=min(30, len(unseen_idx)), replace=False)
@@ -1522,9 +1522,9 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
     })
     save(dual_dir, unseen_pred, "menu_class_python_predictions.csv")
 
-    # ------------------------------------------------------------
-    # 2b. Order-value classification (PRIMARY dual-pipeline task)
-    # ------------------------------------------------------------
+
+
+
     order_cases, order_preds, order_report = order_value_classification(
         orders_completed, items_completed, customer_analytics,
         holdout_size=300,
@@ -1533,21 +1533,21 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
     save(dual_dir, order_preds, "order_value_python_predictions.csv")
     save(dual_dir, order_report, "order_value_classification_report.csv")
 
-    # ------------------------------------------------------------
-    # 3. Market basket
-    # ------------------------------------------------------------
+
+
+
     basket = market_basket(items_completed, n_orders)
     save(output_dir, basket, "market_basket_pairs.csv")
 
-    # ------------------------------------------------------------
-    # 4. Peak periods
-    # ------------------------------------------------------------
+
+
+
     peak = peak_period_analysis(orders_completed)
     save(output_dir, peak, "peak_period_analysis.csv")
 
-    # ------------------------------------------------------------
-    # 5. Demand forecast
-    # ------------------------------------------------------------
+
+
+
     daily_forecast, forecast_metrics = demand_forecast(orders_completed, start_date, cutoff)
     save(output_dir, daily_forecast, "daily_forecast.csv")
     save(output_dir, forecast_metrics, "forecast_evaluation.csv")
@@ -1557,45 +1557,45 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
     naive_mae = float(forecast_metrics.loc[forecast_metrics["model"].str.startswith("naive"), "mae"].iloc[0])
     forecast_beats_baseline = bool(model_mae < naive_mae)
 
-    # ------------------------------------------------------------
-    # 6. Wastage risk
-    # ------------------------------------------------------------
+
+
+
     waste = wastage_risk(wastage_enriched, items_completed)
     save(output_dir, waste, "wastage_risk_analysis.csv")
 
-    # ------------------------------------------------------------
-    # 7. Price sensitivity
-    # ------------------------------------------------------------
+
+
+
     price_sens = price_sensitivity(items_completed, menu)
     save(output_dir, price_sens, "price_sensitivity_analysis.csv")
 
-    # ------------------------------------------------------------
-    # 8. Promotion effectiveness
-    # ------------------------------------------------------------
+
+
+
     promo_eff = promotion_effectiveness(promotions, orders_completed, start_date, cutoff)
     save(output_dir, promo_eff, "promotion_effectiveness.csv")
 
-    # ------------------------------------------------------------
-    # 9. Anomaly detection
-    # ------------------------------------------------------------
+
+
+
     anomalies = anomaly_detection(orders_completed, ratings_enriched)
     save(output_dir, anomalies, "anomaly_detection.csv")
 
-    # ------------------------------------------------------------
-    # 10. Slow movers
-    # ------------------------------------------------------------
+
+
+
     slow = slow_moving_items(items_completed, start_date, cutoff)
     save(output_dir, slow, "slow_moving_items.csv")
 
-    # ------------------------------------------------------------
-    # 11. Location/channel
-    # ------------------------------------------------------------
+
+
+
     loc_chan = location_channel_intelligence(orders_completed, restaurants, locations)
     save(output_dir, loc_chan, "location_channel_intelligence.csv")
 
-    # ------------------------------------------------------------
-    # 12. Churn risk
-    # ------------------------------------------------------------
+
+
+
     shared_churn_frame = build_churn_frame(load_base_frames(processed_dir))
     churn, churn_metrics, churn_cases, churn_preds = churn_risk(
         customer_analytics, order_items, restaurants, cutoff,
@@ -1609,23 +1609,23 @@ def main(processed_dir=None, output_dir=None, dual_dir=None):
     churn_accuracy = float(churn_metrics.loc[churn_metrics["metric"] == "accuracy", "value"].iloc[0])
     churn_macro_f1 = float(churn_metrics.loc[churn_metrics["metric"] == "macro_f1", "value"].iloc[0])
 
-    # ------------------------------------------------------------
-    # 13. Recommendations
-    # ------------------------------------------------------------
+
+
+
     recs = build_recommendations(
         menu_classes, promo_eff, waste, slow, peak, churn, rating_item
     )
     save(output_dir, recs, "recommendations.csv")
 
-    # ------------------------------------------------------------
-    # 14. What-if
-    # ------------------------------------------------------------
+
+
+
     whatif = what_if_scenarios(menu_classes, price_sens)
     save(output_dir, whatif, "what_if_analysis.csv")
 
-    # ------------------------------------------------------------
-    # Summary + dual-pipeline README
-    # ------------------------------------------------------------
+
+
+
     summary = pd.DataFrame([
         {"analysis": "rfm_segmentation", "rows": len(rfm), "key_model": "KMeans(k=5)"},
         {"analysis": "menu_business_classes", "rows": len(menu_classes), "key_model": "median thresholds + RandomForest (comparison set)"},

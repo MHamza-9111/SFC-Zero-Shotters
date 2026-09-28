@@ -1,6 +1,6 @@
-/* ============================================================
-   DineIQ Dashboard — secondary views + order detail modal
-   ============================================================ */
+
+
+
 (function () {
     "use strict";
 
@@ -33,7 +33,7 @@
         return badge(cls || "—", map[cls] || "gray");
     }
 
-    /* ================= Order detail modal ================= */
+
     DQ.openOrder = async function (orderId) {
         document.getElementById("order-modal-title").textContent = `Order DQ-${String(orderId).padStart(4, "0")}`;
         const body = document.getElementById("order-modal-body");
@@ -79,7 +79,7 @@
         }
     };
 
-    /* ================= ORDERS ================= */
+
     const orders = { page: 1, q: "", status: "", channel: "", payment: "", sort: "recent" };
 
     async function loadOrders() {
@@ -145,12 +145,12 @@
             document.getElementById("orders-payment").insertAdjacentHTML("beforeend",
                 `<option value="${esc(s)}">${esc(s)}</option>`);
         });
-        // deep links
+
         const ch = DQ.queryParam("channel");
         if (ch) { orders.channel = ch; document.getElementById("orders-channel").value = ch; }
     }
 
-    /* ================= MENU ================= */
+
     const menuState = { q: "", range: "all" };
 
     async function loadMenu() {
@@ -234,7 +234,7 @@
         }).join("");
     };
 
-    /* ================= INVENTORY ================= */
+
     async function loadInventory() {
         const tbody = document.getElementById("wastage-tbody");
         setLoading(tbody, 6);
@@ -284,7 +284,7 @@
         }
     }
 
-    /* ================= CUSTOMERS ================= */
+
     const cust = { page: 1, q: "", risk: "" };
 
     async function loadCustomers() {
@@ -332,7 +332,7 @@
         }
     }
 
-    /* ================= PROMOTIONS ================= */
+
     const promos = { filter: "", page: 1, pageSize: 15, all: [] };
 
     async function loadPromotions() {
@@ -387,7 +387,7 @@
             });
     }
 
-    /* ================= PAYMENTS ================= */
+
     const pay = { range: "month", page: 1, q: "", method: "", status: "" };
 
     const PAY_ICONS = { "Cash": "cash", "Card": "card", "Online Wallet": "phone", "Unspecified": "wallet" };
@@ -490,7 +490,7 @@
         }
     }
 
-    /* ================= REPORTS ================= */
+
     async function loadReports() {
         const stats = document.getElementById("report-stats");
         const endpoints = [
@@ -587,7 +587,7 @@
         });
     }
 
-    /* ================= LOCATIONS ================= */
+
     let locSelected = null;
 
     async function loadLocations() {
@@ -620,7 +620,7 @@
                     drawLocChart(r);
                 }));
 
-            // peak hours grouped bars
+
             const peak = r.peak_hours || [];
             const byHour = {};
             peak.forEach(p => {
@@ -665,7 +665,7 @@
         DQ.charts.areaLine(wrap, points, { height: 220, tension: 0.3 });
     }
 
-    /* ================= MODELS ================= */
+
     const scorer = { task: "high_value_order", specs: [] };
 
     async function loadModels() {
@@ -828,7 +828,7 @@
             });
     }
 
-    /* ================= SETTINGS ================= */
+
     async function loadSettings() {
         try {
             const [meta, status] = await Promise.all([
@@ -855,7 +855,7 @@
         }
     }
 
-    /* ================= Registration ================= */
+
     DQ.registerView("orders",
         function init() {
             fillOrderFilters();
@@ -994,7 +994,7 @@
         },
         loadSettings);
 
-    /* ================= SRS analytical views ================= */
+
     DQ.registerView("basket", () => {}, loadBasketView);
     DQ.registerView("price", function init() {
         let timer;
@@ -1335,8 +1335,8 @@
                 kpiMini("Quarantined rows", fmt.num(quarantined), "retained for review"),
             ].join("");
             document.getElementById("quality-steps").innerHTML = (pipeline.steps || []).map(step => `<tr style="cursor:default"><td class="cell-strong">${esc(step.name)}</td><td>${badge(step.status, step.status === "ok" ? "green-solid" : step.status === "fail" ? "red" : "gray")}</td><td>${esc(step.detail)}</td></tr>`).join("") || `<tr><td colspan="3">No processing status is available.</td></tr>`;
-            
-            // Build the visual track
+
+
             const visualTrack = document.getElementById("pipeline-visual-track");
             if (visualTrack) {
                 if (pipeline.steps && pipeline.steps.length) {
@@ -1402,7 +1402,7 @@
             document.getElementById("usage-sources").innerHTML = rows.map(source => `<tr style="cursor:default"><td class="cell-strong">${esc(source.label)}</td><td class="num">${fmt.num(source.rows)}</td><td>${badge(source.status, source.status === "available" ? "green-solid" : "red")}</td></tr>`).join("");
         } catch (error) { document.getElementById("usage-kpis").innerHTML = errorState(error.message); }
     }
-    
+
     async function loadChannelsView() {
         const tbody = document.getElementById("channels-tbody");
         setLoading(tbody, 3);
@@ -1413,7 +1413,7 @@
                 kpiMini("Omnichannel Revenue", fmt.money0(r.rows.reduce((sum, x) => sum + x.revenue, 0)), "across all active channels"),
                 kpiMini("Total Refunds", fmt.money0(r.rows.reduce((sum, x) => sum + x.refunds, 0)), "deducted from revenue"),
             ].join("");
-            
+
             tbody.innerHTML = (r.rows || []).map(row => `<tr style="cursor:default">
                 <td class="cell-strong">${esc(row.channel)}</td>
                 <td class="num">${fmt.num(row.orders)}</td>
@@ -1421,16 +1421,16 @@
                 <td class="num">${fmt.money2(row.avg_order_value)}</td>
                 <td class="num" style="color:var(--danger)">${fmt.money2(row.refunds)}</td>
             </tr>`).join("") || `<tr><td colspan="5">${emptyState("No channel data found", "Pipeline data not available for channels.", "globe")}</td></tr>`;
-            
-            // Build the charts
+
+
             if (r.rows && r.rows.length && window.DQ.charts) {
-                // Pie/Donut for Network Distribution
+
                 const pieData = r.rows.slice(0, 5).map(c => ({ label: c.channel, value: c.revenue }));
                 if (pieData.length) {
                     DQ.charts.donut(document.getElementById("channel-chart-dist"), pieData);
                 }
-                
-                // Stacked/Area chart for trends
+
+
                 if (r.monthly && r.monthly.months && r.monthly.months.length) {
                     const topChan = r.rows[0].channel;
                     const topSeries = r.monthly.series[topChan] || [];
@@ -1441,7 +1441,7 @@
             }
         } catch (error) { tbody.innerHTML = `<tr><td colspan="5">${errorState(error.message)}</td></tr>`; }
     }
-    
+
     DQ.registerView("channels", () => {}, loadChannelsView);
 
     async function reloadLayers() {

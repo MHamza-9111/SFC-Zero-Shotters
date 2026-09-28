@@ -20,9 +20,9 @@ BASE = Path(__file__).resolve().parents[2]
 if str(BASE) not in sys.path:
     sys.path.insert(0, str(BASE))
 
-from src.backend.app import create_app  # noqa: E402
-from src.services import dashboard_service  # noqa: E402
-from src.services.dashboard_service import DashboardService  # noqa: E402
+from src.backend.app import create_app
+from src.services import dashboard_service
+from src.services.dashboard_service import DashboardService
 
 
 @pytest.fixture(scope="module")
@@ -33,9 +33,9 @@ def client():
     return app.test_client()
 
 
-# ---------------------------------------------------------------------------
-# Status & health
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_health_and_status(client):
     body = client.get("/health").get_json()
@@ -57,32 +57,32 @@ def test_dashboard_meta(client):
     assert layers["orders"]["layer"] in ("evidence", "processed")
 
 
-# ---------------------------------------------------------------------------
-# Overview widgets
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_overview_kpis_are_real_numbers(client):
     body = client.get("/api/v1/dashboard/overview").get_json()
     kpis = body["kpis"]
     assert body["as_of"]
-    # Revenue for the latest evidence day must be a genuine positive number.
+
     assert kpis["revenue"]["value"] > 0
     assert kpis["orders"]["value"] >= 1
     assert kpis["aov"]["value"] > 0
     assert kpis["locations_active"]["total"] == 20
     assert body["coverage_note"]
 
-    # Service pulse covers the four real order channels.
+
     names = {c["name"] for c in body["service_pulse"]["channels"]}
     assert {"Dine-in", "Takeaway", "Website/App", "Third-party Delivery"} <= names
 
-    # Recent orders are sorted newest-first and carry real totals.
+
     rec = body["recent_orders"]
     assert rec and all(o["total_amount"] > 0 for o in rec)
     times = [(o["order_date"], o["order_time"] or "") for o in rec]
     assert times == sorted(times, reverse=True)
 
-    # Payment methods only include methods present in the data.
+
     methods = {p["method"] for p in body["payment_methods"]}
     assert methods <= {"Cash", "Card", "Online Wallet", "Unspecified"}
 
@@ -105,9 +105,9 @@ def test_revenue_series_ranges(client):
             assert "label" in p and "value" in p and "orders" in p
 
 
-# ---------------------------------------------------------------------------
-# Orders / dishes
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_orders_list_filters_and_pagination(client):
     body = client.get("/api/v1/dashboard/orders?page_size=5").get_json()
@@ -130,7 +130,7 @@ def test_order_detail_and_404(client):
     body = client.get("/api/v1/dashboard/orders/1").get_json()
     assert body["order_id"] == 1
     assert body["total_amount"] > 0
-    # order 1 has line-item evidence in the committed slice
+
     assert body["lines"], "order 1 line items expected from order_item_revenue evidence"
 
     resp = client.get("/api/v1/dashboard/orders/999999")
@@ -151,9 +151,9 @@ def test_dishes_ranking(client):
     assert weekly["range"] == "week"
 
 
-# ---------------------------------------------------------------------------
-# Payments / transactions
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_payments_summary(client):
     body = client.get("/api/v1/dashboard/payments?range=year").get_json()
@@ -173,9 +173,9 @@ def test_transactions(client):
     assert all(t["status"] == "Paid" for t in paid["items"])
 
 
-# ---------------------------------------------------------------------------
-# Growth / business views
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_menu_intelligence(client):
     body = client.get("/api/v1/dashboard/menu-intelligence").get_json()
@@ -234,9 +234,9 @@ def test_reports_catalog(client):
     assert body["quality"] and body["cleaning"]
 
 
-# ---------------------------------------------------------------------------
-# Models & pipeline status (API_CONTRACT sections 2-3)
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_models_registry_contract(client):
     body = client.get("/api/v1/models").get_json()
@@ -258,9 +258,9 @@ def test_pipeline_status_contract(client):
     assert body["dual_pipeline"]["agreement"] == 100.0
 
 
-# ---------------------------------------------------------------------------
-# Ensemble scoring (API_CONTRACT section 1)
-# ---------------------------------------------------------------------------
+
+
+
 
 ORDER_RECORD = {
     "order_hour": 18, "day_of_week_code": 2, "order_month": 7,
@@ -271,9 +271,9 @@ ORDER_RECORD = {
 }
 
 CHURN_RECORD = {
-    # recency_days was deliberately removed from CHURN_FEATURES (label
-    # leakage — see AUDIT_PHASE2_FINDINGS.md); records must match the
-    # published feature contract exactly.
+
+
+
     "f_log_orders": 1.2, "f_log_spend": 9.4,
     "average_order_value": 3200, "discount_dependency": 0.02,
     "promo_dependency": 0.1, "top_category_share": 0.4,
@@ -282,9 +282,9 @@ CHURN_RECORD = {
 }
 
 MENU_RECORD = {
-    # Derived target-defining fields (units_sold, revenue, estimated_profit,
-    # profit_margin_percentage) are excluded from MENU_FEATURES by design;
-    # records must match the published feature contract exactly.
+
+
+
     "average_rating": 4.22, "rating_count": 3100, "wastage_ratio": 0.08,
     "avg_unit_price": 640.5, "promo_dependency": 0.12,
     "weekend_order_share": 0.38, "unique_customers": 1840,
@@ -301,7 +301,7 @@ def test_predict_order_value_nfr(client):
     pred = body["predictions"][0]
     assert 0.0 <= pred["probability_ensemble"] <= 1.0
     assert body["ensemble_version"]["big_data"] >= 1
-    # Contract response keys
+
     assert {"probability_big_data", "probability_python",
             "probability_ensemble", "decision_rule"} <= set(pred)
 
@@ -359,9 +359,9 @@ def test_predict_tasks_spec_drives_the_scorer_form(client):
     assert tasks["high_value_order"]["max_batch"] == 100
 
 
-# ---------------------------------------------------------------------------
-# Legacy endpoints & pages
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_legacy_analytics_endpoints(client):
     classes = client.get("/api/v1/analytics/menu-classes")
@@ -390,8 +390,8 @@ def test_pages_render(client, path):
     assert f'id="view-{view}"' in html
     assert 'id="theme-toggle"' in html
     if view == "settings":
-        # Theme picker lives in the settings view of the split Jinja layout;
-        # every app page carries the header toggle instead.
+
+
         assert 'id="theme-segment"' in html
     assert "<img" not in html
     if view == "models":
@@ -401,17 +401,17 @@ def test_pages_render(client, path):
         assert 'id="report-revenue"' in html and 'id="report-peak"' in html
 
 
-# ---------------------------------------------------------------------------
-# Processed analytical layer (regression)
-#
-# ``process_dineiq_data.py`` joins the restaurant / location dimensions onto
-# the item and customer datasets but never onto the orders dataset, so
-# ``processed_data/analytics/orders_processed.csv`` has no ``location_id``,
-# ``city_area``, ``restaurant_name`` or ``restaurant_type``.  The dashboard
-# used to read those with ``df.get(col)`` and coerce the resulting ``None``,
-# which surfaced as ``TypeError: data type 'Int64' not understood`` and 500s
-# on every widget as soon as the Python pipeline had been run locally.
-# ---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
 
 PROCESSED_ORDERS_COLUMNS = [
     "order_id", "customer_id", "restaurant_id", "order_date", "order_time",
@@ -497,8 +497,8 @@ def _evidence_areas() -> dict[int, str]:
     return dict(zip(ranking["location_id"].astype(int), ranking["city_area"]))
 
 
-# Restaurant ids 1..5 are pinned to the first five committed areas, so the
-# synthetic dimensions agree with the evidence the widgets are scored against.
+
+
 FIXTURE_AREAS = sorted(_evidence_areas())[:5]
 RESTAURANT_LOCATIONS = {rid: loc for rid, loc in enumerate(FIXTURE_AREAS, start=1)}
 
@@ -571,14 +571,14 @@ def test_orders_loader_backfills_labels_from_dimension_tables(tmp_path):
     assert orders["location_id"].notna().all()
     assert not (orders["city_area"] == "").any()
     assert not (orders["restaurant_name"] == "").any()
-    # order 1 belongs to restaurant 2, which the dimensions pin to a real area.
+
     row = orders[orders["order_id"] == 1].iloc[0]
     expected_loc = RESTAURANT_LOCATIONS[2]
     assert int(row["restaurant_id"]) == 2
     assert int(row["location_id"]) == expected_loc
     assert row["city_area"] == _evidence_areas()[expected_loc]
     assert row["restaurant_name"] == "Restaurant 2"
-    # The loader still reports which layer the orders came from.
+
     sources = {s["key"]: s for s in svc.meta()["data_sources"]}
     assert sources["orders"]["layer"] == "processed"
     assert sources["orders"]["rows"] == 40
@@ -647,7 +647,7 @@ def test_processed_layer_overview_is_real(processed_client):
     body = processed_client.get("/api/v1/dashboard/overview").get_json()
     assert body["kpis"]["orders"]["value"] > 0
     assert body["kpis"]["revenue"]["value"] > 0
-    # Location labels survive the processed layer, so the filter still resolves.
+
     area = _evidence_areas()[FIXTURE_AREAS[0]]
     filtered = processed_client.get(
         f"/api/v1/dashboard/overview?location_id={FIXTURE_AREAS[0]}").get_json()

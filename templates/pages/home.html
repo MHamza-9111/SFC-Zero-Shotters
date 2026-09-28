@@ -1,5 +1,5 @@
-{# Role dashboard. Only the block for the signed-in role is rendered; when auth
-   is disabled (local development / tests) the Administrator block is shown. #}
+
+
 {% set r = current_role or 'Administrator' %}
 <section class="view" id="view-home" data-title="Home" data-role="{{ r }}">
   <div class="view-heading">

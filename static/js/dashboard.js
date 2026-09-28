@@ -1,4 +1,4 @@
-/* DineIQ Analytics — Interactive Dashboard Script */
+
 
 document.addEventListener("DOMContentLoaded", () => {
     initTabs();

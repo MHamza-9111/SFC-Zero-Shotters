@@ -11,9 +11,9 @@ Pandas dtypes mirror the DDL for the fallback engine.
 
 from __future__ import annotations
 
-# ------------------------------------------------------------------
-# PySpark DDL strings
-# ------------------------------------------------------------------
+
+
+
 
 SPARK_DDL = {
     "locations": (
@@ -76,9 +76,9 @@ SPARK_DDL = {
     ),
 }
 
-# ------------------------------------------------------------------
-# Pandas dtypes (fallback engine)
-# ------------------------------------------------------------------
+
+
+
 
 PANDAS_DTYPES = {
     "locations": {
@@ -157,9 +157,9 @@ PANDAS_DTYPES = {
     },
 }
 
-# ------------------------------------------------------------------
-# Metadata: primary keys and the analytical period
-# ------------------------------------------------------------------
+
+
+
 
 PRIMARY_KEYS = {
     "locations": "location_id",
@@ -181,10 +181,10 @@ DATASETS = list(SPARK_DDL.keys())
 ANALYSIS_START = "2025-01-01"
 ANALYSIS_END = "2025-12-31"
 
-# Partition columns used when writing the validated Parquet layer.
+
 PARTITION_BY = {
-    "orders": "order_month",          # date-partitioned transaction data
-    "order_items": "restaurant_id",   # location-level workload locality
+    "orders": "order_month",
+    "order_items": "restaurant_id",
     "ratings": None,
     "inventory": None,
     "wastage": None,

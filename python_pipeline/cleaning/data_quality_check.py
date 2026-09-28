@@ -2,22 +2,22 @@ from pathlib import Path
 
 import pandas as pd
 
-# ============================================================
-# DineIQ Analytics - Raw Data Quality Assessment
-# ============================================================
-# Scans the RAW data layer (before cleaning) and reports:
-#   - row / column counts
-#   - missing cells and duplicate rows
-#   - null and duplicate primary keys
-#   - invalid numeric values and date values
-#   - dataset-specific logical checks (order totals, inventory
-#     balance, rating range, discount range, price/cost margin)
-#
-# Raw files are only READ, never modified.
-#
-# Refactored to main(raw_dir, report_dir) so the Jupyter
-# notebooks can run the same assessment on any data directory.
-# ============================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 BASE = Path(__file__).resolve().parents[2]
 
@@ -202,7 +202,7 @@ def main(raw_dir=None, report_dir=None):
                 column
             )
 
-        # Dataset-specific logical checks
+
         if filename == "orders.csv":
             if all(c in df.columns for c in
                    ["subtotal", "discount_amount", "tax_amount", "delivery_fee", "total_amount"]):

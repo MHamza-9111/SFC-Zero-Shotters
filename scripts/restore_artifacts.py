@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """Restore runtime artifacts that are stored as unfetched Git-LFS pointers.
 
 The model files (``models/**/model.joblib``) and
@@ -39,7 +39,7 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parents[1]
 POINTER_PREFIX = b"version https://git-lfs"
 
-# (label, predicate-path) — paths whose absence/pointer state drives each step.
+
 DATA_CSV = BASE / "processed_data" / "analytics" / "order_items_integrated.csv"
 
 
@@ -128,14 +128,14 @@ def main() -> int:
             print("\nRestore incomplete — see errors above.", file=sys.stderr)
             return 1
 
-    # Verify through the real application.
+
     try:
         sys.path.insert(0, str(BASE))
-        from src.backend.app import create_app  # noqa: WPS433 (runtime check)
+        from src.backend.app import create_app
 
         client = create_app().test_client()
         status = client.get("/api/v1/status").get_json() or {}
-    except Exception as exc:  # pragma: no cover - diagnostic only
+    except Exception as exc:
         print(f"\nCould not verify status: {exc}", file=sys.stderr)
         return 1
 

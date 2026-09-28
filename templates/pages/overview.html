@@ -8,20 +8,20 @@
               <button class="btn btn-ghost" id="asof-latest" type="button">Latest</button>
             </div>
           </div>
-          
+
           <div class="notice coverage-note" id="coverage-note" style="margin-bottom:16px;"></div>
 
-          <!-- PRIMARY COMMAND SURFACE -->
+
           <div class="grid g4 kpi-grid" id="kpi-grid"></div>
 
-          <!-- ASYMMETRIC SECONDARY SURFACE -->
+
           <div class="grid dashboard-grid" style="grid-template-columns: 2fr 1fr;">
             <section class="card">
               <div class="card-head"><div><h3 class="card-title">Network Revenue Topography</h3><div class="card-sub" id="rev-sub">Real-time monetary velocity against operational capacity</div></div><div class="card-metric"><strong id="rev-total">—</strong><span id="rev-trend"></span></div></div>
               <div class="card-tools"><div class="segmented" id="rev-range"><button type="button" data-range="week" class="active">Week</button><button type="button" data-range="month">Month</button><button type="button" data-range="year">Year</button></div><span class="muted" id="rev-source"></span></div>
               <div class="chart chart-large" id="rev-chart"></div>
             </section>
-            
+
             <div class="grid g1" style="gap:16px;">
               <section class="card">
                 <div class="card-head"><div><h3 class="card-title">Service Pulse</h3><div class="card-sub" id="pulse-sub">Active channel distribution</div></div></div>
@@ -34,13 +34,13 @@
             </div>
           </div>
 
-          <!-- TERTIARY INTELLIGENCE ROW -->
+
           <div class="grid g3 dashboard-grid">
             <section class="card">
               <div class="card-head"><div><h3 class="card-title">Recent Event Log</h3><div class="card-sub" id="recent-sub">Processed transactions</div></div><label class="sr-only" for="recent-sort">Order by</label><select class="control control-small" id="recent-sort"><option value="recent">Chronological</option><option value="amount_desc">High value</option><option value="amount_asc">Low value</option></select></div>
               <div class="card-body compact-body"><div class="order-list" id="recent-orders" style="max-height: 280px;"></div></div>
             </section>
-            
+
             <section class="card">
               <div class="card-head"><div><h3 class="card-title">Top Asset Performers</h3><div class="card-sub" id="dishes-sub">Ranked by yield</div></div><label class="sr-only" for="dishes-range">Asset range</label><select class="control control-small" id="dishes-range"><option value="all">Global</option><option value="month">30D</option><option value="week">7D</option><option value="today">24H</option></select></div>
               <div class="card-body compact-body"><div id="dish-list"></div></div>
@@ -51,7 +51,7 @@
               <div class="card-body compact-body"><div id="area-list"></div></div>
             </section>
           </div>
-          
+
           <div class="grid g2 dashboard-grid">
             <section class="card"><div class="card-head"><div><h3 class="card-title">Capital Inflow Mix</h3><div class="card-sub" id="payments-scope">Settled tenders</div><strong class="card-metric-value" id="pay-total">—</strong></div></div><div class="card-body compact-body"><div class="data-list" id="pay-list"></div></div></section>
             <section class="card"><div class="card-head"><div><h3 class="card-title">Transaction Ledger</h3><div class="card-sub" id="tx-sub">Most recent settled records</div></div></div><div class="card-body compact-body"><div class="data-list" id="tx-list"></div></div></section>

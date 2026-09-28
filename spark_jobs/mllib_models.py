@@ -37,7 +37,7 @@ import pandas as pd
 
 RANDOM_STATE = 42
 
-from .features import (  # noqa: E402
+from .features import (
     CHURN_FEATURES,
     MENU_FEATURES,
     ORDER_FEATURES,
@@ -51,13 +51,13 @@ from .features import (  # noqa: E402
 )
 
 
-# ---------------------------------------------------------------------------
-# Base-layer loading (shared by both engines)
-# ---------------------------------------------------------------------------
 
-# ---------------------------------------------------------------------------
-# Training + evaluation
-# ---------------------------------------------------------------------------
+
+
+
+
+
+
 
 def _split(frame, key, excluded, test_size, stratify_col=None, seed=RANDOM_STATE):
     """
@@ -328,7 +328,7 @@ def _spark_train_task_c(engine, frames, excluded_cells):
         "macro_f1": round(float(f1_score(pdf["business_class"], pdf["predictionLabel"], average="macro")), 4),
     }
 
-    # Fit the production pipeline on every non-case cell.
+
     final = pipeline.fit(_spark_input(engine, tr, MENU_FEATURES, "business_class"))
     return final, metrics, {
         "n_train": len(tr), "n_eval": len(eval_part),
@@ -337,9 +337,9 @@ def _spark_train_task_c(engine, frames, excluded_cells):
     }
 
 
-# ---------------------------------------------------------------------------
-# Artifact persistence (versioned)
-# ---------------------------------------------------------------------------
+
+
+
 
 def _next_version(models_dir: Path, task: str) -> int:
     base = Path(models_dir) / task
@@ -391,15 +391,15 @@ def load_latest_model(models_dir: Path, task: str):
     meta = json.loads((vdir / "metadata.json").read_text())
     if meta["model_file"] == "model.joblib":
         model = joblib.load(vdir / "model.joblib")
-    else:  # pragma: no cover - spark path
+    else:
         from pyspark.ml import PipelineModel
         model = PipelineModel.load(str(vdir / "model"))
     return model, meta
 
 
-# ---------------------------------------------------------------------------
-# Step entry point
-# ---------------------------------------------------------------------------
+
+
+
 
 def run(engine, processed_dir: Path, models_dir: Path, evidence_dir: Path,
         cases_dir: Path) -> pd.DataFrame:

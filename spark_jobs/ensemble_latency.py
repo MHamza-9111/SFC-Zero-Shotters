@@ -140,7 +140,7 @@ def measure_ensemble(engine, pipeline_models_dir: Path, python_models_dir: Path,
             "ensemble_probabilities": ens_proba,
         }
 
-    # Warm-up: guarantees a warm process / preloaded models.
+
     for _ in range(WARMUP_RUNS):
         once()
 

@@ -1,5 +1,5 @@
-/* Decorative particle + parallax layer for the landing and auth pages.
-   Kept as a static file (not inline) so the strict CSP `script-src 'self'` holds. */
+
+
 (function() {
   const canvas = document.getElementById('particles-canvas');
   if (!canvas) return;
@@ -37,8 +37,8 @@
 
   function draw() {
     ctx.clearRect(0, 0, w, h);
-    
-    // update and draw particles
+
+
     particles.forEach(p => {
       p.x += p.vx;
       p.y += p.vy;
@@ -46,12 +46,12 @@
       if (p.x > w) p.x = 0;
       if (p.y < 0) p.y = h;
       if (p.y > h) p.y = 0;
-      
+
       const dx = p.x - mouseX;
       const dy = p.y - mouseY;
       const dist = Math.sqrt(dx*dx + dy*dy);
-      
-      // interaction: connection lines
+
+
       if (dist > 0 && dist < 180) {
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
@@ -59,19 +59,19 @@
         ctx.strokeStyle = p.c + (0.5 - dist/360) + ')';
         ctx.lineWidth = 1;
         ctx.stroke();
-        
-        // slight repulsion
+
+
         p.x += (dx / dist) * 1.5;
         p.y += (dy / dist) * 1.5;
       }
-      
+
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = p.c + p.a + ')';
       ctx.fill();
     });
-    
-    // Parallax food items
+
+
     const cx = w/2, cy = h/2;
     items.forEach((item, i) => {
       const speed = speeds[i];

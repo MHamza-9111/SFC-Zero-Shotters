@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 
 CURRENCY = {"code": "PKR", "symbol": "Rs.", "locale": "en-PK"}
 
-# Canonical channel / payment labels used across the platform.
+
 DEFAULT_CHANNELS = [
     "Dine-in",
     "Takeaway",
@@ -71,19 +71,19 @@ def records(df: pd.DataFrame, limit: int | None = None) -> list[dict]:
     return [{k: _clean(v) for k, v in row.items()} for row in out.to_dict("records")]
 
 
-# ---------------------------------------------------------------------------
-# Column coercion helpers
-#
-# Every loader reads artifacts produced by different pipeline stages, so a
-# column that exists in one layer is routinely absent in another (e.g.
-# ``orders_processed.csv`` never joins the restaurant/location dimensions).
-# ``DataFrame.get`` answers a missing column with ``None``, which the
-# ``pd.to_numeric`` / ``pd.to_datetime`` calls below happily accept and turn
-# into a 0-d numpy scalar - the later ``.astype("Int64")`` then fails with
-# the opaque ``TypeError: data type 'Int64' not understood``.  Routing every
-# lookup through these helpers keeps the loaders total: a missing column
-# degrades to an aligned empty/all-null Series instead of taking the API down.
-# ---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def _column(df: pd.DataFrame, name: str) -> pd.Series:
     """``df[name]`` that degrades to an aligned empty Series, never ``None``."""
@@ -133,7 +133,7 @@ class DashboardService:
         self._loaded = False
         self._sources: dict[str, dict] = {}
 
-        # Normalized frames -------------------------------------------------
+
         self.orders = pd.DataFrame()
         self.items = pd.DataFrame()
         self.monthly = pd.DataFrame()
@@ -148,7 +148,7 @@ class DashboardService:
         self._recommendations_df = pd.DataFrame()
         self.daily_sales = pd.DataFrame()
 
-        # Reference / report frames -----------------------------------------
+
         self.dual_summary = pd.DataFrame()
         self.eval_summary = pd.DataFrame()
         self.latency = pd.DataFrame()
@@ -160,9 +160,9 @@ class DashboardService:
         self._date_min: pd.Timestamp | None = None
         self._date_max: pd.Timestamp | None = None
 
-    # ------------------------------------------------------------------
-    # Loading
-    # ------------------------------------------------------------------
+
+
+
     def ensure_loaded(self, force: bool = False) -> None:
         with self._lock:
             if self._loaded and not force:
@@ -279,7 +279,7 @@ class DashboardService:
 
             self._loaded = True
 
-    # -- source helpers -------------------------------------------------
+
 
     def _note_source(self, key: str, label: str, path: Path | None,
                      rows: int, layer: str) -> None:
@@ -288,7 +288,7 @@ class DashboardService:
             "label": label,
             "file": str(path.relative_to(self.base)) if path else None,
             "rows": int(rows),
-            "layer": layer,          # 'processed' | 'evidence' | 'models' | 'missing'
+            "layer": layer,
             "status": "available" if path else "missing",
         }
 
@@ -313,7 +313,7 @@ class DashboardService:
         self._note_source(key, label, path, len(df), layer)
         return df
 
-    # -- normalized orders / items --------------------------------------
+
 
     def _load_orders(self) -> pd.DataFrame:
         """Load orders from the processed layer or the committed evidence."""
@@ -362,13 +362,13 @@ class DashboardService:
         out["order_date_str"] = out["order_date"].dt.strftime("%Y-%m-%d")
         out = out.dropna(subset=["order_date"]).reset_index(drop=True)
 
-        # The processed analytical layer (orders_processed.csv) only carries the
-        # raw order facts plus derived flags - process_dineiq_data.py joins the
-        # restaurant / location dimensions onto the item and customer datasets,
-        # never onto the orders dataset.  Recover those labels from the cleaned
-        # dimension tables (falling back to the committed evidence slice) so the
-        # location filter, city areas and restaurant names stay real instead of
-        # silently going blank whenever the local pipeline has been run.
+
+
+
+
+
+
+
         missing_labels = [col for col in ("location_id", "restaurant_name",
                                           "restaurant_type", "city_area")
                           if col not in df.columns]
@@ -378,7 +378,7 @@ class DashboardService:
         self._note_source("orders", "Orders (enriched)", path, len(out), layer)
         return out
 
-    # -- dimension back-fill --------------------------------------------
+
 
     def _read_dimension(self, candidates: list[str], columns: list[str]):
         """Read a lookup table as an index-keyed frame, or ``None`` if unusable."""
@@ -419,8 +419,8 @@ class DashboardService:
         if "city_area" in missing and locations is not None and "city_area" in locations.columns:
             out["city_area"] = out["location_id"].map(locations["city_area"])
 
-        # Last resort: the committed Spark SQL evidence carries the same labels
-        # for the orders it sampled, so fill whatever the dimensions left blank.
+
+
         still_missing = [col for col in missing
                          if col not in out.columns or bool(_blank_mask(out[col]).all())]
         if still_missing:
@@ -440,7 +440,7 @@ class DashboardService:
                     out[col] = out[col].mask(
                         _blank_mask(out[col]), out["order_id"].map(evidence[col]))
 
-        # Loader contract: labels are plain text ("" when unknown), ids nullable.
+
         for col in ("city_area", "restaurant_name", "restaurant_type"):
             out[col] = out[col].fillna("").astype(str)
         out["location_id"] = _to_int(out, "location_id")
@@ -501,7 +501,7 @@ class DashboardService:
             out["city_area"] = ""
         out = out.dropna(subset=["order_date"]).reset_index(drop=True)
 
-        # Back-fill city_area via the restaurant -> area map from orders.
+
         if out["city_area"].eq("").all() and not self.orders.empty:
             rmap = (self.orders.dropna(subset=["restaurant_id"])
                     .drop_duplicates("restaurant_id")
@@ -519,7 +519,7 @@ class DashboardService:
         """Cross-frame enrichment that needs all sources loaded first."""
         if self.items.empty:
             return
-        # Category names (categories frame is loaded after items).
+
         if self.items["category_name"].eq("").any() and not self.categories.empty:
             cmap = dict(zip(
                 pd.to_numeric(self.categories["category_id"], errors="coerce").astype("Int64"),
@@ -527,7 +527,7 @@ class DashboardService:
             missing = self.items["category_name"].eq("")
             self.items.loc[missing, "category_name"] = \
                 self.items.loc[missing, "category_id"].map(cmap).fillna("")
-        # City areas via the restaurant -> area map from orders.
+
         if self.items["city_area"].eq("").any() and not self.orders.empty:
             rmap = self._restaurant_area_map()
             missing = self.items["city_area"].eq("")
@@ -602,7 +602,7 @@ class DashboardService:
                         "threshold": meta.get("threshold"),
                         "label_rule": meta.get("label_rule"),
                     })
-        # The active version is the highest v<n> per (task, pipeline).
+
         latest: dict[tuple[str, str], int] = {}
         for e in entries:
             key = (e["task"], e["pipeline"])
@@ -612,9 +612,9 @@ class DashboardService:
         entries.sort(key=lambda e: (e["task"], e["pipeline"], -e["version"]))
         return entries
 
-    # ------------------------------------------------------------------
-    # Shared filters
-    # ------------------------------------------------------------------
+
+
+
     def _filter_orders(self, location_id=None, date_from=None, date_to=None,
                        completed_only: bool = False) -> pd.DataFrame:
         self.ensure_loaded()
@@ -647,7 +647,7 @@ class DashboardService:
             area = self._area_of(location_id)
             if area:
                 df = df[(df["city_area"] == area) | (df["city_area"] == "")]
-                # city_area '' when the map is incomplete - fall back to restaurant map
+
                 if df["city_area"].eq("").any():
                     rmap = self._restaurant_area_map()
                     extra = df["city_area"].eq("")
@@ -678,9 +678,9 @@ class DashboardService:
         self.ensure_loaded()
         return self._date_max
 
-    # ------------------------------------------------------------------
-    # Meta
-    # ------------------------------------------------------------------
+
+
+
     def meta(self) -> dict:
         self.ensure_loaded()
         locations = []
@@ -731,9 +731,9 @@ class DashboardService:
             "quarantine": self.quarantine_counts,
         }
 
-    # ------------------------------------------------------------------
-    # Overview payload
-    # ------------------------------------------------------------------
+
+
+
     def overview(self, location_id=None, date_str: str | None = None) -> dict:
         self.ensure_loaded()
         as_of = pd.Timestamp(date_str) if date_str else self._date_max
@@ -789,7 +789,7 @@ class DashboardService:
             },
         }
 
-        # Service pulse: real order flow split by channel for the day.
+
         pulse_channels = []
         observed = {}
         if len(day):
@@ -830,7 +830,7 @@ class DashboardService:
             "share": round(float(r["share"]) * 100.0, 2) if pd.notna(r["share"]) else None,
         } for _, r in self.categories.iterrows()] if not self.categories.empty else []
 
-        # Monthly summary ("Sales This Month" widget) from the population aggregate.
+
         month_total = None
         month_trend = None
         month_label = as_of.strftime("%B %Y")
@@ -904,9 +904,9 @@ class DashboardService:
                 }
         return {"location_id": int(location_id), "city_area": self._area_of(location_id)}
 
-    # ------------------------------------------------------------------
-    # Revenue series
-    # ------------------------------------------------------------------
+
+
+
     def revenue_series(self, range_key: str = "week", location_id=None,
                        date_str: str | None = None) -> dict:
         self.ensure_loaded()
@@ -1000,7 +1000,7 @@ class DashboardService:
             "orders": int(o),
         } for m, v, o in zip(grouped["month"], grouped["value"], grouped["orders"])]
         total = round(sum(p["value"] for p in points), 2)
-        # Trend: last month vs the month before it.
+
         trend = None
         if len(points) >= 2 and points[-2]["value"]:
             trend = round((points[-1]["value"] - points[-2]["value"]) / points[-2]["value"] * 100.0, 2)
@@ -1016,9 +1016,9 @@ class DashboardService:
             "data_status": "ok",
         }
 
-    # ------------------------------------------------------------------
-    # Orders
-    # ------------------------------------------------------------------
+
+
+
     def _orders_payload(self, df: pd.DataFrame, include_items: bool = False) -> list[dict]:
         items_by_order: dict = {}
         if include_items and not self.items.empty:
@@ -1154,9 +1154,9 @@ class DashboardService:
                                  "Line-level detail not present in the loaded data sample")
         return payload
 
-    # ------------------------------------------------------------------
-    # Dishes / menu
-    # ------------------------------------------------------------------
+
+
+
     def _dishes_rows(self, items_df: pd.DataFrame, limit: int | None = None) -> list[dict]:
         if items_df is None or items_df.empty:
             return []
@@ -1230,8 +1230,8 @@ class DashboardService:
                         comparison = comparison[join_keys + comparison_columns].drop_duplicates(join_keys)
                         df = df.merge(comparison, on=join_keys, how="left", suffixes=("", "_comparison"))
                 except Exception:
-                    # The deterministic rule-based class remains available if
-                    # optional model-comparison evidence is unreadable.
+
+
                     pass
             if "actual_class" not in df.columns:
                 for source in ("business_class", "menu_business_classification"):
@@ -1301,9 +1301,9 @@ class DashboardService:
             "data_status": "ok" if (wastage_items or not slow.empty or not risk.empty) else "empty",
         }
 
-    # ------------------------------------------------------------------
-    # Payments & transactions
-    # ------------------------------------------------------------------
+
+
+
     def _payment_rows(self, df: pd.DataFrame) -> list[dict]:
         rows = []
         if df is None or df.empty:
@@ -1339,7 +1339,7 @@ class DashboardService:
         df = self._filter_orders(location_id, date_from, date_to, completed_only=True)
         methods = self._payment_rows(df)
 
-        # Monthly mix per payment method (from the order sample).
+
         by_month = []
         if not df.empty:
             tmp = df.copy()
@@ -1422,9 +1422,9 @@ class DashboardService:
             "total_amount": round(float(df["total_amount"].sum()), 2) if total else 0.0,
         }
 
-    # ------------------------------------------------------------------
-    # Areas / locations
-    # ------------------------------------------------------------------
+
+
+
     def _areas_rows(self, location_id=None, limit: int = 5) -> list[dict]:
         self.ensure_loaded()
         if self.location_ranking.empty:
@@ -1487,7 +1487,7 @@ class DashboardService:
                    .reset_index().sort_values("revenue", ascending=False))
             df_ref = self.orders[self.orders["order_status"] == "Refunded"]
             ref_grp = df_ref.groupby("order_channel")["total_amount"].sum().to_dict()
-            
+
             for _, r in grp.iterrows():
                 chan = str(r["order_channel"]).strip() or "Unknown"
                 orders = int(r["orders"])
@@ -1499,7 +1499,7 @@ class DashboardService:
                     "avg_order_value": round(rev / orders, 2) if orders else 0.0,
                     "refunds": round(float(ref_grp.get(r["order_channel"], 0.0)), 2),
                 })
-        
+
         monthly_series = {}
         months = []
         if not self.channel_monthly.empty:
@@ -1507,16 +1507,16 @@ class DashboardService:
             for chan, g in self.channel_monthly.groupby("order_channel"):
                 by_month = dict(zip(g["month"].astype(str), g["revenue"].astype(float)))
                 monthly_series[chan] = [round(by_month.get(m, 0.0), 2) for m in months]
-                
+
         return {
             "rows": rows,
             "monthly": {"months": months, "series": monthly_series},
             "data_status": "ok" if rows else "empty"
         }
 
-    # ------------------------------------------------------------------
-    # Customers / promotions
-    # ------------------------------------------------------------------
+
+
+
     def _churn_recency(self) -> pd.Series:
         """Days since last order, whichever name the churn artifact uses."""
         if self.churn.empty:
@@ -1625,14 +1625,14 @@ class DashboardService:
     def recommendations(self) -> dict:
         self.ensure_loaded()
         if self._recommendations_df.empty:
-            # Fall back to trap-based guidance derived from promo evidence.
+
             traps = self.promos_page("traps")["items"][:3] if not self.promos.empty else []
             return {"items": [], "derived_from_traps": traps, "data_status": "empty"}
         return {"items": records(self._recommendations_df), "data_status": "ok"}
 
-    # ------------------------------------------------------------------
-    # Models / pipeline status / reports
-    # ------------------------------------------------------------------
+
+
+
     def models_info(self) -> dict:
         self.ensure_loaded()
         tasks = {}
@@ -1738,9 +1738,9 @@ class DashboardService:
             "data_status": "ok",
         }
 
-    # ------------------------------------------------------------------
-    # Alerts & search
-    # ------------------------------------------------------------------
+
+
+
     def alerts(self) -> dict:
         self.ensure_loaded()
         items = []
@@ -1819,7 +1819,7 @@ class DashboardService:
                 "customers": customers}
 
 
-# Module-level singleton --------------------------------------------------
+
 _service: DashboardService | None = None
 _service_lock = threading.Lock()
 

@@ -33,7 +33,7 @@ def _java_home_ok() -> bool:
 def spark_available() -> bool:
     """True when both pyspark and a JVM are importable/executable."""
     try:
-        import pyspark  # noqa: F401
+        import pyspark
     except Exception:
         return False
     return _java_home_ok()
@@ -46,7 +46,7 @@ class BaseEngine:
     def __init__(self, work_root: Path):
         self.work_root = Path(work_root)
 
-    def load_csv(self, name: str, path: Path):  # pragma: no cover - abstract
+    def load_csv(self, name: str, path: Path):
         raise NotImplementedError
 
     def write_parquet(self, df, path: Path, partition_by: str | None = None):
@@ -73,14 +73,14 @@ class PandasEngine(BaseEngine):
     def __init__(self, work_root: Path):
         super().__init__(work_root)
         self.dtypes = None
-        # injected by the caller (spark_pipeline.schemas.PANDAS_DTYPES)
+
         self.dtype_map = {}
 
     def load_csv(self, name: str, path: Path) -> pd.DataFrame:
         dtypes = self.dtype_map.get(name)
         df = pd.read_csv(path, dtype=dtypes, low_memory=False)
-        # Empty optional strings (promotion_id, email, ...) arrive as NaN;
-        # normalize to "" so string logic matches the Spark engine.
+
+
         for col in df.columns:
             if df[col].dtype == object or str(df[col].dtype) == "string":
                 df[col] = df[col].fillna("").astype(str)
@@ -90,10 +90,10 @@ class PandasEngine(BaseEngine):
                       partition_by: str | None = None):
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        # Overwrite semantics (matches SparkEngine's ``mode("overwrite")``).
-        # ``pq.write_to_dataset`` adds a new uuid-named file on every call and
-        # never removes old ones, so re-running the pipeline used to multiply
-        # every partitioned row.
+
+
+
+
         if path.is_dir():
             shutil.rmtree(path)
         elif path.exists():
@@ -189,7 +189,7 @@ def get_engine(prefer: str = "auto", work_root: Path | None = None) -> BaseEngin
     if prefer == "spark" or (prefer == "auto" and spark_available()):
         try:
             return SparkEngine(work_root)
-        except Exception as exc:  # pragma: no cover - depends on env
+        except Exception as exc:
             if prefer == "spark":
                 raise
             print(f"[engine] Spark unavailable ({exc}); falling back to pandas engine.")

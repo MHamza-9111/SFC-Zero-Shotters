@@ -144,8 +144,8 @@ class ScoringService:
             try:
                 self._load("python", task)
             except ModelsUnavailable:
-                # Keep other available tasks warm; task_specs reports missing
-                # model sides, and the scoring path enforces each task's needs.
+
+
                 continue
         return self.status()
 
@@ -201,9 +201,9 @@ class ScoringService:
 
             spark = self._spark_session()
             spark_frame = spark.createDataFrame(frame.assign(__row=np.arange(len(frame))).to_dict("records"))
-            # Current Spark artifacts are persisted PipelineModels that own
-            # their VectorAssembler/Scaler/Classifier stages. Keep support
-            # for older classifier-only artifacts by assembling on demand.
+
+
+
             if hasattr(model, "stages"):
                 model_input = spark_frame
             else:

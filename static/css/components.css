@@ -1,9 +1,9 @@
-/* ==========================================================================
-   DineIQ Analytics — Component Library
-   Cards · KPIs · Tables · Buttons · Forms · Badges · Overlays · States
-   ========================================================================== */
 
-/* ---------------------------- Buttons ----------------------------------- */
+
+
+
+
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -96,7 +96,7 @@
 }
 .text-link-btn:hover { text-decoration: underline; }
 
-/* ---------------------------- Controls ---------------------------------- */
+
 .control {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.10);
@@ -201,7 +201,7 @@ input[type="range"]::-moz-range-thumb {
   border: 3px solid #0b1220;
 }
 
-/* ---------------------------- Cards ------------------------------------- */
+
 .card {
   position: relative;
   background: var(--glass-bg);
@@ -278,7 +278,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .page-grid { margin-top: 16px; }
 
-/* ---------------------------- KPI cards --------------------------------- */
+
 .kpi-grid { margin-bottom: 16px; }
 .kpi {
   position: relative;
@@ -365,7 +365,7 @@ input[type="range"]::-moz-range-thumb {
   line-height: 1.1;
 }
 
-/* ---------------------------- Badges & chips ---------------------------- */
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -415,7 +415,7 @@ input[type="range"]::-moz-range-thumb {
   color: var(--text);
 }
 
-/* Insight callout (prototype) */
+
 .insight {
   display: flex;
   gap: 10px;
@@ -445,7 +445,7 @@ input[type="range"]::-moz-range-thumb {
   line-height: 1.6;
 }
 
-/* ---------------------------- Tables ------------------------------------ */
+
 .table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -485,7 +485,7 @@ input[type="range"]::-moz-range-thumb {
 .table td.cell-sub { color: var(--text-2); font-size: 11.5px; }
 .table-compact td { padding: 7px 10px; }
 
-/* Progress meter bars inside cells */
+
 .mbar, .pay-bar, .cat-bar {
   height: 5px;
   border-radius: 99px;
@@ -518,7 +518,7 @@ input[type="range"]::-moz-range-thumb {
   background: linear-gradient(90deg, var(--teal), var(--amber));
 }
 
-/* ---------------------------- Pager ------------------------------------- */
+
 .pager {
   display: flex;
   align-items: center;
@@ -531,7 +531,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .pager-btns { display: inline-flex; gap: 8px; }
 
-/* ---------------------------- Dropdowns --------------------------------- */
+
 .dropdown-wrap { position: relative; }
 .dropdown {
   position: absolute;
@@ -607,7 +607,7 @@ input[type="range"]::-moz-range-thumb {
   justify-content: center;
 }
 
-/* User menu */
+
 .user-menu-button {
   width: 36px; height: 36px;
   border-radius: 99px;
@@ -660,7 +660,7 @@ input[type="range"]::-moz-range-thumb {
 .user-menu-item.danger { color: var(--rose); }
 :root[data-theme="light"] .user-menu-item:hover { background: rgba(15, 23, 42, 0.05); }
 
-/* ---------------------------- Modals ------------------------------------ */
+
 .modal {
   position: fixed;
   inset: 0;
@@ -703,7 +703,7 @@ input[type="range"]::-moz-range-thumb {
 .modal-heading h2 { font-size: 17px; font-weight: 700; }
 #order-modal-body, #info-modal-body { padding: 18px 20px 22px; }
 
-/* ---------------------------- Toasts ------------------------------------ */
+
 .toast-wrap {
   position: fixed;
   right: 20px;
@@ -741,7 +741,7 @@ input[type="range"]::-moz-range-thumb {
 }
 :root[data-theme="light"] .toast.error { color: #be123c; border-color: rgba(225, 29, 72, 0.4); }
 
-/* ---------------------------- Loading states ---------------------------- */
+
 .skeleton {
   background: linear-gradient(100deg, rgba(255, 255, 255, 0.045) 40%,
               rgba(255, 255, 255, 0.10) 50%, rgba(255, 255, 255, 0.045) 60%);
@@ -758,7 +758,7 @@ input[type="range"]::-moz-range-thumb {
 .sk-line { height: 12px; margin: 8px 0; }
 .sk-block { height: 120px; margin: 10px 0; }
 
-/* Top load bar */
+
 .loadbar {
   position: fixed;
   top: 0; left: 0;
@@ -780,7 +780,7 @@ input[type="range"]::-moz-range-thumb {
   100% { left: 105%; }
 }
 
-/* ---------------------------- Empty / error ----------------------------- */
+
 .empty-state {
   padding: 34px 20px;
   text-align: center;
@@ -818,7 +818,7 @@ input[type="range"]::-moz-range-thumb {
   border-color: rgba(15, 23, 42, 0.1);
 }
 
-/* ---------------------------- Lists & tiles ----------------------------- */
+
 .data-list, .alert-list { display: grid; gap: 8px; }
 .order-list { display: grid; gap: 6px; overflow-y: auto; }
 
@@ -1005,7 +1005,7 @@ input[type="range"]::-moz-range-thumb {
 .report-stat .k { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-3); font-weight: 800; }
 .report-stat .v { font-family: var(--font-disp); font-size: 19px; font-weight: 700; color: var(--heading); margin-top: 4px; }
 
-/* Detail grids (order modal) */
+
 .detail-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1021,7 +1021,7 @@ input[type="range"]::-moz-range-thumb {
 .detail-cell .k { font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-3); font-weight: 800; }
 .detail-cell .v { font-size: 13px; font-weight: 700; color: var(--heading-2); margin-top: 3px; overflow-wrap: anywhere; }
 
-/* ---------------------------- Charts ------------------------------------ */
+
 .chart {
   position: relative;
   height: 260px;
@@ -1051,7 +1051,7 @@ input[type="range"]::-moz-range-thumb {
 .chart-tip strong { color: var(--amber-2); display: block; margin-bottom: 2px; }
 :root[data-theme="light"] .chart-tip strong { color: var(--amber-deep); }
 
-/* ---------------------------- Heatmap ----------------------------------- */
+
 .heat { display: grid; gap: 3px; }
 .heat .hc {
   height: 16px;
@@ -1068,7 +1068,7 @@ input[type="range"]::-moz-range-thumb {
   padding-right: 6px;
 }
 
-/* ---------------------------- Pipeline track ---------------------------- */
+
 .pipeline-track {
   display: flex;
   flex-wrap: wrap;
@@ -1097,7 +1097,7 @@ input[type="range"]::-moz-range-thumb {
 .pipeline-label { font-size: 12px; font-weight: 700; color: var(--heading-2); }
 .pipeline-meta { font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
 
-/* ---------------------------- Scorer (predictions) ---------------------- */
+
 .scorer-tools {
   display: flex;
   flex-wrap: wrap;
@@ -1149,12 +1149,12 @@ input[type="range"]::-moz-range-thumb {
   padding: 16px 18px 18px;
 }
 
-/* ---------------------------- Data editor ------------------------------- */
+
 .data-delete { color: var(--rose); }
 .team-role { min-width: 150px; }
 .team-save { min-width: 76px; }
 
-/* ---------------------------- Misc -------------------------------------- */
+
 .refresh-button.spinning svg { animation: spin 0.6s linear; }
 @keyframes spin { to { transform: rotate(360deg); } }
 

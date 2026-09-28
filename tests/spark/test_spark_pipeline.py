@@ -33,13 +33,13 @@ sys.path.insert(0, str(BASE))
 sys.path.insert(0, str(BASE / "data_generator"))
 sys.path.insert(0, str(BASE / "python_pipeline" / "cleaning"))
 
-import clean_dineiq_data  # noqa: E402
-from generate_dineiq_data import generate as generate_data  # noqa: E402
+import clean_dineiq_data
+from generate_dineiq_data import generate as generate_data
 
-from spark_jobs import (dual_pipeline_compare, ensemble_latency,  # noqa: E402
+from spark_jobs import (dual_pipeline_compare, ensemble_latency,
                         ingest_validate, mllib_models, spark_sql)
-from spark_jobs.engines import get_engine, spark_available  # noqa: E402
-from spark_jobs.features import (  # noqa: E402
+from spark_jobs.engines import get_engine, spark_available
+from spark_jobs.features import (
     CHURN_FEATURES,
     MENU_FEATURES,
     ORDER_FEATURES,
@@ -48,7 +48,7 @@ from spark_jobs.features import (  # noqa: E402
     build_order_frame,
     load_base_frames,
 )
-from spark_jobs.schemas import (  # noqa: E402
+from spark_jobs.schemas import (
     DATASETS,
     PANDAS_DTYPES,
     PRIMARY_KEYS,
@@ -80,9 +80,9 @@ CONFIG = {
 }
 
 
-# ---------------------------------------------------------------------------
-# Session fixture: mini pipeline in a temp dir
-# ---------------------------------------------------------------------------
+
+
+
 
 @pytest.fixture(scope="session")
 def mini_env(tmp_path_factory):
@@ -117,7 +117,7 @@ def cases_dir(mini_env, tmp_path_factory):
     frames = load_base_frames(mini_env["processed"])
     rng = np.random.default_rng(0)
 
-    # -- order value (50 cases) --------------------------------------
+
     day_map = {d: i for i, d in enumerate(
         ["Monday", "Tuesday", "Wednesday", "Thursday",
          "Friday", "Saturday", "Sunday"])}
@@ -142,7 +142,7 @@ def cases_dir(mini_env, tmp_path_factory):
                           index=False)
     _save_py_artifact(out, "high_value_order", py, {"features": ORDER_FEATURES})
 
-    # -- churn (30 cases) ----------------------------------------------
+
     cf = build_churn_frame(frames)
     cidx = rng.choice(cf.index, size=30, replace=False)
     ctrain = cf.loc[~cf.index.isin(set(cidx.tolist()))]
@@ -156,8 +156,8 @@ def cases_dir(mini_env, tmp_path_factory):
     ccases = ccases.rename(columns={"churned": "actual_churn"})
     ccases.to_csv(out / "churn_unseen_cases.csv", index=False)
 
-    # Must mirror production (python_pipeline/model_artifacts.py and
-    # spark_jobs/mllib_models.py): a scaled logistic regression.
+
+
     py = make_pipeline(StandardScaler(),
                        LogisticRegression(max_iter=2000, random_state=42))
     py.fit(ctrain[CHURN_FEATURES].fillna(0), ctrain["churned"])
@@ -171,14 +171,14 @@ def cases_dir(mini_env, tmp_path_factory):
                  ).to_csv(out / "churn_python_predictions.csv", index=False)
     _save_py_artifact(out, "customer_churn", py, {"features": CHURN_FEATURES})
 
-    # -- menu class (10 cases) -------------------------------------------
+
     mf = build_menu_frame(frames)
     midx = rng.choice(mf.index, size=min(10, len(mf)), replace=False)
     mtrain = mf.loc[~mf.index.isin(set(midx.tolist()))]
     mcases = mf.loc[sorted(midx.tolist()),
                     ["menu_item_id", "restaurant_id"] + MENU_FEATURES +
                     ["business_class"]].copy()
-    # join item_name if available
+
     menu = frames["menu_items"]
     mcases = mcases.merge(
         menu[["menu_item_id", "item_name"]], on="menu_item_id",
@@ -253,9 +253,9 @@ def pipeline_out(mini_env, cases_dir, tmp_path_factory):
             "models_dir": models, "cases_dir": cases_dir}
 
 
-# ---------------------------------------------------------------------------
-# Static checks
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_schemas_complete():
     assert len(DATASETS) == 12
@@ -278,9 +278,9 @@ def test_engine_label_present(pipeline_out):
     assert pipeline_out["engine"].label()["engine"] == "pandas"
 
 
-# ---------------------------------------------------------------------------
-# Step 1 - ingestion & validation
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_ingestion_report_clean(pipeline_out):
     report = pipeline_out["report"]
@@ -317,16 +317,16 @@ def test_parquet_written_and_partitioned(pipeline_out):
     for name in DATASETS:
         target = pq / f"{name}.parquet"
         assert target.exists() or target.is_dir(), f"missing {name}.parquet"
-    # orders is partitioned by order_month
+
     assert (pq / "orders.parquet").is_dir()
     parts = [d.name for d in (pq / "orders.parquet").iterdir()
              if d.name.startswith("order_month=")]
     assert len(parts) >= 12, parts
     df = pd.read_parquet(pq / "orders.parquet")
     assert "order_month" in df.columns and len(df) > 0
-    # non-partitioned one is a single file
+
     assert (pq / "ratings.parquet").is_file()
-    # regression: no order may be stored twice
+
     assert df["order_id"].is_unique, "orders.parquet contains duplicated rows"
 
 
@@ -345,9 +345,9 @@ def test_parquet_rewrite_is_idempotent(tmp_path):
     assert len(list((target / "order_month=2025-01").glob("*.parquet"))) == 1
 
 
-# ---------------------------------------------------------------------------
-# Step 2 - SQL analysis
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_sql_outputs(pipeline_out):
     expected = ["orders_enriched", "order_item_revenue", "monthly_revenue",
@@ -376,9 +376,9 @@ def test_sql_summary_labels_engine(pipeline_out):
     assert meta["engine"] == "pandas"
 
 
-# ---------------------------------------------------------------------------
-# Step 3 - models
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_three_versioned_models(pipeline_out):
     for task in ("high_value_order", "customer_churn",
@@ -399,7 +399,7 @@ def test_three_versioned_models(pipeline_out):
 def test_models_exclude_committed_cases(mini_env, pipeline_out):
     meta = json.loads((pipeline_out["models_dir"] / "high_value_order" /
                        "v1" / "metadata.json").read_text())
-    # mini dataset: all completed orders minus the 50 case orders
+
     frames = load_base_frames(mini_env["processed"])
     of = build_order_frame(
         frames, {d: i for i, d in enumerate(
@@ -408,9 +408,9 @@ def test_models_exclude_committed_cases(mini_env, pipeline_out):
     assert meta["n_train"] == len(of) - 50
 
 
-# ---------------------------------------------------------------------------
-# Step 4 - dual comparison
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_dual_comparison(pipeline_out):
     ev = pipeline_out["evidence"] / "dual_pipeline"
@@ -427,8 +427,8 @@ def test_dual_comparison(pipeline_out):
 
     summary = pd.read_csv(ev / "dual_pipeline_summary.csv")
     assert len(summary) == 3
-    # Same data + same features + same seed/hyperparameters on both
-    # sides -> the mini pipelines must agree on (almost) all cases.
+
+
     for _, row in summary.iterrows():
         assert row["agreement_percentage"] >= 95.0, row
 
@@ -443,24 +443,24 @@ def test_disagreements_explained(pipeline_out):
             len(bad) == 0
 
 
-# ---------------------------------------------------------------------------
-# Step 5 - NFR latency
-# ---------------------------------------------------------------------------
+
+
+
 
 def test_nfr_latency_passes(pipeline_out):
     ev = pipeline_out["evidence"] / "latency"
     assert (ev / "ensemble_latency_report.csv").exists()
     report = pd.read_csv(ev / "ensemble_latency_report.csv")
-    assert (report["pass"] == True).all()  # noqa: E712
+    assert (report["pass"] == True).all()
     assert (report["total_ms_max"] < 5000).all()
 
     res = pipeline_out["latency"]["high_value_order"]
-    # mini dataset carries 50 order cases, so the warm batch is
-    # min(100, 50); the NFR protocol itself is the 100-record batch
-    # exercised by the full-scale evidence (Main/evidence/latency/).
+
+
+
     assert res["batch_size"] >= 50
     assert res["pass"]
-    # sample carries both model versions (versioned artifact NFR rule)
+
     assert res["python_model_version"] is not None
     assert res["pipeline_model_version"] is not None
 

@@ -63,13 +63,13 @@ def test_forecast_model_beats_naive_baseline(pipeline):
     model = ev[ev["model"].str.startswith("linear")].iloc[0]
     naive = ev[ev["model"].str.startswith("naive")].iloc[0]
 
-    # Metrics must be positive and finite.
+
     for row in (model, naive):
         assert row["mae"] > 0
         assert row["rmse"] > 0
         assert 0 < row["mape"] < 100
 
-    # SRS requirement: the model must improve on a simple baseline.
+
     assert model["mae"] < naive["mae"], (
         f"forecast model MAE {model['mae']} did not beat naive "
         f"baseline MAE {naive['mae']}"
@@ -80,7 +80,7 @@ def test_forecast_holdout_is_chronological(pipeline):
     out = pipeline["analytics"]
     fc = _read(out, "daily_forecast.csv")
     fc["date"] = pd.to_datetime(fc["date"])
-    # Held-out set must be the final contiguous block of the year.
+
     assert fc["date"].min() >= pd.Timestamp("2025-10-01"), (
         "forecast holdout does not appear to be the last days of the window"
     )
@@ -119,7 +119,7 @@ def test_dual_pipeline_sets_consistent(pipeline):
     mp = _read(d, "menu_class_python_predictions.csv")
     assert set(mc["menu_item_id"]) == set(mp["menu_item_id"])
 
-    # The Python predictions must be real (not all one class).
+
     assert op["python_predicted_high_value"].nunique() >= 1
     assert cp["python_predicted_churn"].nunique() >= 1
 
@@ -133,10 +133,10 @@ def test_churn_model_reports_sensible_metrics(pipeline):
     auc = float(metrics["roc_auc"])
     assert 0.5 <= acc <= 1.0
     assert 0.5 <= auc <= 1.0
-    # After leakage removal, the result is expected to be materially below
-    # the old perfect score.  The SRS target is recorded as a target, not a
-    # reason to reintroduce a label-defining feature when honest training
-    # cannot reach it on this dataset.
+
+
+
+
     assert acc < 0.99, f"churn accuracy {acc} still suspiciously perfect"
     assert 0.5 <= float(metrics["macro_f1"]) <= 1.0
 

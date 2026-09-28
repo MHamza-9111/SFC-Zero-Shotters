@@ -126,8 +126,8 @@ def compare_churn(engine, models_dir: Path, cases_dir: Path, out_dir: Path):
     df = df.drop(columns=[c for c in df.columns if c.endswith("_py")])
     model, meta = load_latest_model(models_dir, "customer_churn")
 
-    # The case file carries the raw customer aggregates; the log
-    # features are derived exactly as in the training frame.
+
+
     X = pd.DataFrame({
         "f_log_orders": np.log1p(df["total_orders"].astype(float)),
         "f_log_spend": np.log1p(df["total_spend"].astype(float)),

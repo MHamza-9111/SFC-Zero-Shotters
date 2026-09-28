@@ -1,9 +1,9 @@
-/* ============================================================
-   DineIQ Dashboard — Home (role dashboards)
-   The server renders only the block for the signed-in role
-   (templates/pages/home.html); this file fills it from the
-   existing /api/v1 endpoints.
-   ============================================================ */
+
+
+
+
+
+
 (function () {
     "use strict";
 
@@ -15,7 +15,7 @@
     const rootEl = () => el("view-home");
     const roleOf = () => (rootEl() && rootEl().dataset.role) || "Administrator";
 
-    /* ---------------- shared building blocks ---------------- */
+
     function kpiCard({ label, value, support, trendPct, ic, tint, hero }) {
         const trend = fmt.trend(trendPct, "vs prior day");
         return `<div class="kpi ${hero ? "hero" : ""}">
@@ -36,7 +36,7 @@
              <div class="skeleton sk-line" style="width:60%"></div></div>`).join("");
     }
 
-    /* Load one card independently so a single failing endpoint never blanks the page. */
+
     async function fill(id, loader) {
         const target = el(id);
         if (!target) return;
@@ -93,9 +93,9 @@
         return d.toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
     }
 
-    /* ============================================================
-       Administrator
-       ============================================================ */
+
+
+
     const ROLE_ORDER = ["Administrator", "Regional Manager", "Restaurant Manager", "Data Analyst"];
 
     async function loadAdmin() {
@@ -124,7 +124,7 @@
                 support: pipe.status === "fulfilled" && pipe.value.last_processing_run ? String(pipe.value.last_processing_run).slice(11, 16) + " · processing complete" : "No run recorded" }),
         ].join("");
 
-        // Accounts by role
+
         const roles = el("home-roles");
         if (list) {
             const total = list.length || 1;
@@ -165,9 +165,9 @@
         ]);
     }
 
-    /* ============================================================
-       Regional Manager
-       ============================================================ */
+
+
+
     async function loadRegional() {
         skeletonKpis(4);
         try {
@@ -230,9 +230,9 @@
         ]);
     }
 
-    /* ============================================================
-       Restaurant Manager
-       ============================================================ */
+
+
+
     const PAY_ICONS = { "Cash": "cash", "Card": "card", "Online Wallet": "phone", "Unspecified": "wallet" };
 
     function savedLocation() {
@@ -252,7 +252,7 @@
             const saved = savedLocation();
             if (saved && locations.some(l => String(l.location_id) === saved)) select.value = saved;
             select.addEventListener("change", () => {
-                try { localStorage.setItem(LOCATION_KEY, select.value); } catch (_) { /* choice stays for this visit */ }
+                try { localStorage.setItem(LOCATION_KEY, select.value); } catch (_) {  }
                 loadRestaurant();
             });
         } catch (err) {
@@ -294,7 +294,7 @@
                 trendPct: k.customers && k.customers.trend_pct, support: k.customers && k.customers.support }),
         ].join("");
 
-        // Recent orders
+
         const orders = ov.recent_orders || [];
         const list = el("home-orders");
         el("home-orders-sub").textContent = `${orders.length} recent order(s)`;
@@ -313,7 +313,7 @@
         list.querySelectorAll("[data-order]").forEach(btn =>
             btn.addEventListener("click", () => DQ.openOrder && DQ.openOrder(btn.dataset.order)));
 
-        // Best sellers
+
         const dishes = (ov.top_dishes || []).slice(0, 5);
         el("home-dishes").innerHTML = dishes.length ? dishes.map((d, i) => `
             <a class="dish-row" href="/menu">
@@ -324,7 +324,7 @@
                 <span class="dish-right"><span class="dish-amount">${fmt.money0(d.revenue)}</span></span>
             </a>`).join("") : emptyState("No dish sales", "No menu sales recorded for this location.", "menu-book");
 
-        // Payment mix
+
         const pays = ov.payment_methods || [];
         el("home-pay-sub").textContent = `Settled tenders on ${fmt.dateLabel(ov.as_of)}`;
         el("home-pay").innerHTML = pays.length ? pays.map(r => `
@@ -348,9 +348,9 @@
         ]);
     }
 
-    /* ============================================================
-       Data Analyst
-       ============================================================ */
+
+
+
     async function loadAnalyst() {
         skeletonKpis(4);
         const [status, forecast, anomalies, meta, pipe, alerts] = await Promise.allSettled([
@@ -378,7 +378,7 @@
                 value: quarantine === null ? "—" : fmt.num(quarantine), support: "Parked by the data-quality pipeline" }),
         ].join("");
 
-        // Forecast vs actual, latest 7 points
+
         const fc = el("home-forecast");
         if (ok(forecast)) {
             const pts = (forecast.value.points || []).slice(-7);
@@ -395,7 +395,7 @@
             fc.innerHTML = errorState(forecast.reason && forecast.reason.message);
         }
 
-        // Anomalies, largest z-scores first
+
         const an = el("home-anomalies");
         if (ok(anomalies)) {
             const rows = (anomalies.value.sales || []).slice()
@@ -424,7 +424,7 @@
         ]);
     }
 
-    /* ---------------- view registration ---------------- */
+
     const LOADERS = {
         "Administrator": loadAdmin,
         "Regional Manager": loadRegional,

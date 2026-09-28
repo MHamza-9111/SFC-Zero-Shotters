@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
-# ---------------------------------------------------------------------------
-# DineIQ Big Data pipeline - Spark environment setup (production path).
-#
-# Sets up everything spark_jobs/ needs to run on the REAL
-# Spark engine:
-#   1. Python virtual environment + dependencies
-#   2. JRE 17 (required by PySpark)
-#   3. Smoke test proving the Spark engine is usable
-#
-# On machines without a JVM (or without network access to install one)
-# the pipeline automatically falls back to the documented pandas/pyarrow
-# engine (spark_jobs/engines.py); every artifact then carries
-# an engine label recording which engine produced it.
-#
-# Usage:
-#   bash setup_spark.sh
-# ---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 set -euo pipefail
 
 BASE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -20,14 +20,14 @@ sys.path.insert(0, str(BASE / "python_pipeline" / "cleaning"))
 sys.path.insert(0, str(BASE / "python_pipeline" / "processing"))
 sys.path.insert(0, str(BASE / "python_pipeline" / "analytics"))
 
-import clean_dineiq_data  # noqa: E402
-import process_dineiq_data  # noqa: E402
-import run_advanced_analytics  # noqa: E402
-from generate_dineiq_data import generate as generate_data  # noqa: E402
+import clean_dineiq_data
+import process_dineiq_data
+import run_advanced_analytics
+from generate_dineiq_data import generate as generate_data
 
 
-# Medium scale: large enough for stable ML metrics (churn, forecast)
-# but small enough to keep the test session fast (~30 seconds).
+
+
 PIPELINE_CONFIG = {
     "seed": 42,
     "scale": {

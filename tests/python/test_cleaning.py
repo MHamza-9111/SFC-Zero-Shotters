@@ -52,30 +52,30 @@ def test_foreign_keys_hold_after_cleaning(pipeline):
     ra = _read(proc, "ratings.csv")
     pr = _read(proc, "promotions.csv")
 
-    # orders -> customers / restaurants
+
     assert od["customer_id"].isin(set(cu["customer_id"])).all()
     assert od["restaurant_id"].isin(set(rt["restaurant_id"])).all()
 
-    # orders -> promotions
-    # promotion_id comes back as float64; normalize to clean strings.
+
+
     od_pid = od["promotion_id"].apply(
         lambda x: "" if pd.isna(x) else str(int(x))
     )
     promo_ids = set(pr["promotion_id"].astype(str))
     assert od_pid[od_pid != ""].isin(promo_ids).all()
 
-    # order items -> orders / menu
+
     assert oi["order_id"].isin(set(od["order_id"])).all()
     assert oi["menu_item_id"].isin(set(mi["menu_item_id"])).all()
 
-    # order items restaurant consistency
+
     item_rest = mi.set_index("menu_item_id")["restaurant_id"]
     m = oi.merge(od[["order_id", "restaurant_id"]], on="order_id")
     assert (m["menu_item_id"].map(item_rest) == m["restaurant_id"]).all(), (
         "order items must come from the order's own restaurant"
     )
 
-    # ratings -> orders, and rated item is in the order
+
     assert ra["order_id"].isin(set(od["order_id"])).all()
     order_customer = od.set_index("order_id")["customer_id"]
     ra_expected = ra["order_id"].map(order_customer)
@@ -101,28 +101,28 @@ def test_processed_counts_never_exceed_raw(pipeline):
 def test_injected_problems_are_quarantined(pipeline):
     q = pipeline["quarantine"]
 
-    # Out-of-period orders.
+
     oq = _read(q, "orders_quarantine.csv")
     reasons = oq["quarantine_reason"].astype(str)
     assert reasons.str.contains("outside analysis period").any(), (
         "out-of-period orders were not quarantined"
     )
 
-    # Orphan / invalid ratings.
+
     rq = _read(q, "ratings_quarantine.csv")
     rr = rq["quarantine_reason"].astype(str)
     assert rr.str.contains("not part of the referenced order").any(), (
         "orphan ratings were not quarantined"
     )
 
-    # Duplicate customers.
+
     cq = _read(q, "customers_quarantine.csv")
     cr = cq["quarantine_reason"].astype(str)
     assert cr.str.contains("Duplicate customer_id").any(), (
         "duplicate customers were not quarantined"
     )
 
-    # Invalid order lines.
+
     iq = _read(q, "order_items_quarantine.csv")
     ir = iq["quarantine_reason"].astype(str)
     assert ir.str.contains("Invalid order item").any(), (

@@ -27,17 +27,17 @@ ORDER_FEATURES = [
     "total_orders", "total_spend",
 ]
 
-# Churn label is defined from recency at PERIOD_END.  Recency is therefore
-# deliberately excluded from the model input to prevent direct label leakage.
+
+
 CHURN_FEATURES = [
     "f_log_orders", "f_log_spend", "average_order_value",
     "discount_dependency", "promo_dependency", "top_category_share",
     "unique_categories", "total_items_purchased", "weekend_order_share",
 ]
 
-# Menu classes are defined from demand/profit/margin medians. Those target
-# defining variables must not be fed back into the classifier. These are
-# independent behavioral / customer-signal features instead.
+
+
+
 MENU_FEATURES = [
     "average_rating", "rating_count", "wastage_ratio",
     "avg_unit_price", "promo_dependency", "weekend_order_share",
@@ -136,17 +136,17 @@ def _day_code_map_from_cases(cases_path: Path) -> dict:
     return m
 
 
-# ---------------------------------------------------------------------------
-# Feature frame construction (pandas engine)
-# ---------------------------------------------------------------------------
+
+
+
 
 def build_order_frame(frames: dict, day_map: dict) -> pd.DataFrame:
     o = _derived_orders(frames["orders"])
     comp = o[o["is_completed"]].copy()
     items = _completed_items(frames)
 
-    # basket_size = number of order lines (nunique order_item_id),
-    # matching the Python pipeline definition exactly.
+
+
     agg = items.groupby("order_id").agg(
         basket_size=("order_item_id", "nunique"),
         basket_quantity=("quantity", "sum"),
@@ -158,10 +158,10 @@ def build_order_frame(frames: dict, day_map: dict) -> pd.DataFrame:
         customer_order_count=("order_id", "nunique"),
         customer_spend=("total_amount", "sum")).reset_index()
     comp = comp.merge(cust, on="customer_id", how="left")
-    # Predict at order time: do not let the target order contribute to the
-    # customer history features. Including the current total_amount inside
-    # total_spend would make the order-value label partially visible to the
-    # model. Leave-one-order-out aggregates keep the feature causal.
+
+
+
+
     comp["total_orders"] = (comp["customer_order_count"] - 1).clip(lower=0)
     comp["total_spend"] = (comp["customer_spend"] - comp["total_amount"]).clip(lower=0)
     comp = comp.drop(columns=["customer_order_count", "customer_spend"])
@@ -261,9 +261,9 @@ def build_menu_frame(frames: dict) -> pd.DataFrame:
     wastage_item = (wast.groupby("menu_item_id")["quantity_wasted"]
                     .sum().reset_index())
 
-    # Independent behavioral signals for ML: no units/revenue/profit/margin,
-    # because the menu class itself is deterministically defined from those
-    # target variables.
+
+
+
     behavior = (items.groupby(["menu_item_id", "restaurant_id"])
                 .agg(avg_unit_price=("unit_price", "mean"),
                      promo_dependency=("is_promo_order", "mean"),
@@ -287,11 +287,11 @@ def build_menu_frame(frames: dict) -> pd.DataFrame:
     u_med = df["units_sold"].median()
     p_med = df["estimated_profit"].median()
     m_med = df["profit_margin_percentage"].median()
-    # SRS Step 10 (same rule as python_pipeline/analytics/run_advanced_analytics.py):
-    # Profit Driver = high demand + high profit + high margin; Volume
-    # Driver = any other high-demand item; Hidden Opportunity = low
-    # demand + high margin; Low Performer = low demand + low margin.
-    # The four conditions partition all items (default is unreachable).
+
+
+
+
+
     high_demand = df["units_sold"] >= u_med
     high_profit = df["estimated_profit"] >= p_med
     high_margin = df["profit_margin_percentage"] >= m_med

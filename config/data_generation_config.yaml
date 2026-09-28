@@ -24,6 +24,6 @@ time:
 
 output:
   raw_dir: "raw_data"
-  # Canonical cleaned CSV layer consumed by both analytics pipelines.
+
   processed_dir: "processed_data"
   parquet_dir: "parquet_data"

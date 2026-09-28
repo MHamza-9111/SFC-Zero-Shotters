@@ -1,8 +1,8 @@
-/* ============================================================
-   DineIQ Landing — live platform facts from the public API.
-   Every value rendered here comes from GET /api/v1/status.
-   Failures surface as an explicit "Unavailable" state.
-   ============================================================ */
+
+
+
+
+
 (function () {
     "use strict";
 
@@ -20,7 +20,7 @@
         const track = byId("landing-ticker");
         if (!track || !facts.length) return;
         const items = facts.map((f) => `<span>${f}</span>`).join("");
-        track.innerHTML = items + items; // duplicated for a seamless loop
+        track.innerHTML = items + items;
     }
 
     function modelSummary(models) {

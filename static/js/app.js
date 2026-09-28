@@ -1,7 +1,7 @@
-/* ============================================================
-   DineIQ Dashboard — App Shell, Themes, Animations & Interactions
-   3D Tilt physics, Cursor aura, Scroll tracking, Shortcuts
-   ============================================================ */
+
+
+
+
 (function () {
     "use strict";
 
@@ -17,27 +17,27 @@
         if (v && v.initialized && v.refresh) v.refresh();
     };
 
-    /* ---------------- Theme Engine ---------------- */
+
     function applyTheme(theme) {
         theme = theme === "light" ? "light" : "dark";
         DQ.state.theme = theme;
         document.documentElement.setAttribute("data-theme", theme);
         document.body.setAttribute("data-theme", theme);
-        try { localStorage.setItem("dq-theme", theme); } catch (_) { /* Theme remains active. */ }
-        
+        try { localStorage.setItem("dq-theme", theme); } catch (_) {  }
+
         const use = document.querySelector("#theme-icon use");
         if (use) use.setAttribute("href", theme === "dark" ? "#i-sun" : "#i-moon");
-        
+
         const toggle = document.getElementById("theme-toggle");
         if (toggle) {
             toggle.setAttribute("aria-pressed", String(theme === "light"));
             toggle.title = `Switch to ${theme === "dark" ? "light" : "dark"} theme`;
         }
-        
+
         document.querySelectorAll("#theme-segment button").forEach(b =>
             b.classList.toggle("active", b.dataset.theme === theme));
-            
-        // Re-render charts with new theme colors
+
+
         if (DQ.charts && DQ.charts.rerenderStored) {
             DQ.charts.rerenderStored();
         }
@@ -53,7 +53,7 @@
         });
     }
 
-    /* ---------------- View Activation ---------------- */
+
     function activateView() {
         document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
         const section = document.getElementById("view-" + current);
@@ -74,7 +74,7 @@
         }
     }
 
-    /* ---------------- Sidebar Drawer (Mobile) ---------------- */
+
     const sidebar = document.getElementById("sidebar");
     const scrim = document.getElementById("sidebar-scrim");
     const menuToggle = document.getElementById("menu-toggle");
@@ -113,11 +113,11 @@
             closeSidebar();
         }
     });
-    // Close the drawer when navigating on small screens.
+
     if (sidebar) sidebar.querySelectorAll(".nav-item").forEach(link =>
         link.addEventListener("click", () => { if (window.innerWidth <= 1080) closeSidebar(); }));
 
-    /* ---------------- Branch Selector ---------------- */
+
     const branchBtn = document.getElementById("branch-selector");
     const branchMenu = document.getElementById("branch-menu");
     const branchChip = document.getElementById("branch-chip");
@@ -143,7 +143,7 @@
                 <span>${esc(r.city_area)}
                     ${r.orders ? `<span class="muted">· ${fmt.num(r.orders)} orders</span>` : ""}</span>
             </button>`).join("") || `<div class="empty-state">No matching areas</div>`;
-            
+
         list.querySelectorAll("[data-loc]").forEach(btn => btn.addEventListener("click", () => {
             DQ.state.locationId = btn.dataset.loc;
             localStorage.setItem("dq-loc", DQ.state.locationId);
@@ -181,7 +181,7 @@
     if (bSearch) bSearch.addEventListener("input", (e) => renderBranchList(e.target.value));
     if (branchMenu) branchMenu.addEventListener("click", e => e.stopPropagation());
 
-    /* ---------------- Notifications Panel ---------------- */
+
     const notifBtn = document.getElementById("notif-btn");
     const notifPanel = document.getElementById("notif-panel");
     if (notifBtn && notifPanel) {
@@ -214,7 +214,7 @@
         }
     }
 
-    /* ---------------- Global Search ---------------- */
+
     const searchInput = document.getElementById("global-search");
     const searchResults = document.getElementById("search-results");
     let searchTimer;
@@ -271,15 +271,15 @@
         }
     }
 
-    /* ---------------- Command Palette (Ctrl+K) ---------------- */
+
     const cmdPalette = document.getElementById("command-palette");
     const cmdInput = document.getElementById("command-input");
     const cmdResults = document.getElementById("command-results");
-    
+
     if (cmdPalette && cmdInput && cmdResults) {
         let focusedIndex = -1;
         const getItems = () => Array.from(cmdResults.querySelectorAll(".command-item:not([hidden])"));
-        
+
         function openCommandPalette() {
             cmdPalette.hidden = false;
             cmdInput.value = "";
@@ -288,12 +288,12 @@
             updateFocus();
             setTimeout(() => cmdInput.focus(), 10);
         }
-        
+
         function closeCommandPalette() {
             cmdPalette.hidden = true;
             cmdInput.blur();
         }
-        
+
         function updateFocus() {
             const items = getItems();
             items.forEach((item, i) => {
@@ -305,23 +305,23 @@
                 }
             });
         }
-        
-        // Keyboard Shortcuts
+
+
         document.addEventListener("keydown", (e) => {
-            // Ctrl+K or Cmd+K
+
             if ((e.ctrlKey || e.metaKey) && e.key === "k") {
                 e.preventDefault();
                 if (cmdPalette.hidden) openCommandPalette();
                 else closeCommandPalette();
             }
-            
-            // Escape to close
+
+
             if (e.key === "Escape" && !cmdPalette.hidden) {
                 e.preventDefault();
                 closeCommandPalette();
             }
-            
-            // Navigation within palette
+
+
             if (!cmdPalette.hidden) {
                 const items = getItems();
                 if (e.key === "ArrowDown") {
@@ -340,13 +340,13 @@
                 }
             }
         });
-        
-        // Filter commands on typing
+
+
         cmdInput.addEventListener("input", (e) => {
             const query = e.target.value.toLowerCase().trim();
             const items = Array.from(cmdResults.querySelectorAll(".command-item"));
             let visibleCount = 0;
-            
+
             items.forEach(item => {
                 const text = item.textContent.toLowerCase();
                 if (text.includes(query)) {
@@ -356,30 +356,30 @@
                     item.hidden = true;
                 }
             });
-            
-            // Reset focus to first visible item
+
+
             focusedIndex = visibleCount > 0 ? 0 : -1;
             updateFocus();
         });
-        
-        // Handle clicks on command items
+
+
         cmdResults.addEventListener("click", (e) => {
             const btn = e.target.closest(".command-item");
             if (btn && btn.dataset.nav) {
                 closeCommandPalette();
-                // Find and click the corresponding sidebar navigation item
+
                 const navLink = document.querySelector(`.nav-item[data-view="${btn.dataset.nav}"]`);
                 if (navLink) navLink.click();
             }
         });
-        
-        // Close on background click
+
+
         cmdPalette.addEventListener("click", (e) => {
             if (e.target === cmdPalette) closeCommandPalette();
         });
     }
 
-    /* ---------------- System Status & Profile ---------------- */
+
     async function loadStatus() {
         try {
             const s = await api.get("/api/v1/status");
@@ -399,7 +399,7 @@
         }
     }
 
-    /* ---------------- Modals & Auth ---------------- */
+
     document.querySelectorAll("[data-close]").forEach(btn =>
         btn.addEventListener("click", () => DQ.closeModal(btn.dataset.close)));
     document.querySelectorAll(".modal").forEach(m =>
@@ -413,7 +413,7 @@
         });
     }
 
-    /* Account dropdown — real session data from /auth/me */
+
     const userMenuBtn = document.getElementById("user-menu-btn");
     const userMenu = document.getElementById("user-menu");
     if (userMenuBtn && userMenu) {
@@ -441,16 +441,16 @@
             if (teamLink) teamLink.hidden = user.role !== "Administrator";
             if (signOutButton) signOutButton.title = `${user.name} · ${user.role}`;
         } catch (_) {
-            /* Running without auth requirement — menu stays generic. */
+
         }
     }
 
-    /* ---------------- Precision interaction: no 3D/gravity transforms ---------------- */
-    // Cards stay spatially stable while hover states use border/background emphasis.
-    // This keeps dense analytical tables and charts readable and avoids perspective
-    // motion that can make an intelligence dashboard feel like a game UI.
 
-    /* ---------------- Scroll Progress Tracking ---------------- */
+
+
+
+
+
     const progressBar = document.getElementById("scroll-progress-bar");
     if (progressBar) {
         window.addEventListener("scroll", () => {
@@ -460,9 +460,9 @@
         }, { passive: true });
     }
 
-    /* ---------------- Ambient micro-interactions ---------------- */
-    // Card spotlight: the radial highlight follows the pointer across each
-    // surface. Delegated so it also covers dynamically rendered cards/tables.
+
+
+
     (function cardSpotlight() {
         let raf = null;
         document.addEventListener("mousemove", (e) => {
@@ -478,8 +478,8 @@
         }, { passive: true });
     })();
 
-    // Cursor aura: a soft, eased glow that trails the pointer. Pointer-fine and
-    // motion-tolerant contexts only — never on touch or reduced-motion.
+
+
     (function cursorAura() {
         const aura = document.getElementById("cursor-aura");
         if (!aura) return;
@@ -505,9 +505,9 @@
         }
     })();
 
-    /* ---------------- Global Keyboard Shortcuts ---------------- */
+
     window.addEventListener("keydown", (e) => {
-        // Ctrl+K or Cmd+K: Focus search
+
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
             e.preventDefault();
             if (searchInput) {
@@ -515,7 +515,7 @@
                 searchInput.select();
             }
         }
-        // 'D' key toggles theme when not in input/textarea
+
         if (e.key === "d" && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) {
             const next = DQ.state.theme === "dark" ? "light" : "dark";
             applyTheme(next);
@@ -523,7 +523,7 @@
         }
     });
 
-    /* ---------------- Refresh Button ---------------- */
+
     const refreshBtn = document.getElementById("refresh-dashboard");
     const pageLoadbar = document.getElementById("loadbar");
     if (refreshBtn) {
@@ -540,7 +540,7 @@
         });
     }
 
-    /* ---------------- Boot ---------------- */
+
     async function boot() {
         applyTheme(DQ.state.theme);
 
