@@ -1,0 +1,41 @@
+{# Shared overlays: modals, toasts, command palette. Included by app.html. #}
+
+<div class="modal" id="modal-order" role="dialog" aria-modal="true" aria-labelledby="order-modal-title" hidden>
+  <div class="modal-card">
+    <div class="modal-heading">
+      <h2 id="order-modal-title">Order details</h2>
+      <button class="icon-btn" type="button" data-close="modal-order" aria-label="Close order details"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div id="order-modal-body"></div>
+  </div>
+</div>
+
+<div class="modal" id="modal-info" role="dialog" aria-modal="true" aria-labelledby="info-modal-title" hidden>
+  <div class="modal-card">
+    <div class="modal-heading">
+      <h2 id="info-modal-title">Details</h2>
+      <button class="icon-btn" type="button" data-close="modal-info" aria-label="Close details"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div id="info-modal-body"></div>
+  </div>
+</div>
+
+<div id="toast-wrap" class="toast-wrap" role="status" aria-live="polite" aria-atomic="false"></div>
+
+<div class="command-palette" id="command-palette" hidden role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="command-card">
+    <div class="command-input-wrap">
+      <svg><use href="#i-search"/></svg>
+      <input class="command-input" id="command-input" type="text" placeholder="Search DineIQ…" autocomplete="off" aria-label="Search commands and navigation">
+      <span class="command-kbd">ESC</span>
+    </div>
+    <div class="command-results" id="command-results">
+      <div class="nav-group-label">Navigation</div>
+      {% for group, items in navigation %}
+      {% for view, label, icon, href in items %}
+      <button class="command-item" data-nav="{{ view }}"><svg><use href="#i-{{ icon }}"/></svg>{{ label }}</button>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</div>

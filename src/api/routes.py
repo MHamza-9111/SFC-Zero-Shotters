@@ -77,6 +77,7 @@ def _auth_db() -> sqlite3.Connection:
         password_hash TEXT NOT NULL,
         salt TEXT NOT NULL,
         brand TEXT NOT NULL,
+        is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )""")
     con.execute("""CREATE TABLE IF NOT EXISTS audit_log (
@@ -93,6 +94,8 @@ def _auth_db() -> sqlite3.Connection:
     if "created_at" not in user_columns:
         con.execute("ALTER TABLE users ADD COLUMN created_at TEXT")
         con.execute("UPDATE users SET created_at=CURRENT_TIMESTAMP WHERE created_at IS NULL")
+    if "is_active" not in user_columns:
+        con.execute("ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1")
     con.execute("CREATE INDEX IF NOT EXISTS idx_audit_created_at ON audit_log(created_at)")
     con.commit()
     return con
@@ -128,10 +131,31 @@ def _audit(action: str, *, record_count: int | None = None,
         LOGGER.exception("Could not persist audit event %s", action)
 
 
-def _authorized(*roles: str):
-    if current_app.testing or not current_app.config.get("AUTH_REQUIRED", True):
-        return None
+def refresh_session_user() -> dict | None:
+    """Reload the account behind a signed session so role/status changes apply immediately."""
     user = session.get("user")
+    if not user or not user.get("email"):
+        return None
+    con = _auth_db()
+    try:
+        row = con.execute(
+            "SELECT name,role,email,brand,is_active FROM users WHERE email=?",
+            (user["email"],),
+        ).fetchone()
+    finally:
+        con.close()
+    if not row or not row["is_active"]:
+        session.clear()
+        return None
+    current = {key: row[key] for key in ("name", "role", "email", "brand")}
+    session["user"] = current
+    return current
+
+
+def _authorized(*roles: str):
+    if not current_app.config.get("AUTH_REQUIRED", True):
+        return None
+    user = refresh_session_user()
     if not user:
         return _error("AUTHENTICATION_REQUIRED", "Sign in to use this service.", 401)
     if roles and user.get("role") not in roles:
@@ -146,7 +170,8 @@ def require_sign_in():
     denied = _authorized()
     if denied:
         return denied
-    if request.method in {"POST", "PATCH", "PUT", "DELETE"} and not current_app.testing:
+    if (request.method in {"POST", "PATCH", "PUT", "DELETE"}
+            and current_app.config.get("AUTH_REQUIRED", True)):
         expected = session.get("csrf_token")
         supplied = request.headers.get("X-CSRF-Token", "")
         if not expected or not secrets.compare_digest(expected, supplied):
@@ -270,11 +295,13 @@ def auth_login():
     email = str(payload.get("email", "")).strip().lower()
     password = str(payload.get("password", ""))
     con = _auth_db()
-    row = con.execute("SELECT name,role,email,brand,password_hash,salt FROM users WHERE email=?",
+    row = con.execute("SELECT name,role,email,brand,password_hash,salt,is_active FROM users WHERE email=?",
                       (email,)).fetchone()
     con.close()
     if not row:
         return _error("INVALID_CREDENTIALS", "Invalid email or password.", 401)
+    if not row["is_active"]:
+        return _error("ACCOUNT_INACTIVE", "This account has been deactivated. Contact an administrator.", 403)
     current_hash = _hash_password(password, row["salt"])
     valid_password = secrets.compare_digest(current_hash, row["password_hash"])
     legacy_password = False
@@ -306,7 +333,7 @@ def auth_logout():
 
 @api_bp.route("/auth/me", methods=["GET"])
 def auth_me():
-    user = session.get("user")
+    user = refresh_session_user()
     if not user:
         return _error("AUTHENTICATION_REQUIRED", "Sign in to use this service.", 401)
     return jsonify(user)
@@ -314,7 +341,7 @@ def auth_me():
 
 @api_bp.route("/auth/csrf", methods=["GET"])
 def auth_csrf():
-    if not session.get("user"):
+    if not refresh_session_user():
         return _error("AUTHENTICATION_REQUIRED", "Sign in to use this service.", 401)
     if not session.get("csrf_token"):
         session["csrf_token"] = secrets.token_urlsafe(32)
@@ -327,7 +354,7 @@ def list_users():
     if denied:
         return denied
     con = _auth_db()
-    rows = con.execute("SELECT email,name,role,brand,created_at FROM users ORDER BY name").fetchall()
+    rows = con.execute("SELECT email,name,role,brand,is_active,created_at FROM users ORDER BY name").fetchall()
     con.close()
     return jsonify({"users": [dict(row) for row in rows]})
 
@@ -359,6 +386,28 @@ def update_user_role(email):
         return _error("NOT_FOUND", "User account was not found.", 404)
     _audit("user_role_update", details={"target_email": email.strip().lower(), "role": role})
     return jsonify({"email": email.strip().lower(), "role": role})
+
+
+@api_bp.route("/auth/users/<path:email>/status", methods=["PATCH"])
+def update_user_status(email):
+    denied = _authorized("Administrator")
+    if denied:
+        return denied
+    payload = request.get_json(silent=True)
+    is_active = payload.get("is_active") if isinstance(payload, dict) else None
+    if not isinstance(is_active, bool):
+        return _error("INVALID_STATUS", "is_active must be true or false.", 400)
+    target = email.strip().lower()
+    con = _auth_db()
+    try:
+        cursor = con.execute("UPDATE users SET is_active=? WHERE email=?", (int(is_active), target))
+        con.commit()
+    finally:
+        con.close()
+    if not cursor.rowcount:
+        return _error("NOT_FOUND", "User account was not found.", 404)
+    _audit("user_status_update", details={"target_email": target, "is_active": is_active})
+    return jsonify({"email": target, "is_active": is_active})
 
 
 @api_bp.route("/audit", methods=["GET"])

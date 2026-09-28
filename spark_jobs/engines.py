@@ -90,6 +90,14 @@ class PandasEngine(BaseEngine):
                       partition_by: str | None = None):
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
+        # Overwrite semantics (matches SparkEngine's ``mode("overwrite")``).
+        # ``pq.write_to_dataset`` adds a new uuid-named file on every call and
+        # never removes old ones, so re-running the pipeline used to multiply
+        # every partitioned row.
+        if path.is_dir():
+            shutil.rmtree(path)
+        elif path.exists():
+            path.unlink()
         if partition_by and partition_by in df.columns:
             import pyarrow as pa
             import pyarrow.parquet as pq

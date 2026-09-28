@@ -1,0 +1,19 @@
+<section class="view" id="view-team" data-title="Team &amp; access">
+          <div class="view-heading"><div><div class="eyebrow">Administration</div><h2>Team &amp; access</h2><p>Account roles are enforced by the API. New sign-ups start as Data Analysts.</p></div></div>
+          <section class="card"><div class="card-head"><div><h3 class="card-title">Workspace accounts</h3><div class="card-sub" id="team-status">Administrator access is required to manage roles and account status.</div></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Name</th><th>Email</th><th>Brand</th><th>Role</th><th>Status</th><th>Created</th><th>Update</th></tr></thead><tbody id="team-tbody"></tbody></table></div></section>
+          <section class="card" id="team-audit">
+            <div class="card-head">
+              <div><h3 class="card-title">Audit trail</h3><div class="card-sub" id="audit-status">Sign-ins, exports, predictions and admin changes.</div></div>
+              <div class="card-tools-inline">
+                <label class="sr-only" for="audit-limit">Rows</label>
+                <select class="control control-small" id="audit-limit">
+                  <option value="25">25</option><option value="50">50</option><option value="100">100</option>
+                </select>
+                <button class="btn btn-ghost btn-sm" id="audit-refresh" type="button">Refresh</button>
+              </div>
+            </div>
+            <div class="table-wrap"><table class="table table-compact"><thead><tr>
+              <th>When</th><th>Actor</th><th>Role</th><th>Action</th><th>Records</th><th>Status</th><th>Details</th>
+            </tr></thead><tbody id="audit-tbody"></tbody></table></div>
+          </section>
+        </section>

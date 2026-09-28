@@ -14,16 +14,90 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.api.routes import (api_bp, bootstrap_admin_from_environment,
-                            scoring_service)
+                            refresh_session_user, scoring_service)
 
 BASE_DIR = PROJECT_ROOT
 PAGES = {
     "orders", "menu", "inventory", "customers", "promotions", "payments",
     "reports", "locations", "models", "settings", "basket", "price",
     "forecast", "peak", "anomalies", "whatif", "recommendations", "quality",
-    "channels",
+    "channels", "home",
     "team", "billing", "data",
 }
+
+NAV_GROUPS = (
+    ("Home", (("home", "My dashboard", "home"),)),
+    ("Operations", (
+        ("orders", "Orders", "receipt"), ("inventory", "Wastage & stock", "box"),
+        ("payments", "Payments", "wallet"), ("promotions", "Promotions", "tag"),
+        ("locations", "Locations", "pin"), ("data", "Data management", "doc"),
+    )),
+    ("Intelligence", (
+        ("overview", "Executive dashboard", "grid"), ("menu", "Menu intelligence", "menu-book"),
+        ("channels", "Channels", "globe"), ("customers", "Customers", "users"),
+        ("basket", "Market basket", "bag"), ("price", "Price intelligence", "trend"),
+        ("forecast", "Demand forecast", "chart"), ("peak", "Peak periods", "clock"),
+        ("anomalies", "Anomalies", "alert"),
+    )),
+    ("Models & simulation", (
+        ("models", "Models & serving", "cpu"), ("whatif", "What-if scenarios", "sliders"),
+        ("recommendations", "Recommendations", "spark"),
+    )),
+    ("Action & governance", (
+        ("quality", "Data quality", "shield"), ("reports", "Reports", "doc"),
+        ("team", "Team & access", "users"),
+    )),
+    ("Workspace", (("billing", "Usage", "chart"), ("settings", "Settings", "check"))),
+)
+
+ROLE_PAGES = {
+    "Administrator": frozenset({"home", "overview", *PAGES}),
+    "Regional Manager": frozenset({
+        "home", "overview", "locations", "promotions", "menu", "channels", "customers", "basket",
+        "price", "forecast", "peak", "anomalies", "whatif", "recommendations", "reports",
+    }),
+    "Restaurant Manager": frozenset({
+        "home", "orders", "inventory", "payments", "promotions", "menu", "customers", "forecast",
+        "peak", "recommendations",
+    }),
+    "Data Analyst": frozenset({
+        "home", "menu", "channels", "customers", "basket", "price", "forecast", "peak", "anomalies",
+        "models", "whatif", "recommendations", "quality", "reports", "data",
+    }),
+}
+
+ROLE_INFO = {
+    "Administrator": {
+        "eyebrow": "Administration", "title": "Workspace command center",
+        "blurb": "Review account access, audit activity, and the health of the analytics platform.",
+    },
+    "Regional Manager": {
+        "eyebrow": "Regional performance", "title": "Regional operations dashboard",
+        "blurb": "Compare locations, sales channels, and signals that need regional attention.",
+    },
+    "Restaurant Manager": {
+        "eyebrow": "Restaurant operations", "title": "Restaurant operations dashboard",
+        "blurb": "Track the sales, orders, best sellers, and payment mix for your selected location.",
+    },
+    "Data Analyst": {
+        "eyebrow": "Analytics workspace", "title": "Analytics workbench",
+        "blurb": "Monitor forecast quality, anomalies, models, and data-pipeline health.",
+    },
+}
+
+
+def _role_navigation(role: str) -> list[tuple[str, list[tuple[str, str, str, str]]]]:
+    """Return only the routes that belong in this role's navigation."""
+    allowed = ROLE_PAGES.get(role, ROLE_PAGES["Data Analyst"])
+    result = []
+    for group, items in NAV_GROUPS:
+        visible = []
+        for view, label, icon in items:
+            if view in allowed:
+                visible.append((view, label, icon, "/" if view == "overview" else f"/{view}"))
+        if visible:
+            result.append((group, visible))
+    return result
 
 
 def _secret_key() -> str:
@@ -89,12 +163,12 @@ def create_app() -> Flask:
 
     @app.before_request
     def protect_pages():
-        if (app.testing or not app.config["AUTH_REQUIRED"]
+        if (not app.config["AUTH_REQUIRED"]
                 or request.path.startswith("/api/")
-                or request.path in {"/health", "/login", "/register"}
+                or request.path in {"/health", "/login", "/register", "/"}
                 or request.path.startswith("/static/")):
             return None
-        if not session.get("user"):
+        if not refresh_session_user():
             next_path = request.full_path if request.full_path else "/"
             return redirect(url_for("login_page", next=next_path))
         return None
@@ -104,19 +178,37 @@ def create_app() -> Flask:
     def dashboard_page(page: str):
         if page not in PAGES and page != "overview":
             return render_template("404.html"), 404
-        return render_template("index.html", view=page)
+        # Signed-out visitors to the site root see the public landing page;
+        # every other page is protected by ``protect_pages`` above.
+        if (request.path == "/" and app.config["AUTH_REQUIRED"]
+                and not refresh_session_user()):
+            return render_template("landing.html")
+        user = refresh_session_user() if app.config["AUTH_REQUIRED"] else None
+        role = (user or {}).get("role", "Administrator")
+        if role not in ROLE_PAGES:
+            role = "Data Analyst"
+        if request.path == "/" and user:
+            return redirect(url_for("dashboard_page", page="home"))
+        if page not in ROLE_PAGES[role]:
+            return redirect(url_for("dashboard_page", page="home"))
+        name = (user or {}).get("name", "").strip()
+        return render_template(
+            "app.html", view=page, current_role=role,
+            current_first_name=name.split()[0] if name else "",
+            role_info=ROLE_INFO[role], navigation=_role_navigation(role),
+        )
 
     @app.route("/login")
     def login_page():
         if session.get("user"):
-            return redirect("/")
-        return render_template("auth.html", mode="login", next=request.args.get("next", "/"))
+            return redirect("/home")
+        return render_template("auth.html", mode="login", next=request.args.get("next", "/home"))
 
     @app.route("/register")
     def register_page():
         if session.get("user"):
-            return redirect("/")
-        return render_template("auth.html", mode="register", next=request.args.get("next", "/"))
+            return redirect("/home")
+        return render_template("auth.html", mode="register", next=request.args.get("next", "/home"))
 
     @app.errorhandler(404)
     def handle_not_found(error):
@@ -151,7 +243,8 @@ def create_app() -> Flask:
         response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
         response.headers.setdefault("Content-Security-Policy",
             "default-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; "
-            "base-uri 'self'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'")
+            "base-uri 'self'; frame-ancestors 'none'; form-action 'self'; "
+            "script-src 'self'; style-src 'self' 'unsafe-inline'")
         if request.path.startswith("/api/") or request.path in {"/login", "/register"}:
             response.headers.setdefault("Cache-Control", "no-store")
         return response

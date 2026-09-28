@@ -110,6 +110,8 @@ def cases_dir(mini_env, tmp_path_factory):
     """Mini dual-pipeline case sets, same formats as the committed ones."""
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
 
     out = tmp_path_factory.mktemp("mini-cases")
     frames = load_base_frames(mini_env["processed"])
@@ -154,7 +156,10 @@ def cases_dir(mini_env, tmp_path_factory):
     ccases = ccases.rename(columns={"churned": "actual_churn"})
     ccases.to_csv(out / "churn_unseen_cases.csv", index=False)
 
-    py = LogisticRegression(max_iter=2000, random_state=42)
+    # Must mirror production (python_pipeline/model_artifacts.py and
+    # spark_jobs/mllib_models.py): a scaled logistic regression.
+    py = make_pipeline(StandardScaler(),
+                       LogisticRegression(max_iter=2000, random_state=42))
     py.fit(ctrain[CHURN_FEATURES].fillna(0), ctrain["churned"])
     X = _churn_X(ccases)
     pred = py.predict(X)
@@ -321,6 +326,23 @@ def test_parquet_written_and_partitioned(pipeline_out):
     assert "order_month" in df.columns and len(df) > 0
     # non-partitioned one is a single file
     assert (pq / "ratings.parquet").is_file()
+    # regression: no order may be stored twice
+    assert df["order_id"].is_unique, "orders.parquet contains duplicated rows"
+
+
+def test_parquet_rewrite_is_idempotent(tmp_path):
+    """Re-running the pipeline must replace, not append to, partitions."""
+    from spark_jobs.engines import PandasEngine
+
+    engine = PandasEngine(tmp_path)
+    df = pd.DataFrame({"order_id": ["a", "b", "c"],
+                       "order_month": ["2025-01", "2025-01", "2025-02"]})
+    target = tmp_path / "orders.parquet"
+    for _ in range(3):
+        engine.write_parquet(df, target, "order_month")
+    out = pd.read_parquet(target)
+    assert len(out) == 3 and out["order_id"].is_unique
+    assert len(list((target / "order_month=2025-01").glob("*.parquet"))) == 1
 
 
 # ---------------------------------------------------------------------------

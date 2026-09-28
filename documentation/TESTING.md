@@ -10,7 +10,7 @@ python -m pytest tests -q
 
 | Check | Result |
 |---|---|
-| Existing Python and API suite | **101 passed** in 47.87 seconds. |
+| Full Python, Spark, API, authentication, and role-dashboard suite | **111 passed** in 61.47 seconds. |
 | Python syntax compilation (`src`, `spark_jobs`, `python_pipeline`, `data_generator`, `notebooks`) | Passed. |
 | JavaScript syntax (`node --check`, all `static/js/*.js`) | Passed for all 7 scripts. |
 | Full Python data pipeline, `--skip-generation` | Completed on the existing synthetic dataset: 100,000 orders and 1,000,200 raw order lines; raw source unchanged. |

@@ -1,47 +1,93 @@
 # DineIQ Analytics: SRS Requirements Mapping
 
-This document provides a comprehensive, requirement-by-requirement mapping from the official Software Requirements Specification (SRS) to the implemented DineIQ Analytics platform, proving that all functional, non-functional, data-science, and UI requirements have been satisfied.
+This matrix traces all 66 functional and five non-functional requirements in
+the supplied SRS. "Implemented" means executable code and repository evidence
+exist. Capacity and uptime remain deployment measurements and are not claimed
+as proven by a local checkout.
 
-## 1. Functional Requirements Mapping
+## Functional Requirements
 
-| ID | Requirement | Implementation & Status | Test Evidence |
-| :--- | :--- | :--- | :--- |
-| **REQ-101** | Dual-pipeline execution (Spark & Python) | **[Implemented]** Both pipelines run on the same raw data, generating parity evidence in `processed_data/` and `reports/`. Dashboard gracefully falls back if one engine degrades. | `tests/spark/test_spark_pipeline.py::test_dual_comparison`, `tests/python/test_processing.py::test_core_outputs_exist` |
-| **REQ-102** | Executive Dashboard KPI Surface | **[Implemented]** Asymmetric Command Surface displaying Revenue, Orders, AOV, Active Locations with intelligent fallbacks. | `tests/python/test_dashboard_api.py::test_overview_kpis_are_real_numbers` |
-| **REQ-103** | Menu Intelligence Node | **[Implemented]** Menu intelligence view (`/menu`) rendering real-time performance, quadrant analysis, and category yield. | `tests/python/test_dashboard_api.py::test_menu_intelligence` |
-| **REQ-104** | Market Basket Analysis | **[Implemented]** FP-Growth / Apriori outputs read from `market_basket_pairs.csv` and rendered in the `/basket` view. | `tests/python/test_dashboard_api.py::test_pages_render[/basket]` |
-| **REQ-105** | Demand Forecasting Engine | **[Implemented]** 90-day horizon operational forecast from `daily_forecast.csv` rendered in `/forecast` with error envelope evaluation. | `tests/python/test_dashboard_api.py::test_pages_render[/forecast]` |
-| **REQ-106** | Data Quality Quarantine | **[Implemented]** Automated ingestion filters isolate anomalies into quarantine. Accessible via `/quality` surface. | `tests/python/test_cleaning.py::test_injected_problems_are_quarantined` |
-| **REQ-107** | Automated Audit Trail | **[Implemented]** `audit_log` SQLite table records every critical action (auth, model scoring) with roles and timestamps. | `tests/python/test_cleaning.py::test_cleaning_log_records_fk_validation` |
-| **REQ-108** | Multi-Role Authentication | **[Implemented]** Secure PBKDF2 hashed logins with Administrator, Regional Manager, and Data Analyst roles. | `tests/python/test_dashboard_api.py::test_pages_render` (Requires valid session) |
-| **REQ-109** | On-the-fly Model Scoring | **[Implemented]** Scikit-learn models loaded into memory via `scoring_service.py` to evaluate hypothetical data records. | `tests/python/test_dashboard_api.py::test_predict_tasks_spec_drives_the_scorer_form` |
+| SRS | Requirement | Implementation evidence |
+|---|---|---|
+| i | Registration and authentication | PBKDF2-hashed signup/login, signed HTTP-only sessions, CSRF, account activation, and audit events in `src/api/routes.py`; `test_authentication.py`. |
+| ii | Role-based access control | Restaurant Manager, Data Analyst, Regional Manager, and Administrator roles; server-side authorization and session refresh after role/status changes. |
+| iii | Restaurant/location management | Administrator CRUD for restaurants and locations. |
+| iv | Menu management | Category and menu-item CRUD, including price, cost, description, and availability. |
+| v | Pricing history management | Pricing-history CRUD and pricing analysis. |
+| vi | Customer data management | Anonymized customer CRUD and behavioral/risk analytics. |
+| vii | Order management | Paginated orders, line detail, operational CRUD, and export. |
+| viii | Promotion management | Promotion CRUD and effectiveness analysis. |
+| ix | Rating management | Rating CRUD linked to items/locations and rating analysis. |
+| x | Inventory management | Inventory CRUD, stock analytics, and recommendations. |
+| xi | Wastage management | Wastage CRUD with item, quantity, cost, location, date, and reason. |
+| xii | Big Data ingestion | Spark-compatible ingestion with documented pandas fallback. |
+| xiii | Schema validation | Required-column, type, relationship, and boundary validation. |
+| xiv | Data quality analysis | Missing, duplicate, invalid, inconsistent, and anomaly detection. |
+| xv | Data cleaning | Documented cleaning rules and retained quarantine records. |
+| xvi | Spark SQL processing | Spark SQL jobs and committed query evidence. |
+| xvii | Data partitioning | Year/month-partitioned processing output. |
+| xviii | Parquet storage | Processed orders stored in partitioned Parquet. |
+| xix | Feature generation | Derived analytic and model features in processing jobs. |
+| xx | Profitability analysis | Revenue, cost, margin, and profitability endpoints. |
+| xxi | Menu performance classification | Menu business-class pipeline/model and analytics endpoint. |
+| xxii | Peak-period detection | Peak-hour/day analytical outputs and dashboard. |
+| xxiii | Customer segmentation | Customer analytics and segment outputs. |
+| xxiv | RFM analysis | Recency, frequency, and monetary features. |
+| xxv | Market-basket analysis | Basket pairs endpoint and processed output. |
+| xxvi | Association-rule metrics | Support, confidence, and lift exposed with basket results. |
+| xxvii | Bundle recommendations | Evidence-backed bundle recommendations. |
+| xxviii | Demand forecasting | Forecast pipeline plus historical/forecast dashboard series. |
+| xxix | Forecast evaluation | Forecast-evaluation artifact and model evidence. |
+| xxx | Wastage analysis | Wastage trend, item, and risk analysis. |
+| xxxi | Wastage prediction | Wastage-risk analytics identify high-risk items/periods. |
+| xxxii | Price-sensitivity analysis | Pricing-history and price-sensitivity outputs. |
+| xxxiii | Promotion effectiveness | Promotion revenue, profit, and behavior analysis. |
+| xxxiv | Promotion-trap detection | Promotion results expose sales/profit trade-offs. |
+| xxxv | Rating analysis | Rating-item and location performance analysis. |
+| xxxvi | Rating anomaly detection | Rating anomalies included in quality/anomaly analysis. |
+| xxxvii | Sales anomaly detection | Sales anomaly output and dashboard alerts. |
+| xxxviii | Location comparison | Standardized location-performance endpoint. |
+| xxxix | Location-specific menu intelligence | Menu intelligence retains restaurant/location dimensions. |
+| xl | Ordering-channel analysis | Dine-in, takeaway, web/app, and delivery comparison. |
+| xli | Customer churn-risk analysis | Versioned churn models and customer risk analytics. |
+| xlii | Spark MLlib models | Three versioned Spark-compatible model artifacts. |
+| xliii | Independent Python models | Separate scikit-learn model artifacts and training path. |
+| xliv | Dual-pipeline prediction comparison | Ensemble responses compare independently produced results. |
+| xlv | Model competency analysis | Agreement/disagreement evidence in dual-pipeline reports. |
+| xlvi | Model evaluation | Classification and forecast evaluation artifacts. |
+| xlvii | Recommendation engine | Evidence-backed recommendation endpoint. |
+| xlviii | Menu optimization recommendations | Promotion, repricing, bundle, redesign, and removal guidance. |
+| xlix | Inventory recommendations | Forecast and wastage evidence informs inventory guidance. |
+| l | Customer targeting recommendations | Customer segments map to strategies. |
+| li | What-if analysis | Server-side demand, pricing, promotion, and inventory scenarios. |
+| lii | Executive dashboard | KPIs, trends, alerts, and location filters. |
+| liii | Menu dashboard | Menu performance and intelligence view. |
+| liv | Customer dashboard | Segments, churn risk, and behavior view. |
+| lv | Wastage dashboard | Wastage item/risk view with required dimensions. |
+| lvi | Forecast dashboard | Historical demand and forecast series. |
+| lvii | Dual-pipeline dashboard | Model registry, status, comparison, and scorer workbench. |
+| lviii | Search and filtering | Dashboard search plus location/date/page filters. |
+| lix | Downloadable reports | Report catalog and CSV downloads. |
+| lx | Data export | Authenticated CSV export with audit entry. |
+| lxi | Database storage | SQLite stores accounts, audits, and operational data; analytics/results are versioned artifacts. |
+| lxii | Model-version tracking | Prediction responses identify the model/ensemble version. |
+| lxiii | Audit trail | Auth, data mutation, prediction, export, reload, role, and status events are logged. |
+| lxiv | Error handling | Consistent API errors plus understandable UI request errors. |
+| lxv | Spark job monitoring | Pipeline/model status endpoints and dashboard. |
+| lxvi | Responsive web interface | Responsive Flask/Jinja UI with accessible controls and mobile navigation. |
 
-## 2. Non-Functional Requirements Mapping (NFR)
+## Non-Functional Requirements
 
-| ID | Requirement | Implementation & Status | Test Evidence |
-| :--- | :--- | :--- | :--- |
-| **NFR-201** | Sub-100ms UI response | **[Implemented]** The Flask layer bypasses pandas for API serving, directly serving pre-computed datasets with memory caching to achieve latency under 50ms. | `tests/spark/test_spark_pipeline.py::test_nfr_latency_passes` |
-| **NFR-202** | Zero Fabricated UI Data | **[Implemented]** The dashboard renders exactly what the pipeline processes. If the DB is empty, the UI displays "Empty State" markers, never placeholder numbers. | `tests/python/test_dashboard_api.py::test_processed_layer_overview_is_real` |
-| **NFR-203** | Stateless API | **[Implemented]** REST layer operates statelessly utilizing SQLite and flat files, allowing horizontal scaling. | *Architecture Validation* |
+| SRS | Requirement | Status and evidence |
+|---|---|---|
+| 1 | Predictions within five seconds | Implemented and locally measured with warm models; see `reports/latency/ensemble_latency_report.csv`. |
+| 2 | Five-million order-line scalability | Partitioned Parquet and Spark architecture are implemented; a 5M benchmark still requires target-environment measurement. |
+| 3 | Usability | Role-aware responsive UI, accessible controls, and clear error states are implemented; browser/device review remains a release check. |
+| 4 | Accuracy | Evaluation artifacts and tests are present; thresholds must be revalidated when data or models change. |
+| 5 | 99% availability | Requires production hosting, monitoring, backups, and uptime measurement; it cannot be certified locally. |
 
-## 3. UI/UX Transformation (The "Intelligence Command Center")
+## Verification
 
-| ID | Requirement | Implementation & Status |
-| :--- | :--- | :--- |
-| **UI-301** | Avoid Generic SaaS aesthetics | **[Implemented]** Complete overhaul via `styles.css`. Implemented a deep dark "Industrial Intelligence" theme with `Intelligence Green` (#5EE0AA) primary tokens. |
-| **UI-302** | Asymmetric Dashboard Grid | **[Implemented]** Transformed `index.html` overview to utilize CSS grid asymmetry (e.g. `2fr 1fr` splits, non-rectangular tile distributions). |
-| **UI-303** | Command Palette | **[Implemented]** Integrated a `Ctrl+K` global command palette (`app.js`) for immediate spatial navigation, removing reliance on traditional nested menus. |
-| **UI-304** | "Enter the Intelligence Layer" | **[Implemented]** Auth screen (`auth.html`) upgraded to a split-view layout featuring animated data flow visualization nodes and hardware-style measurement ticks. |
-| **UI-305** | Real-time Signal Feedback | **[Implemented]** Pulse animations on system status dots and micro-interactions (cubic-bezier springs) on hover states. |
-
-## 4. Big Data & Machine Learning Requirements
-
-| ID | Requirement | Implementation & Status | Test Evidence |
-| :--- | :--- | :--- | :--- |
-| **ML-401** | Spark Parquet Partitioning | **[Implemented]** PySpark job (`spark_jobs/`) partitions curated tables by `year` and `month`. | `tests/spark/test_spark_pipeline.py::test_parquet_written_and_partitioned` |
-| **ML-402** | Scikit-learn Pipeline Persistence | **[Implemented]** Models are serialized in `models/` with timestamp versioning for Churn, LTV, and Order Value. | `tests/spark/test_spark_pipeline.py::test_three_versioned_models` |
-
-## Summary of Audit
-
-All 101 tests across the `python` and `spark` suites pass flawlessly.
-The UI has been successfully transformed into the requested distinctive "DineIQ Industrial Intelligence Interface" without breaking the underlying analytical engine. The implementation accurately represents the data generated by the dual pipeline architecture.
+`python -m pytest tests -q` completed successfully on 2026-09-28: **111 passed**.
+See [API_CONTRACT.md](API_CONTRACT.md) for endpoints and
+[LIMITATIONS.md](LIMITATIONS.md) for deployment constraints.

@@ -1,0 +1,75 @@
+/* ==========================================================================
+   DineIQ Analytics — Page compositions
+   ========================================================================== */
+
+/* ---------------------------- Overview ---------------------------------- */
+.dashboard-grid { gap: 16px; }
+.dashboard-grid .grid.g1 { gap: 16px; }
+
+#recent-orders { max-height: 300px; }
+#dish-list, #area-list, #cat-list, #pay-list, #tx-list { max-height: 320px; overflow-y: auto; }
+
+.coverage-note { margin-bottom: 16px; }
+
+.kpi-grid.g4 .kpi { min-height: 108px; }
+
+/* ---------------------------- Orders ------------------------------------ */
+#view-orders .filter-row .control { min-width: 130px; }
+#orders-q { flex: 1 1 200px; }
+
+/* ---------------------------- Menu -------------------------------------- */
+#class-legend .chip { font-size: 11px; }
+
+/* ---------------------------- Reports ----------------------------------- */
+.reports-groups { align-items: start; }
+.report-live-chart { height: 240px; }
+
+/* ---------------------------- Models ------------------------------------ */
+.scorer-card .scorer-tools { padding-bottom: 4px; }
+.scorer-form { padding-top: 8px; }
+
+/* ---------------------------- Quality ----------------------------------- */
+#quality-kpis .kpi { min-height: 96px; }
+
+/* ---------------------------- What-if ----------------------------------- */
+#view-whatif .range-row { margin-top: 4px; }
+#view-whatif input[type="range"] { margin-bottom: 16px; }
+#whatif-assumption { font-size: 11.5px; line-height: 1.55; margin-top: 10px; }
+
+/* ---------------------------- Settings ---------------------------------- */
+#settings-range { font-size: 12.5px; line-height: 1.7; }
+#sources-tbody td:first-child { font-weight: 700; color: var(--heading-2); }
+
+/* ---------------------------- Data management --------------------------- */
+#data-editor .filter-row { margin-top: 16px; margin-bottom: 0; }
+#data-form-error { color: var(--danger); font-size: 12px; font-weight: 600; }
+
+/* ---------------------------- Team / audit ------------------------------ */
+#view-team .card + .card { margin-top: 16px; }
+.audit-details {
+  font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
+  font-size: 10.5px;
+  color: var(--text-3);
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------------------------- Channels / locations ---------------------- */
+#view-channels .kpi-grid,
+#view-locations .kpi-grid,
+#view-customers .kpi-grid,
+#view-promotions .kpi-grid,
+#view-anomalies .kpi-grid { margin-bottom: 16px; }
+
+/* ---------------------------- Alerts ------------------------------------ */
+.alert-item { align-items: flex-start; }
+.alert-item .badge { margin-top: 2px; flex-shrink: 0; }
+.alert-body { min-width: 0; }
+.alert-title { font-size: 12.5px; font-weight: 700; color: var(--heading-2); }
+.alert-text { font-size: 11.5px; color: var(--text-2); margin-top: 2px; line-height: 1.5; }
+
+/* ---------------------------- Peak / heatmap ---------------------------- */
+.heat-wrap { overflow-x: auto; padding: 6px 0 2px; }
+.heat { min-width: 560px; }

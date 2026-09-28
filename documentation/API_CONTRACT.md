@@ -15,6 +15,7 @@ Authorization failures use `{"error": "…", "message": "…"}`. Unsupported API
 | `GET /auth/csrf` | Signed in | Return the session CSRF token. |
 | `GET /auth/users` | Administrator | List workspace accounts. |
 | `PATCH /auth/users/{email}/role` | Administrator + CSRF | Change a role. The final Administrator cannot be demoted. |
+| `PATCH /auth/users/{email}/status` | Administrator + CSRF | Activate or deactivate an account. A deactivated account cannot create or continue a session. |
 | `GET /audit?limit=100` | Administrator | Read the latest account, prediction, export, data-change, and reload events (maximum 500). |
 
 Roles are `Data Analyst`, `Restaurant Manager`, `Regional Manager`, and `Administrator`. All signed-in roles can read dashboard and operational data. Data mutations, user administration, audit access, and pipeline reload require Administrator privileges.

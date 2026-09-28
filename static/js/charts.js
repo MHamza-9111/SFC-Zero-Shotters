@@ -360,6 +360,7 @@
         const linePath = el("path", {
             d: line, fill: "none", stroke: accent,
             "stroke-width": 2.2, "stroke-linecap": "round", "stroke-linejoin": "round",
+            style: `filter: drop-shadow(0 4px 8px ${accent});`
         }, svg);
 
         // Entrance animation: draw the line, fade the area
@@ -506,6 +507,7 @@
                 const rect = el("rect", {
                     x, y, width: bw, height: h, rx: 4, ry: 4, fill,
                     cursor: "pointer",
+                    style: `filter: drop-shadow(0 4px 8px ${color}); transition: opacity 0.3s ease, filter 0.3s ease;`
                 }, svg);
 
                 if (animate && v > 0) {
@@ -738,6 +740,7 @@
                 d, fill: color, opacity: 0.96,
                 stroke: cardBg, "stroke-width": 2,
                 cursor: "pointer",
+                style: `filter: drop-shadow(0 4px 12px ${color}); transition: transform 0.3s ease, filter 0.3s ease;`
             }, group);
 
             // Hover: nudge the slice outward along its mid-angle

@@ -266,8 +266,8 @@ def run(engine, raw_dir: Path, parquet_dir: Path, reports_dir: Path,
             p = p.copy()
             p["order_month"] = p["order_date"].astype(str).str[:7]
             engine.write_parquet(p, parquet_dir / f"{name}.parquet", partition)
-            continue
-        engine.write_parquet(df, parquet_dir / f"{name}.parquet", partition)
+        else:
+            engine.write_parquet(df, parquet_dir / f"{name}.parquet", partition)
         print(f"  parquet  {name}.parquet"
               + (f" (partitioned by {partition})" if partition else ""))
 

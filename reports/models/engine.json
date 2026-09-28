@@ -1,5 +1,5 @@
 {
   "engine": "pandas",
   "engine_detail": "pandas fallback (PySpark runtime unavailable)",
-  "work_root": "/mnt/data/work/SFC-Zero-Shotters-main"
+  "work_root": "C:\\Users\\mugha\\Desktop\\SFC-Zero-Shotters-main"
 }

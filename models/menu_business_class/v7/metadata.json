@@ -1,0 +1,36 @@
+{
+  "task": "menu_business_class",
+  "type": "multiclass",
+  "version": 7,
+  "engine": {
+    "engine": "pandas",
+    "engine_detail": "pandas fallback (PySpark runtime unavailable)",
+    "work_root": "C:\\Users\\mugha\\Desktop\\SFC-Zero-Shotters-main"
+  },
+  "model_file": "model.joblib",
+  "trained_at": "2026-09-28 12:13:15",
+  "random_state": 42,
+  "features": [
+    "average_rating",
+    "rating_count",
+    "wastage_ratio",
+    "avg_unit_price",
+    "promo_dependency",
+    "weekend_order_share",
+    "unique_customers",
+    "order_line_count"
+  ],
+  "metrics": {
+    "accuracy": 0.4167,
+    "macro_f1": 0.4143
+  },
+  "n_train": 120,
+  "n_eval": 24,
+  "classes": [
+    "Hidden Opportunity",
+    "Low Performer",
+    "Profit Driver",
+    "Volume Driver"
+  ],
+  "label_rule": "median-based 4-class rule incl. contradictory cases"
+}

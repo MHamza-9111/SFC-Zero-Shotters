@@ -1,0 +1,107 @@
+{# Role dashboard. Only the block for the signed-in role is rendered; when auth
+   is disabled (local development / tests) the Administrator block is shown. #}
+{% set r = current_role or 'Administrator' %}
+<section class="view" id="view-home" data-title="Home" data-role="{{ r }}">
+  <div class="view-heading">
+    <div>
+      <div class="eyebrow">{{ role_info.eyebrow }}</div>
+      <h2>{{ role_info.title }}</h2>
+      <p>Welcome back{% if current_first_name %}, {{ current_first_name }}{% endif %}. {{ role_info.blurb }}</p>
+    </div>
+    <div class="date-controls home-controls">
+      <span class="badge badge-amber" id="home-role-badge">{{ r }}</span>
+      {% if r == 'Restaurant Manager' %}
+      <label class="sr-only" for="home-location">Your restaurant location</label>
+      <select class="control" id="home-location" aria-label="Your restaurant location"><option value="">Loading locations…</option></select>
+      {% endif %}
+      <button class="btn btn-ghost" id="home-refresh" type="button"><svg><use href="#i-refresh"/></svg><span>Refresh</span></button>
+    </div>
+  </div>
+
+  <div class="notice coverage-note" id="home-note" style="margin-bottom:16px;" hidden></div>
+  <div class="grid g4 kpi-grid" id="home-kpis"></div>
+
+  {% if r == 'Administrator' %}
+  <div class="grid g2 dashboard-grid">
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Accounts by role</h3><div class="card-sub" id="home-roles-sub">Registered workspace accounts</div></div><a class="text-link" href="/team">Manage roles</a></div>
+      <div class="card-body compact-body"><div class="data-list" id="home-roles"></div></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Recent activity</h3><div class="card-sub">Latest audit-log entries</div></div><a class="text-link" href="/team">Full audit trail</a></div>
+      <div class="card-body compact-body"><div class="data-list" id="home-audit"></div></div>
+    </section>
+  </div>
+  <div class="grid g2 dashboard-grid">
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Alerts</h3><div class="card-sub">Signals raised by the analytics pipeline</div></div></div>
+      <div class="card-body compact-body"><div class="alert-list" id="home-alerts"></div></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Pipeline health</h3><div class="card-sub" id="home-steps-sub">Processing steps</div></div><a class="text-link" href="/models">Models</a></div>
+      <div class="card-body compact-body"><div class="data-list" id="home-steps"></div></div>
+    </section>
+  </div>
+
+  {% elif r == 'Regional Manager' %}
+  <div class="grid g2 dashboard-grid">
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Location leaderboard</h3><div class="card-sub" id="home-loc-sub">Revenue by location</div></div><a class="text-link" href="/locations">All locations</a></div>
+      <div class="card-body compact-body"><div class="data-list" id="home-locations"></div></div>
+    </section>
+    <div class="grid g1" style="gap:16px;">
+      <section class="card">
+        <div class="card-head"><div><h3 class="card-title">Channel mix</h3><div class="card-sub">Revenue share by sales channel</div></div><a class="text-link" href="/channels">Channels</a></div>
+        <div class="card-body compact-body"><div id="home-channels"></div></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h3 class="card-title">Alerts</h3><div class="card-sub">Needs attention across the region</div></div></div>
+        <div class="card-body compact-body"><div class="alert-list" id="home-alerts"></div></div>
+      </section>
+    </div>
+  </div>
+
+  {% elif r == 'Restaurant Manager' %}
+  <div class="grid g2 dashboard-grid">
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Recent orders</h3><div class="card-sub" id="home-orders-sub">Latest orders at your location</div></div><a class="text-link" href="/orders">All orders</a></div>
+      <div class="card-body compact-body"><div class="order-list" id="home-orders" style="max-height:340px;"></div></div>
+    </section>
+    <div class="grid g1" style="gap:16px;">
+      <section class="card">
+        <div class="card-head"><div><h3 class="card-title">Best sellers</h3><div class="card-sub">Top dishes at your location</div></div><a class="text-link" href="/menu">Menu</a></div>
+        <div class="card-body compact-body"><div id="home-dishes"></div></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h3 class="card-title">Payment mix</h3><div class="card-sub" id="home-pay-sub">Settled tenders</div></div><a class="text-link" href="/payments">Payments</a></div>
+        <div class="card-body compact-body"><div class="data-list" id="home-pay"></div></div>
+      </section>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="grid g2 dashboard-grid">
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Forecast vs actual</h3><div class="card-sub" id="home-forecast-sub">Latest days</div></div><a class="text-link" href="/forecast">Open forecast</a></div>
+      <div class="card-body compact-body"><div class="data-list" id="home-forecast"></div></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Latest anomalies</h3><div class="card-sub" id="home-anom-sub">Largest sales deviations</div></div><a class="text-link" href="/anomalies">All anomalies</a></div>
+      <div class="card-body compact-body"><div class="data-list" id="home-anomalies"></div></div>
+    </section>
+  </div>
+  <div class="grid g2 dashboard-grid">
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Pipeline health</h3><div class="card-sub" id="home-steps-sub">Processing steps</div></div><a class="text-link" href="/quality">Data quality</a></div>
+      <div class="card-body compact-body"><div class="data-list" id="home-steps"></div></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3 class="card-title">Alerts</h3><div class="card-sub">Signals raised by the analytics pipeline</div></div></div>
+      <div class="card-body compact-body"><div class="alert-list" id="home-alerts"></div></div>
+    </section>
+  </div>
+  {% endif %}
+
+  <div class="quick-grid" id="home-quick" aria-label="Shortcuts for your role"></div>
+  <div class="muted dashboard-footnote" id="home-foot" style="margin-top:16px;"></div>
+</section>

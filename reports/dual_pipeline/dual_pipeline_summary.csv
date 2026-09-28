@@ -1,4 +1,4 @@
 task,cases,matching_cases,disagreeing_cases,agreement_percentage,python_accuracy,pipeline_accuracy,actual_positive_rate,model_version,engine,mean_abs_probability_gap,actual_class_distribution
-high_value_order,300,300,0,100.0,0.9867,0.9867,0.0867,6,pandas,,
-customer_churn,200,200,0,100.0,0.74,0.74,0.71,6,pandas,0.0,
-menu_business_class,30,30,0,100.0,0.6,0.6,,6,pandas,,"{""Volume Driver"": 11, ""Profit Driver"": 7, ""Low Performer"": 7, ""Hidden Opportunity"": 5}"
+high_value_order,300,300,0,100.0,0.9867,0.9867,0.0867,7,pandas,,
+customer_churn,200,200,0,100.0,0.74,0.74,0.71,7,pandas,0.0,
+menu_business_class,30,30,0,100.0,0.6,0.6,,7,pandas,,"{""Volume Driver"": 11, ""Profit Driver"": 7, ""Low Performer"": 7, ""Hidden Opportunity"": 5}"

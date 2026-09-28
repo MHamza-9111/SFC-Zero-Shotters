@@ -1016,7 +1016,55 @@
     }, updateWhatIf);
     DQ.registerView("recommendations", () => {}, loadRecommendationsView);
     DQ.registerView("quality", () => {}, loadQualityView);
-    DQ.registerView("team", () => {}, loadTeamView);
+    async function loadAuditView() {
+        const tbody = document.getElementById("audit-tbody");
+        const status = document.getElementById("audit-status");
+        if (!tbody) return;
+        setLoading(tbody, 6);
+        try {
+            const limit = (document.getElementById("audit-limit") || {}).value || "100";
+            const result = await api.get("/api/v1/audit", { limit });
+            const items = result.items || [];
+            if (status) {
+                status.textContent = items.length
+                    ? `Showing the ${items.length} most recent events recorded by the API`
+                    : "No audit events recorded yet.";
+            }
+            const statusKind = (s) => {
+                if (s === "success") return "green";
+                if (s === "failed" || s === "rejected") return "red";
+                if (s === "unavailable") return "amber";
+                return "gray";
+            };
+            tbody.innerHTML = items.map(a => `<tr style="cursor:default">
+                <td class="cell-sub">${esc(String(a.created_at || "—").replace("T", " ").slice(0, 19))}</td>
+                <td>${esc(a.actor_email || "system")}</td>
+                <td>${esc(a.actor_role || "—")}</td>
+                <td class="cell-strong">${esc(a.action)}</td>
+                <td class="num">${a.record_count === null || a.record_count === undefined ? "—" : fmt.num(a.record_count)}</td>
+                <td>${badge(a.status || "—", statusKind(a.status))}</td>
+                <td class="audit-details" title="${esc(JSON.stringify(a.details || {}))}">${esc(JSON.stringify(a.details || {}))}</td>
+            </tr>`).join("")
+                || `<tr><td colspan="7">${emptyState("No audit events", "Sign-ins, exports, predictions and admin changes appear here.", "shield")}</td></tr>`;
+        } catch (error) {
+            const message = error.status === 403
+                ? "Administrator access is required to view the audit trail."
+                : error.status === 401
+                    ? "Sign in to view the audit trail."
+                    : error.message;
+            if (status) status.textContent = message;
+            tbody.innerHTML = `<tr><td colspan="7">${errorState(message)}</td></tr>`;
+        }
+    }
+
+    DQ.registerView("team",
+        function init() {
+            const limit = document.getElementById("audit-limit");
+            if (limit) limit.addEventListener("change", loadAuditView);
+            const reload = document.getElementById("audit-refresh");
+            if (reload) reload.addEventListener("click", loadAuditView);
+        },
+        function refresh() { loadTeamView(); loadAuditView(); });
     DQ.registerView("billing", () => {}, loadUsageView);
     DQ.registerView("data", initDataManagement, loadDataManagement);
 
@@ -1319,10 +1367,16 @@
             tbody.innerHTML = (result.users || []).map(user => `<tr style="cursor:default">
                 <td class="cell-strong">${esc(user.name)}</td><td>${esc(user.email)}</td><td>${esc(user.brand)}</td>
                 <td><select class="control team-role" data-email="${esc(user.email)}">${["Data Analyst", "Restaurant Manager", "Regional Manager", "Administrator"].map(role => `<option ${user.role === role ? "selected" : ""}>${role}</option>`).join("")}</select></td>
-                <td>${esc(user.created_at || "—")}</td><td><button class="btn btn-ghost btn-sm team-save" type="button" data-email="${esc(user.email)}">Save role</button></td></tr>`).join("") || `<tr><td colspan="6">No user accounts are registered.</td></tr>`;
+                <td><select class="control team-status" data-email="${esc(user.email)}"><option value="true" ${user.is_active ? "selected" : ""}>Active</option><option value="false" ${user.is_active ? "" : "selected"}>Inactive</option></select></td>
+                <td>${esc(user.created_at || "—")}</td><td><button class="btn btn-ghost btn-sm team-save" type="button" data-email="${esc(user.email)}">Save</button></td></tr>`).join("") || `<tr><td colspan="7">No user accounts are registered.</td></tr>`;
             tbody.querySelectorAll(".team-save").forEach(button => button.addEventListener("click", async () => {
                 const select = tbody.querySelector(`.team-role[data-email="${CSS.escape(button.dataset.email)}"]`);
-                try { await api.patch(`/api/v1/auth/users/${encodeURIComponent(button.dataset.email)}/role`, { role: select.value }); DQ.toast("Account role updated"); }
+                const statusSelect = tbody.querySelector(`.team-status[data-email="${CSS.escape(button.dataset.email)}"]`);
+                try {
+                    await api.patch(`/api/v1/auth/users/${encodeURIComponent(button.dataset.email)}/role`, { role: select.value });
+                    await api.patch(`/api/v1/auth/users/${encodeURIComponent(button.dataset.email)}/status`, { is_active: statusSelect.value === "true" });
+                    DQ.toast("Account access updated");
+                }
                 catch (error) { DQ.toast(error.message, "error"); }
             }));
         } catch (error) {

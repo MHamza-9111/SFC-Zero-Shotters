@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}DineIQ Analytics — Restaurant Intelligence{% endblock %}
+{% block meta_description %}Big Data and ML-powered restaurant intelligence — Spark + Python dual pipelines forecasting demand, profitability, wastage and customer behaviour.{% endblock %}
+{% block body %}
+<main class="landing" id="main-content">
+  {% include "components/food_decor.html" %}
+  <div class="landing-inner">
+    <div class="landing-mark" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke-linecap="round">
+        <g transform="rotate(32 12 12)" stroke="#fbbf24" stroke-width="1.7"><path d="M8.6 2.8v4.4a3.4 3.4 0 0 0 6.8 0V2.8M12 2.8v18.4"/></g>
+        <g transform="rotate(-32 12 12)" stroke="#2dd4bf" stroke-width="1.7"><path d="M8.6 2.8v4.4a3.4 3.4 0 0 0 6.8 0V2.8M12 2.8v18.4"/></g>
+        <path d="M12 8.4l.8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8z" fill="#fde68a" stroke="none"/>
+      </svg>
+    </div>
+
+    <p class="landing-kicker">Aptech · Data Science Intelligence Arena</p>
+    <h1>Dine<span class="grad-txt">IQ</span> Analytics</h1>
+    <p class="landing-sub">
+      Big Data &amp; ML-powered restaurant intelligence — Spark + Python dual pipelines
+      forecasting demand, profitability, wastage and customer behaviour across the network.
+    </p>
+
+    <div class="landing-chips" aria-label="Platform capabilities">
+      <span class="chip"><span class="dot" style="background:#fbbf24"></span>Menu Intelligence</span>
+      <span class="chip"><span class="dot" style="background:#2dd4bf"></span>Demand Forecasting</span>
+      <span class="chip"><span class="dot" style="background:#38bdf8"></span>Customer Segments</span>
+      <span class="chip"><span class="dot" style="background:#a78bfa"></span>Wastage Analytics</span>
+      <span class="chip"><span class="dot" style="background:#fb7185"></span>AI Recommendations</span>
+    </div>
+
+    {# Live platform facts — populated only from real /api/v1/status responses. #}
+    <div class="landing-stats" aria-label="Live platform status">
+      <div class="landing-stat">
+        <div class="val" id="ls-status" data-loading="true">···</div>
+        <div class="lbl">Service status</div>
+        <div class="sub" id="ls-status-sub">Checking the API</div>
+      </div>
+      <div class="landing-stat">
+        <div class="val" id="ls-agreement">···</div>
+        <div class="lbl">Dual-pipeline agreement</div>
+        <div class="sub" id="ls-agreement-sub">Spark vs Python</div>
+      </div>
+      <div class="landing-stat">
+        <div class="val" id="ls-models">···</div>
+        <div class="lbl">Models served</div>
+        <div class="sub" id="ls-models-sub">Ensemble artifacts</div>
+      </div>
+    </div>
+
+    <div class="landing-actions">
+      <a class="btn btn-primary" href="/login">
+        <svg><use href="#i-check"/></svg> Sign In
+      </a>
+      <a class="btn btn-teal" href="/register">
+        <svg><use href="#i-users"/></svg> Create Account
+      </a>
+      <a class="btn btn-ghost" href="/login?next=/">
+        <svg><use href="#i-home"/></svg> Open the app
+      </a>
+    </div>
+
+    <div class="landing-ticker" aria-label="Platform signals">
+      <div class="ticker-track" id="landing-ticker">
+        <span>Connecting to the analytics service…</span>
+        <span>Connecting to the analytics service…</span>
+      </div>
+    </div>
+
+    <p class="landing-foot">DineIQ Analytics · Intelligence Platform v1.0 · © Aptech Limited</p>
+  </div>
+</main>
+{% endblock %}
+{% block scripts %}
+  <script defer src="{{ url_for('static', filename='js/landing.js') }}?v=4"></script>
+{% endblock %}

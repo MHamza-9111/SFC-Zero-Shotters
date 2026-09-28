@@ -9,6 +9,16 @@ DineIQ is a restaurant analytics project with a Flask dashboard, a CSV based Pyt
 - Pipeline status, model registry, dual-pipeline evidence, data quality reports, CSV exports, and audit history.
 - Warm model scoring for high-value orders, customer churn, and menu classification. Scoring uses available versioned model artifacts; it does not train models during requests.
 - Sign-in, self-registration as a Data Analyst, Administrator-controlled role changes, session cookies, CSRF checks for writes, and Administrator-only record mutations.
+- A Home button in the top bar and a role dashboard at `/home`. After sign-in each role lands on its own dashboard, and the sidebar and page access follow the role:
+
+| Role | Home dashboard | Also can open |
+| --- | --- | --- |
+| Administrator | Accounts, audit activity, service and pipeline health | Every page, including Team & access and Data management (write access) |
+| Regional Manager | Network KPIs, location leaderboard, channel mix, alerts | Executive dashboard, locations, channels, promotions, forecast, reports and other analytics pages |
+| Restaurant Manager | Sales, orders, best sellers and payment mix for one chosen location | Orders, wastage & stock, payments, promotions, menu, customers, forecast, peak periods |
+| Data Analyst | Forecast accuracy, anomalies, model and pipeline health | Analytics, models, data quality, reports, read-only data management |
+
+Role pages are enforced by the Flask page routes (`ROLE_PAGES` in `src/backend/app.py`); a page outside the role redirects to `/home`. Role and account-status changes take effect on the member's next protected request.
 - Paginated CRUD for locations, restaurants, categories, menu items, pricing history, anonymized customers, promotions, orders, order lines, ratings, inventory, and wastage.
 
 Operational CRUD writes to SQLite (`runtime/dineiq.sqlite3` by default). Dashboard analytics read the processed pipeline artifacts; they are not automatically recomputed when an operational record is edited. The screen states this boundary. The SQLite customer table intentionally stores no name, email, or phone number.
@@ -51,6 +61,19 @@ python src/backend/app.py
 ```
 
 Open `http://127.0.0.1:5000`. The first Administrator is created only when the bootstrap environment variables are set and no Administrator exists. Public registrations receive the Data Analyst role. Keep the secret and bootstrap password outside source control.
+
+### Missing models? (`Could not load … model …: 118`)
+
+The trained models (`models/**/model.joblib`) and `processed_data/analytics/order_items_integrated.csv` are stored with **Git LFS**. A ZIP download of this repository, or a clone made without `git-lfs`, contains only tiny pointer text files instead of the real bytes — scoring then logs `Could not load … model …: 118`, `GET /api/v1/status` reports `DEGRADED`, and order line items come back empty.
+
+* If you cloned with git: `git lfs install && git lfs pull`
+* Otherwise run (no Java/Spark needed):
+
+```powershell
+python scripts/restore_artifacts.py
+```
+
+The script regenerates the artifacts from the committed pipeline code and verifies `OPERATIONAL` status before exiting. Restart the server afterwards.
 
 ## Production process
 

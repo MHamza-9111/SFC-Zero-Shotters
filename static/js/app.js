@@ -79,19 +79,43 @@
     const scrim = document.getElementById("sidebar-scrim");
     const menuToggle = document.getElementById("menu-toggle");
     const sidebarClose = document.getElementById("sidebar-close");
+    let drawerReturnFocus = null;
 
-    if (menuToggle && sidebar && scrim) {
-        menuToggle.addEventListener("click", () => {
-            sidebar.classList.add("open");
-            scrim.hidden = false;
-        });
+    function openSidebar() {
+        if (!sidebar) return;
+        drawerReturnFocus = document.activeElement;
+        sidebar.classList.add("open");
+        if (scrim) scrim.hidden = false;
+        if (menuToggle) menuToggle.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+        if (sidebarClose) sidebarClose.focus();
     }
     function closeSidebar() {
-        if (sidebar) sidebar.classList.remove("open");
+        if (!sidebar) return;
+        const wasOpen = sidebar.classList.contains("open");
+        sidebar.classList.remove("open");
         if (scrim) scrim.hidden = true;
+        if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+        if (!document.querySelector(".modal:not([hidden])")) document.body.style.overflow = "";
+        if (wasOpen && drawerReturnFocus && typeof drawerReturnFocus.focus === "function") {
+            drawerReturnFocus.focus();
+        }
     }
+    if (menuToggle) menuToggle.addEventListener("click", () => {
+        if (sidebar && sidebar.classList.contains("open")) closeSidebar();
+        else openSidebar();
+    });
     if (scrim) scrim.addEventListener("click", closeSidebar);
     if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && sidebar && sidebar.classList.contains("open")) {
+            e.preventDefault();
+            closeSidebar();
+        }
+    });
+    // Close the drawer when navigating on small screens.
+    if (sidebar) sidebar.querySelectorAll(".nav-item").forEach(link =>
+        link.addEventListener("click", () => { if (window.innerWidth <= 1080) closeSidebar(); }));
 
     /* ---------------- Branch Selector ---------------- */
     const branchBtn = document.getElementById("branch-selector");
@@ -389,11 +413,36 @@
         });
     }
 
+    /* Account dropdown — real session data from /auth/me */
+    const userMenuBtn = document.getElementById("user-menu-btn");
+    const userMenu = document.getElementById("user-menu");
+    if (userMenuBtn && userMenu) {
+        DQ.bindDropdown(userMenuBtn, userMenu, "right");
+        userMenu.addEventListener("click", () => { userMenu.hidden = true; });
+    }
+
+    function initialsOf(name) {
+        return String(name || "")
+            .split(/\s+/).filter(Boolean)
+            .map(word => word[0]).join("")
+            .slice(0, 2).toUpperCase() || "··";
+    }
+
     async function loadSignedInUser() {
         try {
             const user = await api.get("/api/v1/auth/me");
+            const initials = document.getElementById("user-initials");
+            const name = document.getElementById("user-name");
+            const meta = document.getElementById("user-meta");
+            const teamLink = document.getElementById("user-team-link");
+            if (initials) initials.textContent = initialsOf(user.name);
+            if (name) name.textContent = user.name || "Signed in";
+            if (meta) meta.textContent = `${user.email || ""}${user.role ? " · " + user.role : ""}`;
+            if (teamLink) teamLink.hidden = user.role !== "Administrator";
             if (signOutButton) signOutButton.title = `${user.name} · ${user.role}`;
-        } catch (_) { /* Running without auth requirement */ }
+        } catch (_) {
+            /* Running without auth requirement — menu stays generic. */
+        }
     }
 
     /* ---------------- Precision interaction: no 3D/gravity transforms ---------------- */
@@ -476,12 +525,18 @@
 
     /* ---------------- Refresh Button ---------------- */
     const refreshBtn = document.getElementById("refresh-dashboard");
+    const pageLoadbar = document.getElementById("loadbar");
     if (refreshBtn) {
         refreshBtn.addEventListener("click", () => {
             refreshBtn.classList.add("spinning");
+            refreshBtn.disabled = true;
+            if (pageLoadbar) pageLoadbar.classList.add("on");
             DQ.refreshView(current);
-            setTimeout(() => refreshBtn.classList.remove("spinning"), 600);
-            DQ.toast("Dashboard refreshed");
+            setTimeout(() => {
+                refreshBtn.classList.remove("spinning");
+                refreshBtn.disabled = false;
+                if (pageLoadbar) pageLoadbar.classList.remove("on");
+            }, 700);
         });
     }
 
