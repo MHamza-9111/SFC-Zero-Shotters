@@ -17,6 +17,7 @@ from pathlib import Path
 import pandas as pd
 from flask import Blueprint, Response, current_app, jsonify, request, session
 
+from src.runtime import writable_dir
 from src.services.dashboard_service import get_dashboard_service
 from src.services.data_management_service import DataManagementError, DataManagementService
 from src.services.scoring_service import (BatchTooLarge, InvalidRecords,
@@ -65,7 +66,7 @@ def _error(code: str, message: str, status: int):
 
 def _auth_db() -> sqlite3.Connection:
     path = Path(current_app.config.get("AUTH_DB", AUTH_DB))
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path = writable_dir(path.parent) / path.name
     con = sqlite3.connect(path, timeout=10)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA foreign_keys = ON")

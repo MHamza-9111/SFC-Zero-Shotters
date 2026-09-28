@@ -24,7 +24,7 @@ cd "$BASE"
 echo "==> [1/3] Python environment"
 python3 -m venv .venv
 ./.venv/bin/pip install --upgrade pip
-./.venv/bin/pip install -r requirements.txt
+./.venv/bin/pip install -r requirements-pipeline.txt
 
 echo "==> [2/3] Java runtime (JRE 17)"
 if command -v java >/dev/null 2>&1; then

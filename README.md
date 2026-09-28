@@ -48,7 +48,7 @@ scripts/              Utility scripts, including artifact restoration
 ## Requirements
 
 - Python 3.10 or later.
-- The dependencies in `requirements.txt`.
+- The web runtime dependencies in `requirements.txt`; `requirements-pipeline.txt` adds the pipeline, notebook and test extras on top.
 - Java 17 and a compatible PySpark runtime only if the Spark/MLlib execution path is required.
 - The pandas fallback does not require Java.
 - For hosted production use: persistent writable database locations, a TLS-terminating reverse proxy, and process supervision.
@@ -63,7 +63,7 @@ From the repository root:
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-pipeline.txt
 ```
 
 ### Linux / macOS
@@ -72,7 +72,7 @@ python -m pip install -r requirements.txt
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-pipeline.txt
 ```
 
 For Spark execution, install Java 17 separately and confirm:
@@ -174,13 +174,13 @@ python -m spark_jobs.run_all --engine auto
 
 ### Restore missing Git-LFS artifacts
 
-The trained `*.joblib` models and `processed_data/analytics/order_items_integrated.csv` are tracked with Git LFS. A ZIP download or a clone without fetched LFS objects can contain pointer files instead of the actual bytes.
+The trained `*.joblib` model files are tracked with Git LFS. A ZIP download or a clone without fetched LFS objects can contain pointer files instead of the actual bytes.
 
 Typical symptoms include:
 
 - `Could not load ... model ...: 118` in application logs.
 - `GET /api/v1/status` reports `DEGRADED`.
-- Order line items are empty.
+- Model pages report the models as unavailable.
 
 If you cloned with Git LFS:
 
@@ -194,6 +194,19 @@ If you are working from a ZIP or otherwise cannot fetch LFS objects, use the rep
 ```powershell
 python scripts/restore_artifacts.py
 ```
+
+### Runtime datasets
+
+Order line items ship as `processed_data/analytics/order_items_integrated.csv.xz` (13 MB for all 997,205 rows) rather than the 194 MB CSV, so the serverless bundle stays small. The service reads it through the standard-library `lzma` module — no extra dependency.
+
+Rebuild it after the cleaned `processed_data/` layer changes:
+
+```powershell
+python python_pipeline/processing/process_dineiq_data.py
+python scripts/build_runtime_artifacts.py
+```
+
+`scripts/**` is excluded from the deployment bundle, so these run on your machine and are committed.
 
 The restoration script uses the repository's own processing/model code and a pandas fallback for the Big Data-side models, so Java/Spark is not required. It verifies the application status and expects `OPERATIONAL` before you restart the server.
 

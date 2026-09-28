@@ -109,6 +109,12 @@ Legend: **[WORKING]** verified by automated check · **[NOT IMPLEMENTED]** delib
 
 ## 11. Environment artifact restoration (Git-LFS pointers)
 
+> **Current state (supersedes the notes below).** `order_items_integrated.csv` is no longer an
+> LFS object — it ships as `order_items_integrated.csv.xz` (13 MB, all 997,205 rows), rebuilt with
+> `python scripts/build_runtime_artifacts.py`. Only the newest model version per task is retained
+> (~850 MB of superseded versions removed; the service loads only the highest version number).
+> `*.joblib` remains Git-LFS tracked and deployments require Git LFS to be enabled.
+
 - All `*.joblib` models + `order_items_integrated.csv` were committed as unfetched LFS pointers
   (storage host unreachable here; `git-lfs` not installable). Restored via the repo's own pipeline:
   - processing step → real integrated CSV (order line items now populate),

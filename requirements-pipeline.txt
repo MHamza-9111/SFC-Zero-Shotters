@@ -1,0 +1,25 @@
+# Local development / data-pipeline extras.
+#
+# Installs the web runtime (requirements.txt) plus everything needed to run
+# the PySpark pipeline, the notebooks and the test suite on a workstation.
+# Vercel deliberately does NOT install this file - see requirements.txt.
+#
+#     pip install -r requirements-pipeline.txt
+
+-r requirements.txt
+
+# Big data pipeline
+pyspark>=3.5
+pyarrow>=15.0
+PyYAML>=6.0
+
+# Local production server (the deployment platform provides its own)
+waitress>=3.0
+
+# Notebooks
+jupyter>=1.0
+ipykernel>=6.29
+matplotlib>=3.8
+
+# Tests
+pytest>=8.0

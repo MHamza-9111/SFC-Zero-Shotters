@@ -317,7 +317,8 @@ class DashboardService:
 
     def _load_orders(self) -> pd.DataFrame:
         """Load orders from the processed layer or the committed evidence."""
-        processed = self._find(["processed_data/analytics/orders_processed.csv"])
+        processed = self._find(["processed_data/analytics/orders_processed.csv.xz",
+                                "processed_data/analytics/orders_processed.csv"])
         evidence = self._find([
             "reports/spark_sql/orders_enriched.csv",
             "reports/spark_execution/orders_enriched.csv",
@@ -447,7 +448,8 @@ class DashboardService:
         return out
 
     def _load_items(self) -> pd.DataFrame:
-        processed = self._find(["processed_data/analytics/order_items_integrated.csv"])
+        processed = self._find(["processed_data/analytics/order_items_integrated.csv.xz",
+                                "processed_data/analytics/order_items_integrated.csv"])
         evidence = self._find([
             "reports/spark_sql/order_item_revenue.csv",
             "reports/spark_execution/order_item_revenue.csv",

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "wsgi.py": {
+      "memory": 3008,
+      "maxDuration": 60,
+      "excludeFiles": "{**/__pycache__/**,**/*.pyc,notebooks/**,raw_data/**,parquet_data/**,python_pipeline/**,spark_sql/**,data_generator/**,tests/**,documentation/**,scripts/**,reports/charts/**,reports/spark_pipeline/**,processed_data/order_items.csv,processed_data/orders.csv,processed_data/customers.csv,processed_data/ratings.csv,processed_data/inventory.csv,processed_data/wastage.csv,processed_data/analytics/orders_processed.csv,processed_data/analytics/orders_integrated.csv,processed_data/analytics/customer_analytics.csv,processed_data/analytics/ratings_integrated.csv,processed_data/analytics/inventory_integrated.csv,processed_data/analytics/wastage_integrated.csv,processed_data/analytics/rfm_segmentation.csv}"
+    }
+  }
+}

@@ -15,6 +15,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.api.routes import (api_bp, bootstrap_admin_from_environment,
                             refresh_session_user, scoring_service)
+from src.runtime import writable_dir
 
 BASE_DIR = PROJECT_ROOT
 PAGES = {
@@ -105,7 +106,7 @@ def _secret_key() -> str:
     if configured:
         return configured
     runtime = Path(os.environ.get("DINEIQ_RUNTIME_DIR", BASE_DIR / "runtime"))
-    runtime.mkdir(parents=True, exist_ok=True)
+    runtime = writable_dir(runtime)
     path = runtime / "session_secret.key"
     try:
         return path.read_text(encoding="utf-8").strip()
@@ -139,7 +140,8 @@ def create_app() -> Flask:
     app.config.update(
         SECRET_KEY=_secret_key(),
         AUTH_REQUIRED=_env_bool("DINEIQ_AUTH_REQUIRED", True),
-        AUTH_DB=os.environ.get("DINEIQ_AUTH_DB", str(BASE_DIR / "runtime" / "dineiq_auth.sqlite3")),
+        AUTH_DB=os.environ.get("DINEIQ_AUTH_DB", str(
+            writable_dir(BASE_DIR / "runtime") / "dineiq_auth.sqlite3")),
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=_env_bool(

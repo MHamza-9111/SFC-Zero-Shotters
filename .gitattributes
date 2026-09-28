@@ -1,2 +1,10 @@
-processed_data/analytics/order_items_integrated.csv filter=lfs diff=lfs merge=lfs -text
+# Trained model artifacts are stored through Git LFS: a single versioned
+# RandomForest artifact is ~50 MB, which is too large for a normal git blob.
+#
+# Only the newest version of each task is kept in the repository because the
+# application loads only the latest version (see src/services/scoring_service.py).
+#
+# NOTE: the deployment platform must have Git LFS enabled for the project,
+# otherwise these files arrive as pointer text and the model-serving pages
+# report the models as unavailable.
 *.joblib filter=lfs diff=lfs merge=lfs -text

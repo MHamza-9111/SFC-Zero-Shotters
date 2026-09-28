@@ -8,6 +8,8 @@ import sqlite3
 import threading
 from pathlib import Path
 
+from src.runtime import writable_dir
+
 BASE_DIR = Path(__file__).resolve().parents[2]
 
 RESOURCES = {
@@ -102,13 +104,13 @@ class DataManagementError(ValueError):
 
 class DataManagementService:
     def __init__(self, db_path: Path | None = None):
-        self.db_path = Path(db_path or os.environ.get(
+        preferred = Path(db_path or os.environ.get(
             "DINEIQ_DATA_DB", BASE_DIR / "runtime" / "dineiq.sqlite3"))
+        self.db_path = writable_dir(preferred.parent) / preferred.name
         self._initialize_lock = threading.Lock()
         self._initialized = False
 
     def connect(self) -> sqlite3.Connection:
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
         con = sqlite3.connect(self.db_path, timeout=15)
         con.row_factory = sqlite3.Row
         con.execute("PRAGMA foreign_keys=ON")

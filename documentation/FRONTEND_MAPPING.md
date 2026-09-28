@@ -92,6 +92,14 @@ backend counterpart are explicitly NOT implemented (see section 3).
 - Audit trail card added to `pages/team.html` (`#audit-tbody` + `GET /audit`, admin-only inline message).
 
 ### Runtime artifacts restored in this environment
+
+> **Current state (supersedes the notes below).** The order-line dataset is no longer a Git-LFS
+> object: it ships as `processed_data/analytics/order_items_integrated.csv.xz` (13 MB, all 997,205
+> rows) and is rebuilt with `python scripts/build_runtime_artifacts.py`. Only the newest model
+> version per task is kept — ~850 MB of superseded versions were removed because the service loads
+> only the highest version number. `*.joblib` is still Git-LFS tracked, so deployments must have
+> Git LFS enabled; see [INSTALLATION.md](INSTALLATION.md#deploy-to-vercel-serverless).
+
 - All `*.joblib` model files and `processed_data/analytics/order_items_integrated.csv` were committed as
   Git-LFS pointers but the LFS storage host is unreachable from this sandbox (and `git-lfs` is not installable).
   They were regenerated with the repository's own pipeline code instead:

@@ -1,8 +1,7 @@
 
 """Restore runtime artifacts that are stored as unfetched Git-LFS pointers.
 
-The model files (``models/**/model.joblib``) and
-``processed_data/analytics/order_items_integrated.csv`` are committed through
+The trained model files (``models/**/model.joblib``) are committed through
 Git LFS. A ZIP download of the repository, or a clone made without
 ``git-lfs``, contains only the tiny pointer text instead of the real bytes.
 Symptoms:
@@ -10,18 +9,21 @@ Symptoms:
 * startup log: ``Could not load ... model ...: 118`` (pickle ``KeyError``),
 * ``GET /api/v1/status`` reports ``DEGRADED`` and the sidebar shows
   "Pipeline degraded",
-* order line items come back empty.
+* model pages report the models as unavailable.
 
 This script detects those pointers and regenerates the artifacts using the
 repository's own pipeline code — the documented pandas fallback, so **no JVM
 or PySpark is required**:
 
-  1. ``python_pipeline/processing/process_dineiq_data.py``
-       -> real ``order_items_integrated.csv`` (order line items)
-  2. ``python_pipeline/model_artifacts.py``
+  1. ``python_pipeline/model_artifacts.py``
        -> ``models/python/<task>/vNext`` (self-verifies committed predictions)
-  3. ``python -m spark_jobs.run_all --engine pandas --skip ingest sql compare latency``
+  2. ``python -m spark_jobs.run_all --engine pandas --skip ingest sql compare latency``
        -> ``models/<task>/vNext`` (big-data side, pandas fallback engine)
+
+The order-line dataset is **not** a Git LFS object any more. It ships as
+``processed_data/analytics/order_items_integrated.csv.xz`` (13 MB instead of
+194 MB) so the serverless bundle stays small; rebuild it with
+``python scripts/build_runtime_artifacts.py``.
 
 If the checkout has ``.git`` and git-lfs installed, ``git lfs pull`` is the
 faster alternative — this script is for archives and machines without LFS.
@@ -40,7 +42,10 @@ BASE = Path(__file__).resolve().parents[1]
 POINTER_PREFIX = b"version https://git-lfs"
 
 
-DATA_CSV = BASE / "processed_data" / "analytics" / "order_items_integrated.csv"
+# The order-line dataset is no longer an LFS object: it ships as a compressed
+# runtime artifact (13 MB instead of 194 MB) so the serverless bundle fits.
+# Rebuild it with ``python scripts/build_runtime_artifacts.py``.
+ITEM_ARTIFACT = BASE / "processed_data" / "analytics" / "order_items_integrated.csv.xz"
 
 
 def is_pointer(path: Path) -> bool:
@@ -81,10 +86,12 @@ def latest_model_files() -> list[Path]:
 
 
 def pointer_files() -> list[Path]:
-    found = [path for path in latest_model_files() if is_pointer(path)]
-    if DATA_CSV.is_file() and is_pointer(DATA_CSV):
-        found.append(DATA_CSV)
-    return found
+    return [path for path in latest_model_files() if is_pointer(path)]
+
+
+def missing_item_artifact() -> bool:
+    """True when the compressed order-line dataset the app reads is absent."""
+    return not ITEM_ARTIFACT.is_file()
 
 
 def run(step: str, args: list[str]) -> bool:
@@ -111,10 +118,9 @@ def main() -> int:
             return 2
 
         ok = True
-        if any(p == DATA_CSV for p in pending):
-            ok &= run("Regenerating order_items_integrated.csv "
-                      "(data processing step)",
-                      ["python_pipeline/processing/process_dineiq_data.py"])
+        if missing_item_artifact():
+            ok &= run("Rebuilding the compressed order-line runtime artifact",
+                      ["scripts/build_runtime_artifacts.py"])
         if any("models" in p.parts and "python" in p.parts for p in pending):
             ok &= run("Training Python-side model artifacts "
                       "(model_artifacts.py)",
